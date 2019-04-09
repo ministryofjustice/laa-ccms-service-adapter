@@ -1,0 +1,1091 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions name="determinations_service"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wsswssecurity-secext-1.0.xsd"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wsswssecurity-utility-1.0.xsd"
+                  xmlns:typ="http://oracle.com/determinations/server/12.2/rulebase/assess/types"
+                  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:i18n="http://www.w3.org/2005/09/ws-i18n"
+                  targetNamespace="http://oracle.com/determinations/server/12.2/rulebase/assess/types">
+
+  <wsdl:types>
+            <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://oracle.com/determinations/server/12.2/rulebase/assess/types"
+	targetNamespace="http://oracle.com/determinations/server/12.2/rulebase/assess/types"
+	elementFormDefault="qualified" version="1.0">
+
+	<!-- Assess Request and response -->
+	<xsd:element name="assess-request" type="AssessRequest"/>
+	<xsd:element name="assess-response" type="AssessResponse"/>
+	<xsd:complexType name="AssessResponse">
+		<xsd:sequence>
+			<xsd:element name="version-info" type="VersionInfoType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Version information about the policy model. Only populated if show-version is true in the AssessmentConfiguration</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="events" type="ListEventsType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Warning events that occurred during an Assess action. Only populated if show-events is true in the AssessmentConfiguration</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="global-instance" type="GlobalInstanceType">
+				<xsd:annotation>
+					<xsd:documentation>Results of the assessment that was performed using the policy model deployed at the service URL</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="AssessRequest">
+		<xsd:annotation>
+			<xsd:documentation>An assess-request contains an optional config node and a mandatory global-instance node.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="config" type="AssessmentConfiguration" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Options that control how the data provided to the assess operation should be processed, and how the response should be constructed.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="global-instance" type="GlobalInstanceType">
+				<xsd:annotation>
+					<xsd:documentation>Input data on which to perform the assessment, using the policy model deployed at the service URL</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- XSD types for the list goals action -->
+<!-- List Goals Request and response -->
+	<xsd:element name="list-goals-request" type="ListGoalsRequest"/>
+	<xsd:element name="list-goals-response" type="ListGoalsResponse"/>
+	<xsd:complexType name="ListGoalsRequest">
+		<xsd:attribute name="show-version" type="xsd:boolean">
+			<xsd:annotation>
+				<xsd:documentation>Choose whether to show version information about the policy model</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="ListGoalsResponse">
+		<xsd:sequence>
+			<xsd:element name="version-info" type="VersionInfoType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Version information about the policy model. Only populated if show-version is true in the ListGoals request.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="entity" type="ListGoalsEntityType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>For each entity with top-level attributes, the information about those attributes.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- list goals outputs an entity and attributes but has different required attributes  -->
+	<xsd:complexType name="ListGoalsEntityType">
+		<xsd:annotation>
+			<xsd:documentation>The top-level attributes for an entity, returned from a ListGoals action.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="attribute" type="ListGoalsAttributeType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Top-level attributes for the entity.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="entity-id" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>The name of the entity, or "global" for the global entity instance.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="ListGoalsAttributeType">
+		<xsd:annotation>
+			<xsd:documentation>A top-level attribute for an entity, returned from a ListGoals action.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:attribute name="id" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The name of the attribute</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="type" type="AttributeTypeEnum" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The data type of the attribute</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="text" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The text of the attribute, in the language chosen in the locale element of the I18N header for the request.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<!--XSD Types for the Assessment Configuration -->
+<xsd:complexType name="AssessmentConfiguration">
+	<xsd:annotation>
+		<xsd:documentation>Configuration information for an Assess action.</xsd:documentation>
+	</xsd:annotation>
+	<xsd:sequence>
+		<xsd:element name="show-silent" type="xsd:boolean" minOccurs="0">
+			<xsd:annotation>
+				<xsd:documentation>If true, any silent operators attached to rule premises are ignored for decision reports, resulting in the rule branch underneath the silent operator being included in the decision report. If false or not specified, the decision report is shown with the silent operator having the usual effect of hiding all proving attributes.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:element>
+		<xsd:element name="show-invisible" type="xsd:boolean" minOccurs="0">
+			<xsd:annotation>
+				<xsd:documentation>If true, any invisible operators attached to rule premises are ignored for decision reports, resulting in the premise being included in the decision report. If false or not specified, the decision report is shown with the invisible operator having the usual effect of hiding the attribute to which it is attached.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:element>
+		<xsd:element name="show-properties" type="xsd:boolean" minOccurs="0">
+			<xsd:annotation>
+				<xsd:documentation>(Not currently used.) If true, any custom properties for entities and attributes are returned in the response.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:element>
+		<xsd:element name="show-events" type="xsd:boolean" minOccurs="0">
+			<xsd:annotation>
+				<xsd:documentation>If true, any events raised during an assessment are returned in the response.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:element>
+		<xsd:element name="resolve-indecision-relationships" type="xsd:boolean" minOccurs="0">
+			<xsd:annotation>
+				<xsd:documentation>If true, decision reports for unknown attributes (an indecision report) will continue through an unknown relationship, to report on lower attributes and relationships. Normally a decision report will stop at an unknown relationship.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:element>
+		<xsd:element name="show-version" type="xsd:boolean" minOccurs="0">
+			<xsd:annotation>
+				<xsd:documentation>If true, version information about the policy model will be returned.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:element>
+		<xsd:element name="outcome" type="ResponseOutcome" minOccurs="0" maxOccurs="1">
+			<xsd:annotation>
+				<xsd:documentation>Configures the style of information included in the response for each entity's attributes and relationships.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:element>
+	</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ResponseOutcome">
+	<xsd:annotation>
+		<xsd:documentation>Configuration of how outcomes in each entity should be included in the response for an Assess action.</xsd:documentation>
+	</xsd:annotation>
+	<xsd:sequence>
+		<xsd:element name="entity" minOccurs="0" maxOccurs="unbounded">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:element name="attribute-outcome" type="OutcomeType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>How outcomes for attributes in the entity should be included in the response.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="relationship-outcome" type="OutcomeType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>How outcomes for relationships from the entity should be included in the response.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+				<xsd:attribute name="id" type="xsd:string" use="required">
+					<xsd:annotation>
+						<xsd:documentation>Name of the entity being configured.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="OutcomeType">
+	<xsd:annotation>
+		<xsd:documentation>Configuration of how outcomes in an entity should be included in the response for an Assess action.</xsd:documentation>
+	</xsd:annotation>
+	<xsd:attribute name="id" type="xsd:string" use="required">
+		<xsd:annotation>
+			<xsd:documentation>The name of an attribute or relationship in the entity</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:attribute name="outcome-style" type="OutcomeStyleEnum" use="optional">
+		<xsd:annotation>
+			<xsd:documentation>The style of outcome to use for the attribute or relationship, regardless of whether the outcome is known or unknown.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:attribute name="unknown-outcome-style" type="OutcomeStyleEnum" use="optional">
+		<xsd:annotation>
+			<xsd:documentation>The outcome style to use when the attribute or relationship is unknown. Overrides the default style specified in outcome-style.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+	<xsd:attribute name="known-outcome-style" type="OutcomeStyleEnum" use="optional">
+		<xsd:annotation>
+			<xsd:documentation>The outcome style to use when the attribute or relationship is known. Overrides the default style specified in outcome-style.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:attribute>
+</xsd:complexType>
+	<xsd:simpleType name="OutcomeStyleEnum">
+    <xsd:annotation>
+        <xsd:documentation>The style of outcomes that can be specified for attributes and relationships in an Assess action.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+        <xsd:enumeration value="value-only">
+            <xsd:annotation>
+                <xsd:documentation>Do not return a decision report for the attribute or relationship, just its value.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:enumeration>
+        <xsd:enumeration value="decision-report">
+            <xsd:annotation>
+                <xsd:documentation>Return the value, and a full decision report for the attribute or relationship.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:enumeration>
+        <xsd:enumeration value="base-attributes">
+            <xsd:annotation>
+                <xsd:documentation>Return the value, and a decision report containing only the relevant base attributes. I.e. the inputs that influenced the attribute or relationship's outcome.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:enumeration>
+    </xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="AttributeTypeEnum">
+    <xsd:annotation>
+        <xsd:documentation>The supported data types for attributes provided to and returned from an Assess action. See attribute values for the values each type may take.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+        <xsd:enumeration value="boolean">
+            <xsd:annotation>
+                <xsd:documentation>Attribute is type Boolean</xsd:documentation>
+            </xsd:annotation>
+        </xsd:enumeration>
+        <xsd:enumeration value="text">
+            <xsd:annotation>
+                <xsd:documentation>Attribute is type Text</xsd:documentation>
+            </xsd:annotation>
+        </xsd:enumeration>
+        <xsd:enumeration value="number">
+            <xsd:annotation>
+                <xsd:documentation>Attribute is type Number</xsd:documentation>
+            </xsd:annotation>
+        </xsd:enumeration>
+        <xsd:enumeration value="currency">
+            <xsd:annotation>
+                <xsd:documentation>Attribute is type Currency</xsd:documentation>
+            </xsd:annotation>
+        </xsd:enumeration>
+        <xsd:enumeration value="date">
+            <xsd:annotation>
+                <xsd:documentation>Attribute is type Date</xsd:documentation>
+            </xsd:annotation>
+        </xsd:enumeration>
+        <xsd:enumeration value="datetime">
+            <xsd:annotation>
+                <xsd:documentation>Attribute is type Datetime</xsd:documentation>
+            </xsd:annotation>
+        </xsd:enumeration>
+        <xsd:enumeration value="timeofday">
+            <xsd:annotation>
+                <xsd:documentation>Attribute is type Timeofday</xsd:documentation>
+            </xsd:annotation>
+        </xsd:enumeration>
+    </xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="StateEnum">
+    <xsd:annotation>
+        <xsd:documentation>The state of relationships provided to and returned from an action.
+Tip: Omitting a relationship from a request is equivalent to supplying that relationship with a state of uncertain.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+        <xsd:enumeration value="known">
+            <xsd:annotation><xsd:documentation>The relationship is known</xsd:documentation></xsd:annotation>
+        </xsd:enumeration>
+        <xsd:enumeration value="unknown">
+            <xsd:annotation><xsd:documentation>The relationship is unknown</xsd:documentation></xsd:annotation>
+        </xsd:enumeration>
+        <xsd:enumeration value="uncertain">
+            <xsd:annotation><xsd:documentation>The relationship is uncertain</xsd:documentation></xsd:annotation>
+        </xsd:enumeration>
+    </xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="UnknownValue">
+    <xsd:annotation>
+        <xsd:documentation>Used to indicate the unknown value state for attribute and relationship values provided to and returned from an Assess action.
+Tip: Any attributes, entities or relationships that are omitted from a request are also treated as unknown.</xsd:documentation>
+    </xsd:annotation>
+</xsd:complexType>
+<xsd:complexType name="UncertainValue">
+    <xsd:annotation>
+        <xsd:documentation>Used to indicate the uncertain value for attribute values (and change points) provided to and returned from an Assess action. Unlike unknown, uncertain is considered a value, and prevents any further attempts to ask for or determine a value of that attribute.
+Uncertain is most often used when a question has been asked of a real person, and the response is given that no answer is available. For example, if the question is "have you been vaccinated against measles" and the answer is "I don't know" you might use the uncertain value to indicate that the individual has neither definitely been vaccinated nor definitely not been vaccinated against measles.</xsd:documentation>
+    </xsd:annotation>
+</xsd:complexType>
+<xsd:complexType name="ChangePoint">
+    <xsd:annotation>
+        <xsd:documentation>Temporal change points for attribute values and decision report nodes provided to and returned from an action.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice minOccurs="0">
+        <xsd:element name="boolean-val" type="xsd:boolean">
+            <xsd:annotation>
+                <xsd:documentation>For boolean attributes, contains the value of the attribute. Must be set to either "true" or "false".</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="date-val" type="xsd:date">
+            <xsd:annotation>
+                <xsd:documentation>For date attributes, contains the value of the attribute. Must be set to a valid date in the yyyy-mm-dd format. I.e. &lt;year&gt;-&lt;month as two digit number&gt;-&lt;day of month as two digit number&gt;</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="datetime-val" type="xsd:dateTime">
+            <xsd:annotation>
+                <xsd:documentation>For datetime attributes, contains the value of the attribute. Must be a valid date and time in the timezone for the policy model, in the format yyyy-mm-ddThh:mm:ss format. I.e. &lt;year&gt;-&lt;month as two digit number&gt;-&lt;day of month&gt;'T'&lt;hours 00-23&gt;:&lt;minutes 00-59>:&lt;seconds 00-59&gt;</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="time-val" type="xsd:time">
+            <xsd:annotation>
+                <xsd:documentation>For time attributes, contains the value of the attribute. Must be a valid time in hh:mm:ss format. I.e. &lt;hours 00-23&gt;:&lt;minutes 00-59&gt;:&lt;seconds 00-59&gt;</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="number-val" type="xsd:decimal">
+            <xsd:annotation>
+                <xsd:documentation>For number or currency attributes, contains the value of the attribute</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="text-val" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>For text attributes, contains the value of the attribute </xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="uncertain-val" type="UncertainValue">
+            <xsd:annotation>
+                <xsd:documentation>For attributes of any type, this field is used when the attribute has the value uncertain</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="unknown-val" type="UnknownValue">
+            <xsd:annotation>
+                <xsd:documentation>For attributes of any type, this field is used when the attribute has the value unknown</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+    </xsd:choice>
+    <xsd:attribute name="date" type="xsd:date">
+        <xsd:annotation>
+            <xsd:documentation>The date from which the new attribute value takes effect</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+</xsd:complexType>	<!--XSD Types for Assess Error Response -->
+<!-- error response -->
+<xsd:element name="error-response" type="Error"/>
+
+<xsd:complexType name="Error">
+	<xsd:annotation>
+		<xsd:documentation>When error event rules are triggered during an Assess action, a SOAP fault is generated containing the error details.</xsd:documentation>
+	</xsd:annotation>
+	<xsd:sequence>
+		<xsd:element name="code" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>The identifier of the error. Currently always "assess.request.event.error"</xsd:documentation>
+			</xsd:annotation>
+		</xsd:element>
+		<xsd:element name="message" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>The message. Currently always "The rulebase generated the following error events"</xsd:documentation>
+			</xsd:annotation>
+		</xsd:element>
+		<xsd:element name="events" type="ListEventsType" minOccurs="0">
+			<xsd:annotation>
+				<xsd:documentation>Details of the error events that were raised during the assess request.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:element>
+	</xsd:sequence>
+</xsd:complexType>
+	<!--rulebase event types -->
+<xsd:complexType name="RulebaseEventType">
+		<xsd:annotation>
+			<xsd:documentation>Rulebase error and warning events returned from an action.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="message" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>The event message</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="parameters">
+				<xsd:annotation>
+					<xsd:documentation>The sequence of parameter values for the event message</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+						<xsd:element name="value" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="decision-report" type="DecisionReportType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Decision report for the attribute that caused the event</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The type of event. Either "error" or "warning".</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="entity-id" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The name of the entity in which the error or warning occurred, or "global" if it occurred in the global entity.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="instance-id" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>The identifier of the entity instance in which the error or warning occurred, or "global" if it occurred in the global entity instance.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="ListEventsType">
+	<xsd:annotation>
+		<xsd:documentation>A list of policy model error or warning events returned from an Assess action.
+The list of events that appears in an assess response includes only warning events, and only if the show-events property in the assessment configuration is true.
+The list of events that appears in a SOAP fault detail includes only error events.</xsd:documentation>
+	</xsd:annotation>
+	<xsd:sequence>
+		<xsd:element name="event" type="RulebaseEventType" maxOccurs="unbounded">
+			<xsd:annotation>
+				<xsd:documentation>Each event that occurred during the operation</xsd:documentation>
+			</xsd:annotation>
+		</xsd:element>
+	</xsd:sequence>
+</xsd:complexType>
+
+	<!--decision report types -->
+<xsd:complexType name="DecisionReportType">
+    <xsd:annotation>
+        <xsd:documentation>Decision report data returned in the response from an Assess action, for attributes and relationships with a decision report outcome style that is not value-only.
+A decision report provides information on how the value of an attribute was determined (or why it is unknown).</xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice minOccurs="0" maxOccurs="unbounded">
+    <xsd:element name="relationship-node" type="RelationshipNodeType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation>Decision report for an attribute that is relevant to the decision report for this node</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="attribute-node" type="AttributeNodeType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation>Decision report for a relationship that is relevant to the decision report for this node</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="already-proven-node" type="AlreadyProvenNodeType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation>A cross-reference to another decision report node that is relevant to the decision report for this node</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+</xsd:choice>    <xsd:attribute name="report-style" type="xsd:string">
+        <xsd:annotation>
+            <xsd:documentation>Either "decision-report" or "base-attributes" depending on what was requested in the outcome-style for the attribute or relationship</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="AttributeNodeType">
+    <xsd:sequence>
+        <!--node attribute value-->
+<xsd:choice minOccurs="0">
+    <xsd:element name="boolean-val" type="xsd:boolean">
+        <xsd:annotation>
+            <xsd:documentation>For boolean attributes, contains the value of the attribute</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="date-val" type="xsd:date">
+        <xsd:annotation>
+            <xsd:documentation>For date attributes, contains the value of the attribute</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="datetime-val" type="xsd:dateTime">
+        <xsd:annotation>
+            <xsd:documentation>For datetime attributes, contains the value of the attribute</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="time-val" type="xsd:time">
+        <xsd:annotation>
+            <xsd:documentation>For time attributes, contains the value of the attribute</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="number-val" type="xsd:decimal">
+        <xsd:annotation>
+            <xsd:documentation>For number or currency attributes, contains the value of the attribute</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="text-val" type="xsd:string">
+        <xsd:annotation>
+            <xsd:documentation>For text attributes, contains the value of the attribute </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="uncertain-val" type="UncertainValue">
+        <xsd:annotation>
+            <xsd:documentation>For attributes of any type, this field is used when the attribute has the value uncertain</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="unknown-val" type="UnknownValue">
+        <xsd:annotation>
+            <xsd:documentation>For attributes of any type, this field is used when the attribute has the value unknown</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+</xsd:choice>
+<xsd:element name="change-point" type="ChangePoint" minOccurs="0" maxOccurs="unbounded">
+    <xsd:annotation>
+        <xsd:documentation>When an attribute has temporal change points, these fields indicate where those change points occur</xsd:documentation>
+    </xsd:annotation>
+</xsd:element>
+
+        <!--node attribute custom properties -->
+        <xsd:element name="properties" type="ListCustomPropertiesType" minOccurs="0">
+            <xsd:annotation>
+                <xsd:documentation>(Not currently used.) Custom properties specified for the attribute, if any. Only included if show-properties is set to true in the AssessmentConfiguration.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <!--child nodes -->
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+    <xsd:element name="relationship-node" type="RelationshipNodeType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation>Decision report for an attribute that is relevant to the decision report for this node</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="attribute-node" type="AttributeNodeType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation>Decision report for a relationship that is relevant to the decision report for this node</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="already-proven-node" type="AlreadyProvenNodeType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation>A cross-reference to another decision report node that is relevant to the decision report for this node</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+</xsd:choice>    </xsd:sequence>
+    <!--node id -->
+    <xsd:attribute name="id" type="xsd:string" use="required">
+        <xsd:annotation>
+            <xsd:documentation>An identifier for the decision report node. When an attribute occurs more than once in a decision report, a reference is made to the first appearance by using this identifier.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--node entity instance -->
+    <xsd:attribute name="entity-id" type="xsd:string" use="required">
+        <xsd:annotation>
+            <xsd:documentation>The name of the type of entity this attribute is contained in</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="instance-id" type="xsd:string" use="required">
+        <xsd:annotation>
+            <xsd:documentation>The unique identifier of the entity instance for this attribute</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!-- will only show up if outcome is unknown and resolve-rels is true. Used to indicate whether or not the entity instance
+         actually exists in the session or was created to backwards chain unknown relationships -->
+    <xsd:attribute name="hypothetical-instance" type="xsd:boolean" use="required">
+        <xsd:annotation>
+            <xsd:documentation>If true, the entity instance for this attribute was only created to allow the report to continue past an unknown relationship</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--node attribute id & type-->
+    <xsd:attribute name="attribute-id" type="xsd:string" use="required">
+        <xsd:annotation>
+            <xsd:documentation>The name of the attribute for this decision report node</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="type" type="AttributeTypeEnum" use="required">
+        <xsd:annotation>
+            <xsd:documentation>The data type of the attribute for this decision report node</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--node attribute current text -->
+    <xsd:attribute name="text" type="xsd:string" use="required">
+        <xsd:annotation>
+            <xsd:documentation>The text of the decision report for this node. For example "The child's serves of vegetables per day is 3." or "The child does not live at home."</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--true if the attribute is inferred -->
+    <xsd:attribute name="inferred" type="xsd:boolean" use="required">
+        <xsd:annotation>
+            <xsd:documentation>If true, the attribute value was inferred (set) during the assess action.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--only provided if start relevance != ChangePointDate.EARLIEST -->
+    <xsd:attribute name="start-relevance" type="xsd:date" use="optional">
+        <xsd:annotation>
+            <xsd:documentation>If the relevance does not start at the beginning of time, the first date on which the attribute became relevant to the decision report. Can only be set if temporal rules or values are in use.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--only provided if end relevance != ChangePointDate.LATEST -->
+    <xsd:attribute name="end-relevance" type="xsd:date" use="optional">
+        <xsd:annotation>
+            <xsd:documentation>If the relevance does not continue to the end of time, the date on and after which the attribute was no longer relevant to the decision report. Can only be set if temporal rules or values are in use.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+
+</xsd:complexType>
+<xsd:complexType name="RelationshipNodeType">
+    <xsd:sequence>
+        <xsd:element name="target" type="RelationshipTargetType" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+                <xsd:documentation>For inferred relationships, the RelationshipTargetType fields comprise the list of known entity instances for the relationship. For input relationships, it is the list of all entity instances for this relationship.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <!--node relationship properties -->
+        <xsd:element name="properties" type="ListCustomPropertiesType" minOccurs="0">
+            <xsd:annotation>
+                <xsd:documentation>(Not currently used.) Custom properties specified for the relationship, if any. Only included if show-properties is set to true in the AssessmentConfiguration. </xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <!--child nodes -->
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+    <xsd:element name="relationship-node" type="RelationshipNodeType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation>Decision report for an attribute that is relevant to the decision report for this node</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="attribute-node" type="AttributeNodeType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation>Decision report for a relationship that is relevant to the decision report for this node</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="already-proven-node" type="AlreadyProvenNodeType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation>A cross-reference to another decision report node that is relevant to the decision report for this node</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+</xsd:choice>    </xsd:sequence>
+    <!--node id -->
+    <xsd:attribute name="id" type="xsd:string" use="required">
+        <xsd:annotation>
+            <xsd:documentation>An identifier for the decision report node</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--node relationship id -->
+    <xsd:attribute name="relationship-id" type="xsd:string" use="required">
+        <xsd:annotation>
+            <xsd:documentation>The name of the relationship for this decision report node</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--node relationship source instance-->
+    <xsd:attribute name="source-entity-id" type="xsd:string" use="required">
+        <xsd:annotation>
+            <xsd:documentation>The name of the source entity for this relationship</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="source-instance-id" type="xsd:string" use="required">
+        <xsd:annotation>
+            <xsd:documentation>The identifier of the source entity instance for this relationship</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!-- will only show up if outcome is unknown and resolve-rels is true. Used to indicate whether or not the source entity instance
+         actually exists in the session or was created to backwards chain unknown relationships -->
+    <xsd:attribute name="hypothetical-instance" type="xsd:boolean" use="required">
+        <xsd:annotation>
+            <xsd:documentation>If true, this relationship was only created to allow the report to continue past an unknown relationshi</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--node relationship target entity -->
+    <xsd:attribute name="target-entity-id" type="xsd:string" use="required">
+        <xsd:annotation>
+            <xsd:documentation>The name of the target entity for this relationship</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!-- relationship state - known, unknown or uncertain -->
+    <xsd:attribute name="state" type="StateEnum" use="required">
+        <xsd:annotation>
+            <xsd:documentation>The outcome state of the relationship</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--true if the relationship is inferred -->
+    <xsd:attribute name="inferred" type="xsd:boolean" use="required">
+        <xsd:annotation>
+            <xsd:documentation>If true, the relationship was inferred (set) during the assess action.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--only provided if start relevance != ChangePointDate.EARLIEST -->
+    <xsd:attribute name="start-relevance" type="xsd:date" use="optional">
+        <xsd:annotation>
+            <xsd:documentation>If the relevance does not start at the beginning of time, the first date on which the relationship became relevant to the decision report</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--only provided if end relevance != ChangePointDate.LATEST -->
+    <xsd:attribute name="end-relevance" type="xsd:date" use="optional">
+        <xsd:annotation>
+            <xsd:documentation>If the relevance does not continue to the end of time, the date on and after which the relationship was no longer relevant to the decision report</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="AlreadyProvenNodeType">
+    <xsd:annotation>
+        <xsd:documentation>Cross-reference to another node in a decision report returned for an action.</xsd:documentation>
+    </xsd:annotation>
+    <!-- this attribute's value is the id of the node that has already been proven -->
+    <xsd:attribute name="id" type="xsd:string" use="required">
+        <xsd:annotation>
+            <xsd:documentation>The id of a decision report node for an attribute or relationship</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+</xsd:complexType><!--property types -->
+<xsd:complexType name="ListCustomPropertiesType">
+    <xsd:annotation>
+        <xsd:documentation>A list of custom properties returned in an action.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+        <xsd:element name="property" type="CustomPropertyType" maxOccurs="unbounded">
+            <xsd:annotation>
+                <xsd:documentation>Custom properties for an entity or attribute</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+    </xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="CustomPropertyType">
+    <xsd:annotation>
+        <xsd:documentation>A custom property returned in an action.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+        <xsd:extension base="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation>The value of the custom property</xsd:documentation>
+            </xsd:annotation>
+            <xsd:attribute name="key" type="xsd:string" use="required">
+                <xsd:annotation>
+                    <xsd:documentation>The name of the custom property</xsd:documentation>
+                </xsd:annotation>
+            </xsd:attribute>
+        </xsd:extension>
+    </xsd:simpleContent>
+</xsd:complexType><xsd:complexType name="RelationshipType">
+    <xsd:annotation>
+        <xsd:documentation>Information about entity reference relationships provided to and returned from an Assess action.
+Reference relationships are any relationship other than the primary containment relationship for an entity.
+Note: Relationships which are inferred by rules in the policy model can not be supplied in an assess request.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+        <xsd:element name="target" type="RelationshipTargetType" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+                <xsd:documentation>The target entity instances for the relationship</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <!--this element will only be provided if the 'show-properties' attribute is true in the assessment configuration options -->
+        <xsd:element name="properties" type="ListCustomPropertiesType" minOccurs="0">
+            <xsd:annotation>
+                <xsd:documentation>(Not currently used.) Ignored in requests. Custom properties specified for the relationship, if any. Only included if show-properties is set to true in the AssessmentConfiguration.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <!--this element will only appear in a response for attribute outcome attributes whose outcome style is not 'value-only' -->
+        <xsd:element name="decision-report" type="DecisionReportType" minOccurs="0">
+            <xsd:annotation>
+                <xsd:documentation>For relationships with a decision report outcome, contains the details of the decision report.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" use="required">
+        <xsd:annotation>
+            <xsd:documentation>The name of the relationship</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="state" type="StateEnum">
+        <xsd:annotation>
+            <xsd:documentation>The outcome state of the relationship</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--this property will only be provided in a response for relationship outcomes -->
+    <xsd:attribute name="inferred" type="xsd:boolean" use="optional">
+        <xsd:annotation>
+            <xsd:documentation>Ignored in requests. If true, the attribute/relationship was inferred (set) during the assess action.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--the following properties are used to configure relationship outcomes. The requestor must either specify the 'outcome-style' property or both the 'unknown-outcome-style' and the 'known-outcome-style' -->
+    <xsd:attribute name="outcome-style" type="OutcomeStyleEnum" use="optional">
+        <xsd:annotation>
+            <xsd:documentation>The style of outcome to use for the attribute/relationship, regardless of whether the outcome is known or unknown. If not specified, value-only is used.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="unknown-outcome-style" type="OutcomeStyleEnum" use="optional">
+        <xsd:annotation>
+            <xsd:documentation>The outcome style to use when the attribute/relationship is unknown. Overrides the default style specified in outcome-style.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="known-outcome-style" type="OutcomeStyleEnum" use="optional">
+        <xsd:annotation>
+            <xsd:documentation>The outcome style to use when the attribute/relationship is known. Overrides the default style specified in outcome-style.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+</xsd:complexType>
+
+
+<xsd:complexType name="RelationshipTargetType">
+    <!--the value of this attribute must match the id one of the specified entity instances -->
+    <xsd:attribute name="instance-id" type="xsd:string" use="required"/>
+</xsd:complexType>
+<!--generic session data types -->
+<xsd:complexType name="GlobalInstanceType">
+    <xsd:annotation>
+        <xsd:documentation>Data provided to and returned from an Assess action, consisting of the attributes, contained entities and relationships for the global entity instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+        <xsd:element name="attribute" type="AttributeType" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+                <xsd:documentation>Attributes of the one global entity instance</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="relationship" type="RelationshipType" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+                <xsd:documentation>Non-containment relationships from the global entity instance to other entities </xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="entity" type="EntityType" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+                <xsd:documentation>Child entities contained by the global entity instance</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <!--this element will only be provided if the 'show-properties' attribute is true in the assessment configuration options -->
+        <xsd:element name="properties" type="ListCustomPropertiesType" minOccurs="0">
+            <xsd:annotation>
+                <xsd:documentation>(Not currently used.) Custom properties specified for the global entity, if any. Only included if show-properties is set to true in the AssessmentConfiguration.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+    </xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="EntityType">
+    <xsd:annotation>
+        <xsd:documentation>Entity data provided to and returned from an Assess action. Used to group all entity instances for a single entity type.
+Note: Entities which are inferred by rules in the policy model must not be supplied in an assess request.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+        <xsd:element name="instance" type="EntityInstanceType" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+                <xsd:documentation>All entity instances for this entity</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <!--this element will only be provided if the 'show-properties' attribute is true in the assessment configuration options -->
+        <xsd:element name="properties" type="ListCustomPropertiesType" minOccurs="0">
+            <xsd:annotation>
+                <xsd:documentation>(Not currently used.) Ignored in requests. Custom properties specified for the attribute, if any. Only included if show-properties is set to true in the AssessmentConfiguration.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" use="required">
+        <xsd:annotation>
+            <xsd:documentation>The name of the entity</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="inferred" type="xsd:boolean" use="optional">
+        <xsd:annotation>
+            <xsd:documentation>Ignored in requests. If true, all instances of this entity were inferred (created) during the assess action</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="EntityInstanceType">
+    <xsd:annotation>
+        <xsd:documentation>Entity instance data provided to and returned from an Assess action.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+        <xsd:element name="attribute" type="AttributeType" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+                <xsd:documentation>Attributes for the entity instance</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="relationship" type="RelationshipType" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+                <xsd:documentation>Relationships from this entity instance to other entities</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="entity" type="EntityType" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+                <xsd:documentation>Other entities contained by this entity instance</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" use="required">
+        <xsd:annotation>
+            <xsd:documentation>A unique identifier for the entity instance</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+</xsd:complexType>
+
+<xsd:complexType name="AttributeType">
+    <xsd:annotation>
+        <xsd:documentation>Attribute values and metadata provided to and returned from an Assess action.
+Attribute nodes are used either to:
+1. Set an attribute's input value
+2. Indicate the level of outcome detail to include in the response for an attribute
+A value must be provided if no outcome-style is specified, and that value will be used (and returned in the response) even if the attribute is able to be inferred by the policy model. If an outcome-style is specified, any value provided for the attribute is ignored.
+Where an attribute is linked to a value list, ensure that any value you set for the attribute is a value on the value list. Otherwise, the web service will return an error: "The value for attribute &lt;attribute&gt; should be an enumerated value".
+On input, for attributes with an unknown value, either leave the attribute out of the request entirely, or use the unknown-val element.
+Notes:
+* Do not attempt to simultaneously set a value and specify an outcome style for the same attribute.
+* Where an attribute is linked to a value list, and you attempt to set a value for that attribute which is not in the value list, the web service will return an error: "The value for attribute &lt;attribute&gt; should be an enumerated value".
+</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+        <!--node attribute value-->
+<xsd:choice minOccurs="0">
+    <xsd:element name="boolean-val" type="xsd:boolean">
+        <xsd:annotation>
+            <xsd:documentation>For boolean attributes, contains the value of the attribute</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="date-val" type="xsd:date">
+        <xsd:annotation>
+            <xsd:documentation>For date attributes, contains the value of the attribute</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="datetime-val" type="xsd:dateTime">
+        <xsd:annotation>
+            <xsd:documentation>For datetime attributes, contains the value of the attribute</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="time-val" type="xsd:time">
+        <xsd:annotation>
+            <xsd:documentation>For time attributes, contains the value of the attribute</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="number-val" type="xsd:decimal">
+        <xsd:annotation>
+            <xsd:documentation>For number or currency attributes, contains the value of the attribute</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="text-val" type="xsd:string">
+        <xsd:annotation>
+            <xsd:documentation>For text attributes, contains the value of the attribute </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="uncertain-val" type="UncertainValue">
+        <xsd:annotation>
+            <xsd:documentation>For attributes of any type, this field is used when the attribute has the value uncertain</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="unknown-val" type="UnknownValue">
+        <xsd:annotation>
+            <xsd:documentation>For attributes of any type, this field is used when the attribute has the value unknown</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+</xsd:choice>
+<xsd:element name="change-point" type="ChangePoint" minOccurs="0" maxOccurs="unbounded">
+    <xsd:annotation>
+        <xsd:documentation>When an attribute has temporal change points, these fields indicate where those change points occur</xsd:documentation>
+    </xsd:annotation>
+</xsd:element>
+        <!--this element will only be provided if the 'show-properties' attribute is true in the assessment configuration options -->
+        <xsd:element name="properties" type="ListCustomPropertiesType" minOccurs="0">
+            <xsd:annotation>
+                <xsd:documentation>(Not currently used.) Ignored in requests. Custom properties specified for the attribute, if any. Only included if show-properties is set to true in the AssessmentConfiguration for the assess request.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <!--this element will only appear in a response for attribute outcome attributes whose outcome style is not 'value-only' -->
+        <xsd:element name="decision-report" type="DecisionReportType" minOccurs="0">
+            <xsd:annotation>
+                <xsd:documentation>For attributes with a decision report outcome, contains the details of the decision report.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:string" use="required">
+        <xsd:annotation>
+            <xsd:documentation>The name of the attribute</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--this property is returned for each attribute in a response -->
+    <xsd:attribute name="type" type="AttributeTypeEnum" use="optional">
+        <xsd:annotation>
+            <xsd:documentation>Ignored in requests. The data type of the attribute.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--this property will only be provided in a response for relationship outcomes -->
+    <xsd:attribute name="inferred" type="xsd:boolean" use="optional">
+        <xsd:annotation>
+            <xsd:documentation>Ignored in requests. If true, the attribute/relationship was inferred (set) during the assess action.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <!--the following properties are used to configure relationship outcomes. The requestor must either specify the 'outcome-style' property or both the 'unknown-outcome-style' and the 'known-outcome-style' -->
+    <xsd:attribute name="outcome-style" type="OutcomeStyleEnum" use="optional">
+        <xsd:annotation>
+            <xsd:documentation>The style of outcome to use for the attribute/relationship, regardless of whether the outcome is known or unknown. If not specified, value-only is used.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="unknown-outcome-style" type="OutcomeStyleEnum" use="optional">
+        <xsd:annotation>
+            <xsd:documentation>The outcome style to use when the attribute/relationship is unknown. Overrides the default style specified in outcome-style.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="known-outcome-style" type="OutcomeStyleEnum" use="optional">
+        <xsd:annotation>
+            <xsd:documentation>The outcome style to use when the attribute/relationship is known. Overrides the default style specified in outcome-style.</xsd:documentation>
+        </xsd:annotation>
+    </xsd:attribute>
+</xsd:complexType>
+
+
+	<!-- XSD types for version information -->
+<xsd:complexType name="VersionInfoType">
+    <xsd:annotation>
+        <xsd:documentation>The version information of a deployed policy model</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+        <xsd:element name="deployment-version" type="xsd:int" minOccurs="0">
+            <xsd:annotation>
+                <xsd:documentation>The deployed version of the rulebase, as understood by the Policy Automation Hub</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="version-uid" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+                <xsd:documentation>The unique identifier, tagged at compile time by Policy Modeling</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="build-time" type="xsd:dateTime" minOccurs="0">
+            <xsd:annotation>
+                <xsd:documentation>The date and time the policy model was built, automatically tagged by Policy Modeling</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+        <xsd:element name="policy-modeling-version" type="xsd:string" minOccurs="0">
+            <xsd:annotation>
+                <xsd:documentation>The user-defined version identifier, entered in the Policy Modeling interface</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+    </xsd:sequence>
+</xsd:complexType>
+</xsd:schema>
+
+        </wsdl:types>
+
+  <wsdl:message name="ListGoalsResponse">
+    <wsdl:part element="typ:list-goals-response" 
+      name="ListGoalsResponse" />
+  </wsdl:message>
+
+  <wsdl:message name="ListGoalsRequest">
+    <wsdl:part element="typ:list-goals-request" name="ListGoalsRequest" />
+  </wsdl:message>
+
+  <wsdl:message name="AssessResponse">
+    <wsdl:part element="typ:assess-response" name="AssessResponse" />
+  </wsdl:message>
+
+  <wsdl:message name="AssessRequest">
+    <wsdl:part element="typ:assess-request" name="AssessRequest" />
+  </wsdl:message>
+
+  <wsdl:portType name="odsAssessServiceGeneric122_Means__Assessment__v12_type">
+                <wsdl:operation name="ListGoals">
+            <wsdl:input message="typ:ListGoalsRequest"/>
+            <wsdl:output message="typ:ListGoalsResponse"/>
+        </wsdl:operation>
+                <wsdl:operation name="Assess">
+            <wsdl:input message="typ:AssessRequest"/>
+            <wsdl:output message="typ:AssessResponse"/>
+        </wsdl:operation>
+            </wsdl:portType>
+
+    <wsdl:binding name="odsAssessServiceGeneric122_Means__Assessment__v12" type="typ:odsAssessServiceGeneric122_Means__Assessment__v12_type">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+                <wsdl:operation name="ListGoals">
+            <soap:operation soapAction="http://oracle.com/determinations/server/12.2/rulebase/types/ListGoals"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+                <wsdl:operation name="Assess">
+            <soap:operation soapAction="http://oracle.com/determinations/server/12.2/rulebase/types/Assess"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+            </wsdl:binding>
+
+    <wsdl:service name="odsAssessServiceGeneric122_Means__Assessment__v12">
+        <wsdl:port binding="typ:odsAssessServiceGeneric122_Means__Assessment__v12" name="odsAssessServiceGeneric122_Means__Assessment__v12_SOAP">
+            <soap:address location="http://172.16.3.121:7703/devopa10/determinations-server/assess/soap/generic/12.2/Means__Assessment__v12"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
