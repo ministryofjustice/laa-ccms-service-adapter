@@ -1,0 +1,15 @@
+# Compiled class file
+*.class
+*.bak
+/target
+/src/generated/*
+
+# Log file
+*.log
+
+
+# Package Files #
+*.war
+*.ear
+*.tar.gz
+*.rar
