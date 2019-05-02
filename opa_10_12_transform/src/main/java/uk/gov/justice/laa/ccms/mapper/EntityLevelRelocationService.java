@@ -14,4 +14,6 @@ public interface EntityLevelRelocationService {
    void moveGlobalEntityToLowerLevel(AssessResponse response, String globalEntityId);
    
    void moveSubEntitiesToUpperLevel(AssessResponse response);
+   
+   void mapOpa10Relationships(com.oracle.determinations.server._10_0.rulebase.types.AssessResponse response);
 }
