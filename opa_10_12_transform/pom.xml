@@ -139,7 +139,28 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-copy-resources</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<overwrite>true</overwrite>
+							<outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/reference/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.basedir}/src/main/resources/reference</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<!-- cxf-codegen-plugin -->
 			<plugin>
 				<groupId>org.apache.cxf</groupId>
