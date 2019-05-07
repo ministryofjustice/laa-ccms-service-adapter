@@ -9,21 +9,17 @@ import org.apache.cxf.Bus;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.EndpointImpl;
-import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import org.apache.wss4j.dom.WSConstants;
 import org.apache.wss4j.dom.handler.WSHandlerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 import com.oracle.determinations.server._10_0.rulebase.types.OpadsRulebaseGeneric;
 
 @SuppressWarnings("deprecation")
 @Configuration
-@PropertySource(value = "classpath:application-env.properties")
-@PropertySource(value = "classpath:application.properties")
 public class EndpointConfig {
 
    @Autowired

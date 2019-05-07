@@ -1,0 +1,718 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <assess-response xmlns="http://oracle.com/determinations/server/10.0/rulebase/types">
+         <events>
+            <event name="warning" entity-id="global">
+               <message>Protection from Harm:  Should the client be assessed as having access to capital and/or having an income such that they would be over the current LAA thresholds then a waiver will be applied and this will be clear on the provisional result screen (if given).  If this should be the case then please consider the application carefully as the client may be asked to pay a high contribution.  Please click next to continue.</message>
+               <parameters>
+                  <value>"Protection from Harm:  Should the client be assessed as having access to capital and/or having an income such that they would be over the current LAA thresholds then a waiver will be applied and this will be clear on the provisional result screen (if given).  If this should be the case then please consider the application carefully as the client may be asked to pay a high contribution.  Please click next to continue."</value>
+               </parameters>
+               <decision-report report-style="base-attributes">
+                  <attribute-decision-node id="dn:6" entity-id="PROCEEDING" attribute-id="PROCEEDING_NAME" type="text" text="The proceeding name is DA004." inferencing-type="goal">
+                     <text-val>DA004</text-val>
+                  </attribute-decision-node>
+                  <attribute-decision-node id="dn:8" entity-id="PROCEEDING" attribute-id="CLIENT_INVOLVEMENT_TYPE" type="text" text="The client's involvement in the proceeding is A." inferencing-type="goal">
+                     <text-val>A</text-val>
+                  </attribute-decision-node>
+                  <attribute-decision-node id="dn:9" entity-id="global" attribute-id="GB_INPUT_B_3WP2_1A" type="boolean" text="The client does not own or have a financial interest in their main dwelling." inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute-decision-node>
+               </decision-report>
+            </event>
+         </events>
+         <session-data>
+            <list-entity entity-type="EMPLOYMENT_CLIENT">
+               <entity id="30951092">
+                  <attribute id="EMP_INPUT_T_3WP3_2A" type="text" inferencing-type="goal">
+                     <text-val>Hoof and Rooster Limited</text-val>
+                  </attribute>
+                  <attribute id="EMP_INPUT_T_3WP3_4A" type="text" inferencing-type="goal">
+                     <text-val>Kitchen assistant</text-val>
+                  </attribute>
+                  <attribute id="EMP_INPUT_D_3WP3_5A" type="date" inferencing-type="goal">
+                     <date-val>2016-09-18</date-val>
+                  </attribute>
+                  <attribute id="EMP_INPUT_N_3WP3_6A" type="number" inferencing-type="goal">
+                     <number-val>36.5</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="EMP_INPUT_T_3WP3_28A" type="text" inferencing-type="goal">
+                     <text-val>Wage Slips</text-val>
+                  </attribute>
+                  <attribute id="EMP_INPUT_N_3WP3_11A" type="number" inferencing-type="goal">
+                     <number-val>6.0</number-val>
+                     <properties>
+                        <property key="min-value">1</property>
+                        <property key="max-value">6</property>
+                        <property key="int-only">true</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="EMP_INPUT_B_3WP3_60A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="EMP_INPUT_T_3WP3_23A" type="text" inferencing-type="goal">
+                     <text-val>Weekly</text-val>
+                  </attribute>
+                  <attribute id="EMP_INPUT_T_3WP3_29A" type="text" inferencing-type="goal">
+                     <text-val>BACS or other electronic automated transfer</text-val>
+                  </attribute>
+                  <relationships/>
+               </entity>
+            </list-entity>
+            <list-entity entity-type="BANKACC">
+               <entity id="30951088">
+                  <attribute id="BANKACC_INPUT_T_7WP2_3A" type="text" inferencing-type="goal">
+                     <text-val>Bank Current</text-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_T_7WP2_4A" type="text" inferencing-type="goal">
+                     <text-val>Santander</text-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_T_7WP2_6A" type="text" inferencing-type="goal">
+                     <text-val>Client Sole</text-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_C_7WP2_18A" type="currency" inferencing-type="goal">
+                     <number-val>463.68</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_B_7WP2_12A" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_B_7WP2_16A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_B_7WP2_14A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_N_7WP2_5A" type="text" inferencing-type="goal">
+                     <text-val>09012888418048</text-val>
+                  </attribute>
+                  <relationships/>
+               </entity>
+               <entity id="30951089">
+                  <attribute id="BANKACC_INPUT_T_7WP2_3A" type="text" inferencing-type="goal">
+                     <text-val>Bank Savings</text-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_T_7WP2_4A" type="text" inferencing-type="goal">
+                     <text-val>Santander</text-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_T_7WP2_7A" type="text" inferencing-type="goal">
+                     <text-val>Nigel Booth</text-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_T_7WP2_8A" type="text" inferencing-type="goal">
+                     <text-val>Ex-Partner</text-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_C_7WP2_18A" type="currency" inferencing-type="goal">
+                     <number-val>3.64</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_B_7WP2_12A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_B_7WP2_16A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_B_7WP2_14A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_N_7WP2_5A" type="text" inferencing-type="goal">
+                     <text-val>X14803901BOO</text-val>
+                  </attribute>
+                  <relationships/>
+               </entity>
+               <entity id="30951090">
+                  <attribute id="BANKACC_INPUT_T_7WP2_3A" type="text" inferencing-type="goal">
+                     <text-val>Bank Savings</text-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_T_7WP2_4A" type="text" inferencing-type="goal">
+                     <text-val>Santander</text-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_T_7WP2_6A" type="text" inferencing-type="goal">
+                     <text-val>Client Sole</text-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_C_7WP2_18A" type="currency" inferencing-type="goal">
+                     <number-val>2796.61</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_B_7WP2_12A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_B_7WP2_16A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_B_7WP2_14A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="BANKACC_INPUT_N_7WP2_5A" type="text" inferencing-type="goal">
+                     <text-val>R25210723</text-val>
+                  </attribute>
+                  <relationships/>
+               </entity>
+            </list-entity>
+            <list-entity entity-type="PROCEEDING">
+               <entity id="30951094">
+                  <attribute id="PROCEEDING_ID" type="text" inferencing-type="goal">
+                     <text-val>433497</text-val>
+                  </attribute>
+                  <attribute id="CLIENT_INVOLVEMENT_TYPE" type="text" inferencing-type="goal">
+                     <text-val>A</text-val>
+                  </attribute>
+                  <attribute id="LEVEL_OF_SERVICE" type="text" inferencing-type="goal">
+                     <text-val>3</text-val>
+                  </attribute>
+                  <attribute id="MATTER_TYPE" type="text" inferencing-type="goal">
+                     <text-val>MINJN</text-val>
+                  </attribute>
+                  <attribute id="NEW_OR_EXISTING" type="text" inferencing-type="goal">
+                     <text-val>NEW</text-val>
+                  </attribute>
+                  <attribute id="PROCEEDING_NAME" type="text" inferencing-type="goal">
+                     <text-val>DA004</text-val>
+                  </attribute>
+                  <attribute id="REQUESTED_SCOPE" type="text" inferencing-type="goal">
+                     <text-val>MULTIPLE</text-val>
+                  </attribute>
+                  <attribute id="SCOPE_LIMIT_IS_DEFAULT" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="LEAD_PROCEEDING" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="PROCEEDING_ORDER_TYPE" type="text" inferencing-type="goal">
+                     <uncertain-val/>
+                  </attribute>
+                  <relationships/>
+               </entity>
+            </list-entity>
+            <list-entity entity-type="LINKED_CASES">
+               <entity id="30951101">
+                  <attribute id="LINKED_CASE_OWNER" type="text" inferencing-type="goal">
+                     <text-val>No Linked Cases</text-val>
+                  </attribute>
+                  <attribute id="LINKED_CASE_ID" type="number" inferencing-type="goal">
+                     <number-val>-904.0</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <relationships/>
+               </entity>
+            </list-entity>
+            <list-entity entity-type="OPPONENT_OTHER_PARTIES">
+               <entity id="30951093">
+                  <attribute id="OTHER_PARTY_ID" type="text" inferencing-type="goal">
+                     <text-val>5876835</text-val>
+                  </attribute>
+                  <attribute id="OTHER_PARTY_TYPE" type="text" inferencing-type="goal">
+                     <text-val>PERSON</text-val>
+                  </attribute>
+                  <attribute id="OTHER_PARTY_NAME" type="text" inferencing-type="goal">
+                     <text-val>Mr Nigel Booth</text-val>
+                  </attribute>
+                  <attribute id="RELATIONSHIP_TO_CASE" type="text" inferencing-type="goal">
+                     <text-val>OPP</text-val>
+                  </attribute>
+                  <attribute id="RELATIONSHIP_TO_CLIENT" type="text" inferencing-type="goal">
+                     <text-val>SPOUSE</text-val>
+                  </attribute>
+                  <relationships/>
+               </entity>
+            </list-entity>
+            <list-entity entity-type="global">
+               <entity id="30951087">
+                  <attribute id="MEANS_CALCULATIONS" type="boolean" inferencing-type="goal">
+                     <unknown-val/>
+                  </attribute>
+                  <attribute id="GB_CASE_OWNER" type="text" inferencing-type="goal">
+                     <text-val>SFM</text-val>
+                  </attribute>
+                  <attribute id="CERTIFICATE_TYPE" type="text" inferencing-type="goal">
+                     <text-val>UNKNOWN</text-val>
+                  </attribute>
+                  <attribute id="CASE_CONTRIBUTORY" type="text" inferencing-type="goal">
+                     <text-val>true</text-val>
+                  </attribute>
+                  <attribute id="APPLICATION_CASE_REF" type="text" inferencing-type="goal">
+                     <text-val>300000251168</text-val>
+                  </attribute>
+                  <attribute id="CATEGORY_OF_LAW" type="text" inferencing-type="goal">
+                     <text-val>MAT</text-val>
+                  </attribute>
+                  <attribute id="DATE_OF_BIRTH" type="date" inferencing-type="goal">
+                     <date-val>1964-08-02</date-val>
+                  </attribute>
+                  <attribute id="FIRST_NAME" type="text" inferencing-type="goal">
+                     <text-val>Ann</text-val>
+                  </attribute>
+                  <attribute id="MARITIAL_STATUS" type="text" inferencing-type="goal">
+                     <text-val>L</text-val>
+                  </attribute>
+                  <attribute id="NEW_APPL_OR_AMENDMENT" type="text" inferencing-type="goal">
+                     <text-val>APPLICATION</text-val>
+                  </attribute>
+                  <attribute id="SURNAME" type="text" inferencing-type="goal">
+                     <text-val>Booth</text-val>
+                  </attribute>
+                  <attribute id="SURNAME_AT_BIRTH" type="text" inferencing-type="goal">
+                     <text-val>Lesczynsky</text-val>
+                  </attribute>
+                  <attribute id="DEVOLVED_POWERS_CONTRACT_FLAG" type="text" inferencing-type="goal">
+                     <text-val>Yes Excluding JR Proceedings</text-val>
+                  </attribute>
+                  <attribute id="APP_AMEND_TYPE" type="text" inferencing-type="goal">
+                     <text-val>SUBDP</text-val>
+                  </attribute>
+                  <attribute id="COST_LIMIT_CHANGED_FLAG" type="text" inferencing-type="goal">
+                     <text-val>false</text-val>
+                  </attribute>
+                  <attribute id="COUNTRY" type="text" inferencing-type="goal">
+                     <text-val>GB</text-val>
+                  </attribute>
+                  <attribute id="COUNTY" type="text" inferencing-type="goal">
+                     <text-val>Lancashire</text-val>
+                  </attribute>
+                  <attribute id="DATE_ASSESSMENT_STARTED" type="date" inferencing-type="goal">
+                     <date-val>2017-02-08</date-val>
+                  </attribute>
+                  <attribute id="HOME_OFFICE_NO" type="text" inferencing-type="goal">
+                     <uncertain-val/>
+                  </attribute>
+                  <attribute id="NI_NO" type="text" inferencing-type="goal">
+                     <text-val>NB762711B</text-val>
+                  </attribute>
+                  <attribute id="POST_CODE" type="text" inferencing-type="goal">
+                     <text-val>BB7 1QT</text-val>
+                  </attribute>
+                  <attribute id="PROVIDER_CASE_REFERENCE" type="text" inferencing-type="goal">
+                     <text-val>AN/Booth</text-val>
+                  </attribute>
+                  <attribute id="USER_TYPE" type="text" inferencing-type="goal">
+                     <text-val>EXTERNAL</text-val>
+                  </attribute>
+                  <attribute id="POA_OR_BILL_FLAG" type="text" inferencing-type="goal">
+                     <text-val>N/A</text-val>
+                  </attribute>
+                  <attribute id="USER_PROVIDER_FIRM_ID" type="number" inferencing-type="goal">
+                     <number-val>31908.0</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="HIGH_PROFILE" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="LAR_SCOPE_FLAG" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="DEFAULT_COST_LIMITATION" type="currency" inferencing-type="goal">
+                     <number-val>5000.0</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="REQ_COST_LIMITATION" type="currency" inferencing-type="goal">
+                     <number-val>5000.0</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="MOD309_FLAG" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="CERTIFICATE_START_DATE" type="date" inferencing-type="goal">
+                     <date-val>1900-01-01</date-val>
+                  </attribute>
+                  <attribute id="GB_INCIDENT_DATE" type="date" inferencing-type="goal">
+                     <date-val>2017-02-08</date-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_1WP1_2A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_5WP1_3A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_5WP1_18A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_5WP1_22A" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_T_5WP1_2A" type="text" inferencing-type="goal">
+                     <text-val>17/01/2017</text-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_1WP2_14A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_1WP2_22A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_1WP2_27A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_1WP2_36A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_2WP2_1A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_11WP2_3A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_12WP2_2A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_13WP2_7A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_14WP2_7A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_14WP2_8A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_15WP2_8A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_16WP2_7A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_17WP2_7A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_18WP2_4A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_18WP2_6A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_D_18WP2_1A" type="date" inferencing-type="goal">
+                     <date-val>2017-01-20</date-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_18WP2_2A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_3WP2_1A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_4WP2_1A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_10WP2_1A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_5WP2_1A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_7WP2_1A" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_8WP2_1A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_6WP2_1A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_9WP2_1A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_4WP3_209A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_6WP3_232A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_6WP3_233A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_8WP3_308A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_8WP3_310A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_9WP3_349A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_9WP3_350A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_9WP3_351A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_9WP3_352A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_9WP3_353A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_9WP3_354A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_9WP3_356A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_11WP3_367A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_2WP3_214A" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_T_2WP3_50A" type="text" inferencing-type="goal">
+                     <text-val>Non HM Forces</text-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_12WP3_1A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_DECL_B_38WP3_13A" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_12WP3_3A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_14WP3_1A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_C_13WP3_16A" type="currency" inferencing-type="goal">
+                     <number-val>82.14</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="GB_INPUT_T_13WP3_17A" type="text" inferencing-type="goal">
+                     <text-val>Weekly</text-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_13WP3_18A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_13WP3_21A" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_13WP3_26A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_C_13WP3_31A" type="currency" inferencing-type="goal">
+                     <number-val>82.14</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="GB_INPUT_T_13WP3_32A" type="text" inferencing-type="goal">
+                     <text-val>Weekly</text-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_41WP3_20A" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_41WP3_33A" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_39WP3_64A" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_39WP3_70B" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_38WP3_2SCREEN" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_38WP3_3SCREEN" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_41WP3_39A" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_13WP3_49A" type="text" inferencing-type="goal">
+                     <text-val>Rent/Tenancy Agreement</text-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_1WP4_1B" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_1WP4_2B" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_1WP4_3B" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_2WP4_2A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="CLIENT_VULNERABLE" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <relationships/>
+               </entity>
+            </list-entity>
+            <list-entity entity-type="CLI_NON_HM_WAGE_SLIP">
+               <entity id="30951095">
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_1A" type="currency" inferencing-type="goal">
+                     <number-val>206.25</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_2A" type="currency" inferencing-type="goal">
+                     <number-val>0.0</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_3A" type="currency" inferencing-type="goal">
+                     <number-val>6.15</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_3WP3_393A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_D_3WP3_5A" type="date" inferencing-type="goal">
+                     <date-val>2016-12-27</date-val>
+                  </attribute>
+                  <relationships/>
+               </entity>
+               <entity id="30951096">
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_1A" type="currency" inferencing-type="goal">
+                     <number-val>255.62</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_2A" type="currency" inferencing-type="goal">
+                     <number-val>0.0</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_3A" type="currency" inferencing-type="goal">
+                     <number-val>12.07</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_3WP3_393A" type="boolean" inferencing-type="goal">
+                     <boolean-val>true</boolean-val>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_D_3WP3_5A" type="date" inferencing-type="goal">
+                     <date-val>2016-12-20</date-val>
+                  </attribute>
+                  <relationships/>
+               </entity>
+               <entity id="30951097">
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_1A" type="currency" inferencing-type="goal">
+                     <number-val>240.0</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_2A" type="currency" inferencing-type="goal">
+                     <number-val>0.0</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_3A" type="currency" inferencing-type="goal">
+                     <number-val>10.2</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_3WP3_393A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_D_3WP3_5A" type="date" inferencing-type="goal">
+                     <date-val>2017-01-10</date-val>
+                  </attribute>
+                  <relationships/>
+               </entity>
+               <entity id="30951098">
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_1A" type="currency" inferencing-type="goal">
+                     <number-val>215.63</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_2A" type="currency" inferencing-type="goal">
+                     <number-val>0.0</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_3A" type="currency" inferencing-type="goal">
+                     <number-val>7.25</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_3WP3_393A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_D_3WP3_5A" type="date" inferencing-type="goal">
+                     <date-val>2017-01-03</date-val>
+                  </attribute>
+                  <relationships/>
+               </entity>
+               <entity id="30951099">
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_1A" type="currency" inferencing-type="goal">
+                     <number-val>249.38</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_2A" type="currency" inferencing-type="goal">
+                     <number-val>0.0</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_3A" type="currency" inferencing-type="goal">
+                     <number-val>11.32</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_3WP3_393A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_D_3WP3_5A" type="date" inferencing-type="goal">
+                     <date-val>2017-01-24</date-val>
+                  </attribute>
+                  <relationships/>
+               </entity>
+               <entity id="30951100">
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_1A" type="currency" inferencing-type="goal">
+                     <number-val>256.88</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_2A" type="currency" inferencing-type="goal">
+                     <number-val>0.0</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_C_3WP3_3A" type="currency" inferencing-type="goal">
+                     <number-val>12.22</number-val>
+                     <properties>
+                        <property key="int-only">false</property>
+                     </properties>
+                  </attribute>
+                  <attribute id="GB_INPUT_B_3WP3_393A" type="boolean" inferencing-type="goal">
+                     <boolean-val>false</boolean-val>
+                  </attribute>
+                  <attribute id="CLI_NON_HM_WS_INPUT_D_3WP3_5A" type="date" inferencing-type="goal">
+                     <date-val>2017-01-17</date-val>
+                  </attribute>
+                  <relationships/>
+               </entity>
+            </list-entity>
+         </session-data>
+      </assess-response>
+   </soap:Body>
+</soap:Envelope>

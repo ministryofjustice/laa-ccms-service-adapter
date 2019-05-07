@@ -1,7 +1,12 @@
 # Compiled class file
+opa_10_12_transform/.classpath
 *.class
+**.classpath
+**.project
+**.settings
+**.factorypath
 *.bak
-/target
+**/target
 /src/generated/*
 
 # Log file

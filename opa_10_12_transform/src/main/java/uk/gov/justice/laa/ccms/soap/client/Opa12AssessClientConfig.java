@@ -16,14 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 import com.oracle.determinations.server._12_2.rulebase.assess.types.OdsAssessServiceGeneric122MeansAssessmentV12Type;
 
 @SuppressWarnings("deprecation")
 @Configuration
-@PropertySource(value = "classpath:application-env.properties")
-@PropertySource(value = "classpath:application.properties")
 public class Opa12AssessClientConfig {
    private static final Logger logger = LoggerFactory.getLogger(Opa12AssessClientConfig.class);
 

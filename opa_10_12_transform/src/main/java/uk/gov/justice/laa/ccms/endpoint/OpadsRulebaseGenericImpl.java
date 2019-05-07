@@ -1,5 +1,7 @@
 package uk.gov.justice.laa.ccms.endpoint;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import com.oracle.determinations.server._12_2.rulebase.assess.types.OdsAssessSer
 import uk.gov.justice.laa.ccms.mapper.AssessRequestMapper;
 import uk.gov.justice.laa.ccms.mapper.AssessResponseMapper;
 import uk.gov.justice.laa.ccms.mapper.EntityLevelRelocationService;
+import uk.gov.justice.laa.ccms.service.OPAEntity;
 
 @Component
 public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
@@ -32,6 +35,9 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
    @Autowired
    private EntityLevelRelocationService entityLevelRelocationService;
 
+   @Autowired
+   private List<OPAEntity> opaEntities;
+   
    @Override
    public AssessResponse assess(AssessRequest assessRequest) throws ErrorResponse {
 
