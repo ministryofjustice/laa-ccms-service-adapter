@@ -35,8 +35,6 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
    @Autowired
    private EntityLevelRelocationService entityLevelRelocationService;
 
-   @Autowired
-   private List<OPAEntity> opaEntities;
    
    @Override
    public AssessResponse assess(AssessRequest assessRequest) throws ErrorResponse {
@@ -56,6 +54,8 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
       entityLevelRelocationService.moveSubEntitiesToUpperLevel(assess12Response);
 
       AssessResponse response = assessResponseMapper.map(assess12Response);
+      
+      entityLevelRelocationService.mapOpa10Relationships(response);
 
       return response;
    }
