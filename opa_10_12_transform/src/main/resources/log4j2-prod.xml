@@ -2,7 +2,7 @@
 <Configuration status="WARN" monitorInterval="30">
 	<Properties>
 		<Property name="LOG_PATTERN">%d %-5p [%X{msgId}] %c - %m%n</Property>
-		<Property name="LOG_DIRECTORY">/app_base/SNDOPB20/Middleware/user_projects/domains/sndopb20_domain/connector_logs</Property>
+		<Property name="LOG_DIRECTORY">/u01/oracle/prod/opa12prod/mid/1213/user_projects/domains/opa12prod_domain/connector-logs</Property>
 		<Property name="LOG_SUFFIX">_civil</Property>
 		<Property name="ERR_FILE_NAME">${LOG_DIRECTORY}/ccms_pui_err${LOG_SUFFIX}.log</Property>
 		<Property name="DBG_FILE_NAME">${LOG_DIRECTORY}/ccms_pui_app${LOG_SUFFIX}.log</Property>
