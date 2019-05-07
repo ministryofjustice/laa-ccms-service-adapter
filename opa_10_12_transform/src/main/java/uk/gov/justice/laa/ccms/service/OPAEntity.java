@@ -2,7 +2,7 @@ package uk.gov.justice.laa.ccms.service;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder(value = { "LOOKUP_CODE", "ENTITY_CODE", "ENTITY_LEVEL","PARENT_ENTITY_CODE","RELATIONSHIP_PUBLIC_NAME","REVERSE_REL_PUBLIC_NAME"})
+@JsonPropertyOrder(value = { "lookupcode", "entityCode", "entityLevel","parentEntityCode","relationshipPublicName","reverseRelPublicName"})
 public class OPAEntity {
 	
 	private String lookupcode;

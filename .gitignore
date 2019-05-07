@@ -5,6 +5,7 @@ opa_10_12_transform/.classpath
 **.project
 **.settings
 **.factorypath
+**/bin
 *.bak
 **/target
 /src/generated/*
