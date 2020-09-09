@@ -2,16 +2,16 @@
 <Configuration status="WARN" monitorInterval="30">
 	<Properties>
 		<Property name="LOG_PATTERN">%d %-5p [%X{msgId}] %c - %m%n</Property>
-		<Property name="LOG_DIRECTORY">/app_base/SITOPA10/Middleware/user_projects/domains/sitopa10_domain/connector_logs</Property>
+		<Property name="LOG_DIRECTORY">/u01/oracle/e10/opa12e10/mid/1213/user_projects/domains/opa12e10_domain/connector-logs</Property>
 		<Property name="LOG_SUFFIX">_civil</Property>
-		<Property name="ERR_FILE_NAME">${LOG_DIRECTORY}/ccms_pui_err${LOG_SUFFIX}.log</Property>
-		<Property name="DBG_FILE_NAME">${LOG_DIRECTORY}/ccms_pui_app${LOG_SUFFIX}.log</Property>
+		<Property name="ERR_FILE_NAME">${LOG_DIRECTORY}/ccms_asses_service_adapter_err${LOG_SUFFIX}.log</Property>
+		<Property name="DBG_FILE_NAME">${LOG_DIRECTORY}/ccms_asses_service_adapter_app${LOG_SUFFIX}.log</Property>
 	</Properties>
 	<Appenders>
 		<Console name="stdout" target="SYSTEM_OUT" >
 			<PatternLayout pattern="${LOG_PATTERN}" />
 		</Console>
-		
+
 		<RollingFile name="errorfile" fileName="${ERR_FILE_NAME}" filePattern = "${ERR_FILE_NAME}.%d{yyyy-MM-dd}_%i" >
 			<PatternLayout pattern="${LOG_PATTERN}" />
 			<Policies>
@@ -20,7 +20,7 @@
 			</Policies>
 			<DefaultRolloverStrategy max="5" />
 		</RollingFile>
-		
+
 		<RollingFile name="debugfile" fileName="${DBG_FILE_NAME}" filePattern="${DBG_FILE_NAME}.%d{yyyy-MM-dd}_%i" >
 			<PatternLayout pattern="${LOG_PATTERN}" />
 			<Policies>
@@ -28,7 +28,7 @@
 				<SizeBasedTriggeringPolicy size="10M" />
 			</Policies>
 			<DefaultRolloverStrategy max="5" />
-		</RollingFile>	
+		</RollingFile>
 	</Appenders>
 	<Loggers>
 		<Logger name="uk.gov.justice" level="${LOG_LEVEL}" additivity="true">
@@ -42,4 +42,20 @@
 			<AppenderRef ref="errorfile" level="warn" />
 		</Root>
 	</Loggers>
+</Configuration><?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+<Properties>
+	<Property name="LOG_PATTERN">%d %-5p [%X{msgId}] %c - %m%n</Property>
+</Properties>
+<Appenders>
+	<Console name="stdout" target="SYSTEM_OUT" >
+		<PatternLayout pattern="${LOG_PATTERN}" />
+	</Console>
+</Appenders>
+<Loggers>
+	<Root level="info">
+		<AppenderRef ref="stdout" />
+
+	</Root>
+</Loggers>
 </Configuration>
