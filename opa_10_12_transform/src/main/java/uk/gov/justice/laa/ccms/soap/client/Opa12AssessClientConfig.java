@@ -24,7 +24,7 @@ import com.oracle.determinations.server._12_2.rulebase.assess.types.OdsAssessSer
 public class Opa12AssessClientConfig {
    private static final Logger logger = LoggerFactory.getLogger(Opa12AssessClientConfig.class);
 
-   @Value("${client.opa12Assess.address}")
+   @Value("${client.opa12Assess.means.address}")
    private String meansAddress;
 
    @Value("${client.opa12Assess.billing.address}")
@@ -40,7 +40,7 @@ public class Opa12AssessClientConfig {
    public OdsAssessServiceGeneric122MeansAssessmentV12Type opa12MeansAssessServiceProxy() {
       return getOdsAssessServiceGeneric122MeansAssessmentV12Type(meansAddress);
    }
-   
+
    @Bean(name = "opa12BillingAssessServiceProxy")
    public OdsAssessServiceGeneric122MeansAssessmentV12Type opa12BillingAssessServiceProxy() {
       return getOdsAssessServiceGeneric122MeansAssessmentV12Type(billingAddress);
