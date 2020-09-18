@@ -25,7 +25,10 @@ public class Opa12AssessClientConfig {
    private static final Logger logger = LoggerFactory.getLogger(Opa12AssessClientConfig.class);
 
    @Value("${client.opa12Assess.address}")
-   private String address;
+   private String meansAddress;
+
+   @Value("${client.opa12Assess.billing.address}")
+   private String billingAddress;
 
    @Value("${client.opa12Assess.security.user.name}")
    private String userName;
@@ -33,9 +36,18 @@ public class Opa12AssessClientConfig {
    @Autowired
    private ClientPasswordCallback clientPasswordCallback;
 
-   @Bean(name = "opa12AssessServiceProxy")
-   public OdsAssessServiceGeneric122MeansAssessmentV12Type opa12AssessServiceProxy() {
+   @Bean(name = "opa12MeansAssessServiceProxy")
+   public OdsAssessServiceGeneric122MeansAssessmentV12Type opa12MeansAssessServiceProxy() {
+      return getOdsAssessServiceGeneric122MeansAssessmentV12Type(meansAddress);
+   }
+   
+   @Bean(name = "opa12BillingAssessServiceProxy")
+   public OdsAssessServiceGeneric122MeansAssessmentV12Type opa12BillingAssessServiceProxy() {
+      return getOdsAssessServiceGeneric122MeansAssessmentV12Type(billingAddress);
+   }
 
+   private OdsAssessServiceGeneric122MeansAssessmentV12Type getOdsAssessServiceGeneric122MeansAssessmentV12Type(
+       String address) {
       logger.debug("Address:" + address);
 
       JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
@@ -56,5 +68,6 @@ public class Opa12AssessClientConfig {
       client.getOutInterceptors().add(new WSS4JOutInterceptor(outProps));
       return proxy;
    }
+
 
 }

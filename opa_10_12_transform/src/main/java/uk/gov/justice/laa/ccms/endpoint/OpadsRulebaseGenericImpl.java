@@ -1,5 +1,8 @@
 package uk.gov.justice.laa.ccms.endpoint;
 
+import com.oracle.determinations.server._10_0.rulebase.types.AttributeOutcome;
+import com.oracle.determinations.server._10_0.rulebase.types.Entity;
+import com.oracle.determinations.server._10_0.rulebase.types.ListEntity;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,7 +19,6 @@ import com.oracle.determinations.server._12_2.rulebase.assess.types.OdsAssessSer
 import uk.gov.justice.laa.ccms.mapper.AssessRequestMapper;
 import uk.gov.justice.laa.ccms.mapper.AssessResponseMapper;
 import uk.gov.justice.laa.ccms.mapper.EntityLevelRelocationService;
-import uk.gov.justice.laa.ccms.service.OPAEntity;
 
 @Component
 public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
@@ -30,7 +32,10 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
    private AssessResponseMapper assessResponseMapper;
 
    @Autowired
-   private OdsAssessServiceGeneric122MeansAssessmentV12Type opa12AssessServiceProxy;
+   private OdsAssessServiceGeneric122MeansAssessmentV12Type opa12MeansAssessServiceProxy;
+
+   @Autowired
+   private OdsAssessServiceGeneric122MeansAssessmentV12Type opa12BillingAssessServiceProxy;
 
    @Autowired
    private EntityLevelRelocationService entityLevelRelocationService;
@@ -47,7 +52,12 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
 
       entityLevelRelocationService.moveSubEntitiesToLowerLevel(request);
 
-      com.oracle.determinations.server._12_2.rulebase.assess.types.AssessResponse assess12Response = opa12AssessServiceProxy.assess(request);
+      com.oracle.determinations.server._12_2.rulebase.assess.types.AssessResponse assess12Response;
+      if(isMeansAssessment(assessRequest)) {
+         assess12Response = opa12MeansAssessServiceProxy.assess(request);
+      } else {
+         assess12Response = opa12BillingAssessServiceProxy.assess(request);
+      }
 
       entityLevelRelocationService.moveGlobalEntityToLowerLevel(assess12Response, entityLevelRelocationService.getGlobalEntityId(assessRequest));
 
@@ -59,4 +69,21 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
 
       return response;
    }
+
+   boolean isMeansAssessment(AssessRequest assessRequest) {
+      List<ListEntity> listEntityList = assessRequest.getSessionData().getListEntity();
+      for (ListEntity listEntity : listEntityList) {
+         List<Entity> entityList = listEntity.getEntity();
+         for(Entity entity : entityList) {
+            List<AttributeOutcome> attributes = entity.getAttributeOutcome();
+            for (AttributeOutcome attributeOutcome : attributes) {
+               if(attributeOutcome.getId().equals("MEANS_CALCULATIONS")) {
+                  return true;
+               }
+            }
+         }
+      }
+      return false;
+   }
+
 }
