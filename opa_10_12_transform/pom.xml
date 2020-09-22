@@ -105,9 +105,9 @@
 			</properties>
 		</profile>
 		<profile>
-			<id>sit</id>
+			<id>stage</id>
 			<properties>
-				<activatedProperties>sit</activatedProperties>
+				<activatedProperties>stage</activatedProperties>
 			</properties>
 		</profile>
 		<profile>
