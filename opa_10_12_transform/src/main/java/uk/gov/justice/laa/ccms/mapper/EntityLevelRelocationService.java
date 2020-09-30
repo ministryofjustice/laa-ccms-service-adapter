@@ -5,15 +5,17 @@ import com.oracle.determinations.server._12_2.rulebase.assess.types.AssessRespon
 
 public interface EntityLevelRelocationService {
 
-   String getGlobalEntityId(com.oracle.determinations.server._10_0.rulebase.types.AssessRequest request);
+  String getGlobalEntityId(
+      com.oracle.determinations.server._10_0.rulebase.types.AssessRequest request);
 
-   void moveGlobalAttributesAndRelationsToBaseLevel(AssessRequest request);
-   
-   void moveSubEntitiesToLowerLevel(AssessRequest request);
+  void moveGlobalAttributesAndRelationsToBaseLevel(AssessRequest request);
 
-   void moveGlobalEntityToLowerLevel(AssessResponse response, String globalEntityId);
-   
-   void moveSubEntitiesToUpperLevel(AssessResponse response);
-   
-   void mapOpa10Relationships(com.oracle.determinations.server._10_0.rulebase.types.AssessResponse response);
+  void moveSubEntitiesToLowerLevel(AssessRequest request);
+
+  void moveGlobalEntityToLowerLevel(AssessResponse response, String globalEntityId);
+
+  void moveSubEntitiesToUpperLevel(AssessResponse response);
+
+  void mapOpa10Relationships(
+      com.oracle.determinations.server._10_0.rulebase.types.AssessResponse response);
 }

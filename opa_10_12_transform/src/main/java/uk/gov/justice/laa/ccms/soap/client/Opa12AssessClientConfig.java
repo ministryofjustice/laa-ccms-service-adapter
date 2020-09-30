@@ -1,8 +1,8 @@
 package uk.gov.justice.laa.ccms.soap.client;
 
+import com.oracle.determinations.server._12_2.rulebase.assess.types.OdsAssessServiceGeneric122MeansAssessmentV12Type;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
@@ -17,57 +17,57 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.oracle.determinations.server._12_2.rulebase.assess.types.OdsAssessServiceGeneric122MeansAssessmentV12Type;
-
 @SuppressWarnings("deprecation")
 @Configuration
 public class Opa12AssessClientConfig {
-   private static final Logger logger = LoggerFactory.getLogger(Opa12AssessClientConfig.class);
 
-   @Value("${client.opa12Assess.means.address}")
-   private String meansAddress;
+  private static final Logger logger = LoggerFactory.getLogger(Opa12AssessClientConfig.class);
 
-   @Value("${client.opa12Assess.billing.address}")
-   private String billingAddress;
+  @Value("${client.opa12Assess.means.address}")
+  private String meansAddress;
 
-   @Value("${client.opa12Assess.security.user.name}")
-   private String userName;
+  @Value("${client.opa12Assess.billing.address}")
+  private String billingAddress;
 
-   @Autowired
-   private ClientPasswordCallback clientPasswordCallback;
+  @Value("${client.opa12Assess.security.user.name}")
+  private String userName;
 
-   @Bean(name = "opa12MeansAssessServiceProxy")
-   public OdsAssessServiceGeneric122MeansAssessmentV12Type opa12MeansAssessServiceProxy() {
-      return getOdsAssessServiceGeneric122MeansAssessmentV12Type(meansAddress);
-   }
+  @Autowired
+  private ClientPasswordCallback clientPasswordCallback;
 
-   @Bean(name = "opa12BillingAssessServiceProxy")
-   public OdsAssessServiceGeneric122MeansAssessmentV12Type opa12BillingAssessServiceProxy() {
-      return getOdsAssessServiceGeneric122MeansAssessmentV12Type(billingAddress);
-   }
+  @Bean(name = "opa12MeansAssessServiceProxy")
+  public OdsAssessServiceGeneric122MeansAssessmentV12Type opa12MeansAssessServiceProxy() {
+    return getOdsAssessServiceGeneric122MeansAssessmentV12Type(meansAddress);
+  }
 
-   private OdsAssessServiceGeneric122MeansAssessmentV12Type getOdsAssessServiceGeneric122MeansAssessmentV12Type(
-       String address) {
-      logger.debug("Address:" + address);
+  @Bean(name = "opa12BillingAssessServiceProxy")
+  public OdsAssessServiceGeneric122MeansAssessmentV12Type opa12BillingAssessServiceProxy() {
+    return getOdsAssessServiceGeneric122MeansAssessmentV12Type(billingAddress);
+  }
 
-      JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
-      jaxWsProxyFactoryBean.setServiceClass(OdsAssessServiceGeneric122MeansAssessmentV12Type.class);
-      jaxWsProxyFactoryBean.setAddress(address);
-      jaxWsProxyFactoryBean.getInInterceptors().add(new LoggingInInterceptor());
-      jaxWsProxyFactoryBean.getOutInterceptors().add(new LoggingOutInterceptor());
+  private OdsAssessServiceGeneric122MeansAssessmentV12Type getOdsAssessServiceGeneric122MeansAssessmentV12Type(
+      String address) {
+    logger.debug("Address:" + address);
 
-      OdsAssessServiceGeneric122MeansAssessmentV12Type proxy = (OdsAssessServiceGeneric122MeansAssessmentV12Type) jaxWsProxyFactoryBean.create();
+    JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
+    jaxWsProxyFactoryBean.setServiceClass(OdsAssessServiceGeneric122MeansAssessmentV12Type.class);
+    jaxWsProxyFactoryBean.setAddress(address);
+    jaxWsProxyFactoryBean.getInInterceptors().add(new LoggingInInterceptor());
+    jaxWsProxyFactoryBean.getOutInterceptors().add(new LoggingOutInterceptor());
 
-      Map<String, Object> outProps = new HashMap<String, Object>();
-      outProps.put(WSHandlerConstants.ACTION, WSConstants.USERNAME_TOKEN_LN);
-      outProps.put(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PW_TEXT);
-      outProps.put(WSHandlerConstants.USER, userName);
-      outProps.put(WSHandlerConstants.PW_CALLBACK_REF, clientPasswordCallback);
+    OdsAssessServiceGeneric122MeansAssessmentV12Type proxy = (OdsAssessServiceGeneric122MeansAssessmentV12Type) jaxWsProxyFactoryBean
+        .create();
 
-      org.apache.cxf.endpoint.Client client = ClientProxy.getClient(proxy);
-      client.getOutInterceptors().add(new WSS4JOutInterceptor(outProps));
-      return proxy;
-   }
+    Map<String, Object> outProps = new HashMap<String, Object>();
+    outProps.put(WSHandlerConstants.ACTION, WSConstants.USERNAME_TOKEN_LN);
+    outProps.put(WSHandlerConstants.PASSWORD_TYPE, WSConstants.PW_TEXT);
+    outProps.put(WSHandlerConstants.USER, userName);
+    outProps.put(WSHandlerConstants.PW_CALLBACK_REF, clientPasswordCallback);
+
+    org.apache.cxf.endpoint.Client client = ClientProxy.getClient(proxy);
+    client.getOutInterceptors().add(new WSS4JOutInterceptor(outProps));
+    return proxy;
+  }
 
 
 }

@@ -3,7 +3,6 @@ package uk.gov.justice.laa.ccms.service;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import java.io.File;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
@@ -17,27 +16,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReferenceDataService {
 
-	private Logger logger = LoggerFactory.getLogger(ReferenceDataService.class);
-	
-	@Autowired
-	private ApplicationContext context;
+  private final Logger logger = LoggerFactory.getLogger(ReferenceDataService.class);
 
-	public <T> List<T> loadObjectList(Class<T> type, String fileName) {
-		try {
-			CsvMapper mapper = new CsvMapper();
-			CsvSchema schema = mapper.schemaFor(type).withSkipFirstDataRow(true).withColumnSeparator(',');
+  @Autowired
+  private ApplicationContext context;
 
-			InputStream resource = new ClassPathResource(
-					fileName).getInputStream();
+  public <T> List<T> loadObjectList(Class<T> type, String fileName) {
+    try {
+      CsvMapper mapper = new CsvMapper();
+      CsvSchema schema = mapper.schemaFor(type).withSkipFirstDataRow(true).withColumnSeparator(',');
 
-			MappingIterator<T> it = mapper.readerFor(type).with(schema)
-					  .readValues(resource);
-	
-			return it.readAll();
-		} catch (Exception e) {
-			logger.error("Error occurred while loading object list from file " + fileName, e);
-			return Collections.emptyList();
-		}
-	}
+      InputStream resource = new ClassPathResource(
+          fileName).getInputStream();
+
+      MappingIterator<T> it = mapper.readerFor(type).with(schema)
+          .readValues(resource);
+
+      return it.readAll();
+    } catch (Exception e) {
+      logger.error("Error occurred while loading object list from file " + fileName, e);
+      return Collections.emptyList();
+    }
+  }
 
 }
