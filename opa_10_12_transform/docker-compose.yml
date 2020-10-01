@@ -8,7 +8,7 @@ services:
       - 8081:8080
     environment:
       - SPRING_PROFILES_ACTIVE=local
-      - LOGGING_CONGIF=classpath:log4j2-local.xml
+      - LOGGING_CONFIG=classpath:log4j2-local.xml
       - CLIENT_OPA12ASSESS_MEANS_ADDRESS=http://host.docker.internal:8787/determinations-server/assess/soap/generic/12.2/MeansAssessment
       - CLIENT_OPA12ASSESS_BILLING_ADDRESS=http://host.docker.internal:8787/determinations-server/assess/soap/generic/12.2/BillingAssessment
       - CLIENT_OPA12ASSESS_SECURITY_USER_NAME=admin
