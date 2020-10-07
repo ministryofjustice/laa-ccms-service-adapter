@@ -6,7 +6,7 @@
 		<Property name="LOG_SUFFIX">_civil</Property>
 		<Property name="ERR_FILE_NAME">${LOG_DIRECTORY}/ccms_assess_service_adapter_err${LOG_SUFFIX}.log</Property>
 		<Property name="DBG_FILE_NAME">${LOG_DIRECTORY}/ccms_assess_service_adapter_app${LOG_SUFFIX}.log</Property>
-		<Property name="LOG_LEVEL">info</Property>
+		<Property name="LOG_LEVEL">DEBUG</Property>
 	</Properties>
 
 	<Appenders>

@@ -7,7 +7,9 @@ import com.oracle.determinations.server._10_0.rulebase.types.Entity;
 import com.oracle.determinations.server._10_0.rulebase.types.ErrorResponse;
 import com.oracle.determinations.server._10_0.rulebase.types.ListEntity;
 import com.oracle.determinations.server._10_0.rulebase.types.OpadsRulebaseGeneric;
+import com.oracle.determinations.server._12_2.rulebase.assess.types.AttributeType;
 import com.oracle.determinations.server._12_2.rulebase.assess.types.OdsAssessServiceGeneric122MeansAssessmentV12Type;
+import com.oracle.determinations.server._12_2.rulebase.assess.types.OutcomeStyleEnum;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.justice.laa.ccms.mapper.AssessRequestMapper;
 import uk.gov.justice.laa.ccms.mapper.AssessResponseMapper;
 import uk.gov.justice.laa.ccms.mapper.EntityLevelRelocationService;
+import uk.gov.justice.laa.ccms.service.DecisionReportTransformation;
 
 @Component
 public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
@@ -37,6 +40,18 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
   @Autowired
   private EntityLevelRelocationService entityLevelRelocationService;
 
+  @Autowired
+  private DecisionReportTransformation decisionReportTransformation;
+
+
+
+  private final String meansGoal = "MEANS_CALCULATIONS";
+
+  private boolean isMeans = false;
+
+
+
+
 
   @Override
   public AssessResponse assess(AssessRequest assessRequest) throws ErrorResponse {
@@ -51,7 +66,13 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
     entityLevelRelocationService.moveSubEntitiesToLowerLevel(request);
 
     com.oracle.determinations.server._12_2.rulebase.assess.types.AssessResponse assess12Response;
-    if (isMeansAssessment(assessRequest)) {
+
+    isMeans = isMeansAssessment(assessRequest);
+
+    if (isMeans) {
+
+      resetAssessOutcomesStyle(request);
+
       assess12Response = opa12MeansAssessServiceProxy.assess(request);
     } else {
       assess12Response = opa12BillingAssessServiceProxy.assess(request);
@@ -66,6 +87,10 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
 
     entityLevelRelocationService.mapOpa10Relationships(response);
 
+    if ( isMeans ){
+      decisionReportTransformation.tranformToScreenData(assess12Response, response);
+    }
+
     return response;
   }
 
@@ -76,7 +101,7 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
       for (Entity entity : entityList) {
         List<AttributeOutcome> attributes = entity.getAttributeOutcome();
         for (AttributeOutcome attributeOutcome : attributes) {
-          if (attributeOutcome.getId().equals("MEANS_CALCULATIONS")) {
+          if (attributeOutcome.getId().equals(meansGoal)) {
             return true;
           }
         }
@@ -85,4 +110,18 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
     return false;
   }
 
+  /**
+   * To amend outcome style to base-attributes so that Decision Report will
+   * generate required UNKNOWN attributes
+   *
+   * @param assessRequest
+   */
+  public void resetAssessOutcomesStyle(com.oracle.determinations.server._12_2.rulebase.assess.types.AssessRequest assessRequest) {
+    for ( AttributeType attributeType : assessRequest.getGlobalInstance().getAttribute() ){
+      if ("MEANS_CALCULATIONS".equalsIgnoreCase(attributeType.getId())){
+        attributeType.setUnknownOutcomeStyle(OutcomeStyleEnum.BASE_ATTRIBUTES);
+        break;
+      }
+    }
+  }
 }

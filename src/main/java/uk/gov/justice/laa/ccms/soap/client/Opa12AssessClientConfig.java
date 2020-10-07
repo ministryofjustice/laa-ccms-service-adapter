@@ -35,6 +35,8 @@ public class Opa12AssessClientConfig {
   @Autowired
   private ClientPasswordCallback clientPasswordCallback;
 
+  private static final int DEFAULT_LIMIT = 1000 * 1000 *1024;
+
   @Bean(name = "opa12MeansAssessServiceProxy")
   public OdsAssessServiceGeneric122MeansAssessmentV12Type opa12MeansAssessServiceProxy() {
     return getOdsAssessServiceGeneric122MeansAssessmentV12Type(meansAddress);
@@ -52,8 +54,8 @@ public class Opa12AssessClientConfig {
     JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
     jaxWsProxyFactoryBean.setServiceClass(OdsAssessServiceGeneric122MeansAssessmentV12Type.class);
     jaxWsProxyFactoryBean.setAddress(address);
-    jaxWsProxyFactoryBean.getInInterceptors().add(new LoggingInInterceptor());
-    jaxWsProxyFactoryBean.getOutInterceptors().add(new LoggingOutInterceptor());
+    jaxWsProxyFactoryBean.getInInterceptors().add(new LoggingInInterceptor(DEFAULT_LIMIT));
+    jaxWsProxyFactoryBean.getOutInterceptors().add(new LoggingOutInterceptor(DEFAULT_LIMIT));
 
     OdsAssessServiceGeneric122MeansAssessmentV12Type proxy = (OdsAssessServiceGeneric122MeansAssessmentV12Type) jaxWsProxyFactoryBean
         .create();
