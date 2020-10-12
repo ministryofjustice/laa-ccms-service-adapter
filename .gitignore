@@ -1,5 +1,4 @@
 # Compiled class file
-opa_10_12_transform/.classpath
 *.class
 **.classpath
 **.project
@@ -19,3 +18,47 @@ opa_10_12_transform/.classpath
 *.ear
 *.tar.gz
 *.rar
+
+# User-specific stuff
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+# Generated files
+.idea/**/contentModel.xml
+
+# Sensitive or high-churn files
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/dbnavigator.xml
+
+# Gradle and Maven with auto-import
+ auto-import.
+ .idea/artifacts
+ .idea/compiler.xml
+ .idea/jarRepositories.xml
+ .idea/modules.xml
+ .idea/*.iml
+ .idea/modules
+ *.iml
+ *.ipr
+ .idea/libraries
+
+ # IntelliJ
+ out/
+
+ # Maven
+ log/
+ target/
+
+ node_modules
+
+.DS_Store
+
+node_modules
