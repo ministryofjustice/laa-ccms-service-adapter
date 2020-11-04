@@ -28,7 +28,8 @@ public class DecisionReportTransformation {
 
   private final ObjectFactory factory = new ObjectFactory();
 
-  private final String meansGoal = "MEANS_CALCULATIONS";
+  private final String MEANS_CALCULATIONS = "MEANS_CALCULATIONS";
+  private final String MEANS_OUTPUTS = "MEANS_OUTPUTS";
 
   //Hardcoded data, this should be derived from BR100
   private String[] level2Entities = {"ADDTHIRD", "BUSPARTBANK", "BPFAMILYEMPL", "BPPROPERTY", "COPROPERTY",
@@ -112,7 +113,7 @@ public class DecisionReportTransformation {
                               List<AttributeNodeType> unknownNodeList, AssessResponse assess10Response) {
     logger.debug("Parent Entity : " + parentEntity + ", matchingEntity : " + matchingEntity);
 
-    ScreenDefinition screenDefinition = createScreenDefinition(matchingEntity, unknownNodeList);
+    ScreenDefinition screenDefinition = createScreenDefinition(matchingEntity, assess10Response, unknownNodeList);
 
     //Add Screen
     if ( (screenDefinition != null) && (screenDefinition.getScreenControl() != null)
@@ -127,25 +128,31 @@ public class DecisionReportTransformation {
    * Create ScreenDefinition for MEANS goal attribute
    * @return
    */
-  private ScreenDefinition createScreenDefinition(String entityType, List<AttributeNodeType> unknownNodeList) {
-    /*
-      <typ:screen id="@ASSESSMENT_EFFECTIVE_DATE^global" title="Automatic Screen"
-                                    is-automatic="true" entity-type="global" entity-id="75536365">
-        <typ:screen-control control-type="date" caption="What is the assessment effective date?"
-                        is-visible="true" text-style="" attribute-id="ASSESSMENT_EFFECTIVE_DATE"
-                        is-read-only="false" is-mandatory="false" is-inferred="false"/>
-      </typ:screen>
-     */
+  private ScreenDefinition createScreenDefinition(String entityType, AssessResponse assess10Response, List<AttributeNodeType> unknownNodeList) {
     ScreenDefinition screenDefinition = factory.createScreenDefinition();
     screenDefinition.setId("SCREEN");
     screenDefinition.setTitle("OPA-18 Screen");
     screenDefinition.setIsAutomatic(true);
     screenDefinition.setEntityType(entityType);
-    //screenDefinition.setEntityId("");//This should be instance-id from decision-report=>attribute=>instance-id
+
+    //instance-id doesn't exist in OPA18, hence retrieve from opa10 response
+    screenDefinition.setEntityId(getGlobalInstanceId(assess10Response));
+    logger.debug("Global Instance ID : " + screenDefinition.getEntityId() );
 
     createScreenControl(screenDefinition, entityType, unknownNodeList);
 
     return screenDefinition;
+  }
+
+  private String getGlobalInstanceId(AssessResponse assess10Response) {
+    for ( ListEntity listEntity : assess10Response.getSessionData().getListEntity() ){
+      if ( "global".equalsIgnoreCase(listEntity.getEntityType()) ){
+        for ( Entity entity : listEntity.getEntity() ){
+          return entity.getId();
+        }
+      }
+    }
+    return null;
   }
 
   /**
@@ -153,19 +160,9 @@ public class DecisionReportTransformation {
    * @param screenDefinition
    */
   private void createScreenControl(ScreenDefinition screenDefinition, String entityType, List<AttributeNodeType> unknownNodeList) {
-    //ScreenControl
-    /*
-    <typ:screen-control control-type="date" caption="What is the assessment effective date?"
-          is-visible="true" text-style="" attribute-id="ASSESSMENT_EFFECTIVE_DATE" is-read-only="false"
-          is-mandatory="false" is-inferred="false"/>
-     */
     List<ScreenControl> controls = screenDefinition.getScreenControl();
     for ( AttributeNodeType attributeNodeType : unknownNodeList ){
       if ( entityType.equalsIgnoreCase(attributeNodeType.getEntityId()) ){
-
-        if ( StringUtils.isEmpty(screenDefinition.getEntityId()) ) {
-          screenDefinition.setEntityId(attributeNodeType.getInstanceId());
-        }
         ScreenControl screenControl = factory.createScreenControl();
         screenControl.setControlType(attributeNodeType.getType().value());
         screenControl.setCaption(attributeNodeType.getText());
@@ -192,7 +189,8 @@ public class DecisionReportTransformation {
       if ( "global".equalsIgnoreCase(listEntity.getEntityType()) ){
         for ( Entity entity : listEntity.getEntity() ) {
           for ( Attribute attribute : entity.getAttribute() ){
-            if ( meansGoal.equalsIgnoreCase(attribute.getId()) ){
+            if ( MEANS_CALCULATIONS.equalsIgnoreCase(attribute.getId()) ||
+                              MEANS_OUTPUTS.equalsIgnoreCase(attribute.getId()) ){
               logger.debug("Attribute ID added to ScreenControl : " +attribute.getId());
               attribute.setDecisionReport(null);
               attribute.setScreen(screenDefinition);
@@ -257,7 +255,8 @@ public class DecisionReportTransformation {
         AttributeNodeType opaAttributeNodeType = (AttributeNodeType) node;
         logger.debug("AttributeNodeType Id = " + opaAttributeNodeType.getAttributeId());
 
-        if (meansGoal.equalsIgnoreCase(opaAttributeNodeType.getAttributeId())) {
+        if ( MEANS_CALCULATIONS.equalsIgnoreCase(opaAttributeNodeType.getAttributeId()) ||
+                      MEANS_OUTPUTS.equalsIgnoreCase(opaAttributeNodeType.getAttributeId()) ){
           return opaAttributeNodeType;
         }
       }

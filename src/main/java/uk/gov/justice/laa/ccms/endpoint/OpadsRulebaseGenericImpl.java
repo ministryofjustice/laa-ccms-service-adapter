@@ -45,7 +45,8 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
 
 
 
-  private final String meansGoal = "MEANS_CALCULATIONS";
+  private final String MEANS_CALCULATIONS = "MEANS_CALCULATIONS";
+  private final String MEANS_OUTPUTS = "MEANS_OUTPUTS";
 
   private boolean isMeans = false;
 
@@ -101,7 +102,8 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
       for (Entity entity : entityList) {
         List<AttributeOutcome> attributes = entity.getAttributeOutcome();
         for (AttributeOutcome attributeOutcome : attributes) {
-          if (attributeOutcome.getId().equals(meansGoal)) {
+          if ( MEANS_CALCULATIONS.equalsIgnoreCase(attributeOutcome.getId()) ||
+              MEANS_OUTPUTS.equalsIgnoreCase(attributeOutcome.getId()) ) {
             return true;
           }
         }
