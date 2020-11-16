@@ -2,6 +2,8 @@ package uk.gov.justice.laa.ccms.service;
 
 import com.oracle.determinations.server._10_0.rulebase.types.AssessResponse;
 import com.oracle.determinations.server._10_0.rulebase.types.Attribute;
+import com.oracle.determinations.server._10_0.rulebase.types.AttributeDecisionNode;
+import com.oracle.determinations.server._10_0.rulebase.types.DecisionReport;
 import com.oracle.determinations.server._10_0.rulebase.types.Entity;
 import com.oracle.determinations.server._10_0.rulebase.types.ListEntity;
 import com.oracle.determinations.server._10_0.rulebase.types.ObjectFactory;
@@ -13,9 +15,7 @@ import com.oracle.determinations.server._12_2.rulebase.assess.types.DecisionRepo
 import com.oracle.determinations.server._12_2.rulebase.assess.types.GlobalInstanceType;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +30,7 @@ public class DecisionReportTransformation {
 
   private final String MEANS_CALCULATIONS = "MEANS_CALCULATIONS";
   private final String MEANS_OUTPUTS = "MEANS_OUTPUTS";
+  private final String BILLING_IS_COMPLETE = "BILLING_IS_COMPLETE";
 
   //Hardcoded data, this should be derived from BR100
   private String[] level2Entities = {"ADDTHIRD", "BUSPARTBANK", "BPFAMILYEMPL", "BPPROPERTY", "COPROPERTY",
@@ -291,7 +292,8 @@ public class DecisionReportTransformation {
   private DecisionReportType getDecisionReport(GlobalInstanceType globalInstanceType) {
     if ( globalInstanceType != null ){
       for ( AttributeType attributeType : globalInstanceType.getAttribute() ){
-        if ("MEANS_CALCULATIONS".equalsIgnoreCase(attributeType.getId())){
+        if (MEANS_CALCULATIONS.equalsIgnoreCase(attributeType.getId())) {
+             //MEANS_OUTPUTS.equalsIgnoreCase(attributeType.getId()) ){
           return attributeType.getDecisionReport();
         }
       }
@@ -299,38 +301,52 @@ public class DecisionReportTransformation {
     return null;
   }
 
+  public void restructureDecisionReport( String globalEntityId,
+      com.oracle.determinations.server._10_0.rulebase.types.AssessResponse assess10Response ){
 
-  private Map<String, String> getParentChildSubEntities(){
+    DecisionReport decisionReport = getDecisionReport(assess10Response);
 
-    Map<String, String> entityMap = new HashMap<>();
-    entityMap.put("ADDPROPERTY", "ADDTHIRD");
-    entityMap.put("BUSINESSPART", "BUSPARTBANK");
-    entityMap.put("BUSINESSPART","BPFAMILYEMPL");
-    entityMap.put("BUSINESSPART","BPPROPERTY");
-    entityMap.put("COMPANY","COPROPERTY");
-    entityMap.put("COMPANY","SHARE");
-    entityMap.put("EMPLOYMENT_CLIENT","CLI_NON_HM_WAGE_SLIP");
-    entityMap.put("EMPLOYMENT_CLIENT","CLI_NON_HM_L17");
-    entityMap.put("EMPLOYMENT_CLIENT","EMPLOY_BEN_CLIENT");
-    entityMap.put("EMPLOYMENT_CLIENT","EMP_CLI_KNOWN_CHANGE");
-    entityMap.put("EMPLOYMENT_PARTNER","EMPLOY_BEN_PARTNER");
-    entityMap.put("EMPLOYMENT_PARTNER","PAR_EMPLOY_KNOWN_CHANGE");
-    entityMap.put("EMPLOYMENT_PARTNER","PAR_NON_HM_L17");
-    entityMap.put("EMPLOYMENT_PARTNER","PAR_NON_HM_WAGE_SLIP");
-    entityMap.put("SELFEMPLOY","SELFEMPBANK");
-    entityMap.put("SELFEMPLOY","SEFAMILYEMPL");
-    entityMap.put("SELFEMPLOY","SEPROPERTY");
-
-    return entityMap;
+    if ( decisionReport != null ) {
+      //Loop through nodes in Decision Report & retrieve AttributeNodeTypes and RelationshipNodeTypes
+      List<?> nodes = (List<?>) decisionReport.getRelationshipDecisionNodeOrAttributeDecisionNode();
+      resetGlobalEntityId(nodes, globalEntityId);
+    }
   }
 
-  public <K, V> K getKey(Map<K, V> map, V value) {
-    for (Map.Entry<K, V> entry : map.entrySet()) {
-      if (value.equals(entry.getValue())) {
-        return entry.getKey();
+  private DecisionReport getDecisionReport(
+      com.oracle.determinations.server._10_0.rulebase.types.AssessResponse assess10Response ){
+    for (ListEntity listEntity : assess10Response.getSessionData().getListEntity()) {
+      for (Entity entity : listEntity.getEntity()) {
+        for ( Attribute attribute : entity.getAttribute()){
+          if ( MEANS_OUTPUTS.equalsIgnoreCase(attribute.getId()) ||
+                MEANS_CALCULATIONS.equalsIgnoreCase(attribute.getId()) ||
+                  BILLING_IS_COMPLETE.equalsIgnoreCase(attribute.getId())) {
+            return attribute.getDecisionReport();
+          }
+        }
       }
     }
     return null;
+  }
+
+  private void resetGlobalEntityId(List nodeList, String globalEntityId) {
+    // Loop through each node in the nodeList and extract the AttributeNode and RelationshipNode objects but ignore the AlreadyProvenNodes
+    for (Object node : nodeList) {
+      if (node instanceof AttributeDecisionNode) {
+        AttributeDecisionNode attributeDecisionNode = (AttributeDecisionNode) node;
+
+        if ( "global".equalsIgnoreCase(attributeDecisionNode.getEntityId()) ){
+          //logger.debug("Attribute updated - " + attributeDecisionNode.getAttributeId());
+          attributeDecisionNode.setEntityId(globalEntityId);
+        }
+
+        // If this attribute has child attributes then process these.
+        if ( attributeDecisionNode.getAttributeDecisionNodeOrRelationshipDecisionNode() != null ) {
+          List<?> nodes = (List<?>) attributeDecisionNode.getAttributeDecisionNodeOrRelationshipDecisionNode();
+          resetGlobalEntityId(nodes, globalEntityId );
+        }
+      }
+    }
   }
 
 }

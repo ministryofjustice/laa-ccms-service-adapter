@@ -89,7 +89,10 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
     entityLevelRelocationService.mapOpa10Relationships(response);
 
     if ( isMeans ){
+
       decisionReportTransformation.tranformToScreenData(assess12Response, response);
+
+      decisionReportTransformation.restructureDecisionReport(getGlobalEntityId(assessRequest), response);
     }
 
     return response;
@@ -118,12 +121,29 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
    *
    * @param assessRequest
    */
-  public void resetAssessOutcomesStyle(com.oracle.determinations.server._12_2.rulebase.assess.types.AssessRequest assessRequest) {
+  private void resetAssessOutcomesStyle(com.oracle.determinations.server._12_2.rulebase.assess.types.AssessRequest assessRequest) {
     for ( AttributeType attributeType : assessRequest.getGlobalInstance().getAttribute() ){
-      if ("MEANS_CALCULATIONS".equalsIgnoreCase(attributeType.getId())){
+      if (MEANS_CALCULATIONS.equalsIgnoreCase(attributeType.getId())){
         attributeType.setUnknownOutcomeStyle(OutcomeStyleEnum.BASE_ATTRIBUTES);
+        break;
+      } else if (MEANS_OUTPUTS.equalsIgnoreCase(attributeType.getId())){
+        assessRequest.getConfig().setResolveIndecisionRelationships(false);
         break;
       }
     }
   }
+
+
+  private String getGlobalEntityId( AssessRequest assessRequest){
+    List<ListEntity> listEntities = assessRequest.getSessionData().getListEntity();
+    for ( ListEntity listEntity : listEntities ){
+      if ( "global".equalsIgnoreCase(listEntity.getEntityType()) ) {
+        for ( Entity entity : listEntity.getEntity()) {
+          return entity.getId();
+        }
+      }
+    }
+    return null;
+  }
+
 }
