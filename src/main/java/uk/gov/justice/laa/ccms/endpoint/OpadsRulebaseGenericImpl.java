@@ -11,6 +11,7 @@ import com.oracle.determinations.server._12_2.rulebase.assess.types.AttributeTyp
 import com.oracle.determinations.server._12_2.rulebase.assess.types.OdsAssessServiceGeneric122MeansAssessmentV12Type;
 import com.oracle.determinations.server._12_2.rulebase.assess.types.OutcomeStyleEnum;
 import java.util.List;
+import org.apache.cxf.binding.soap.SoapFault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ import uk.gov.justice.laa.ccms.mapper.AssessRequestMapper;
 import uk.gov.justice.laa.ccms.mapper.AssessResponseMapper;
 import uk.gov.justice.laa.ccms.mapper.EntityLevelRelocationService;
 import uk.gov.justice.laa.ccms.service.DecisionReportTransformation;
+import uk.gov.justice.laa.ccms.service.OpaErrorResponseTransformation;
+
+;
 
 @Component
 public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
@@ -43,21 +47,20 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
   @Autowired
   private DecisionReportTransformation decisionReportTransformation;
 
-
+  @Autowired
+  private OpaErrorResponseTransformation opaErrorResponseTransformation;
 
   private final String MEANS_CALCULATIONS = "MEANS_CALCULATIONS";
   private final String MEANS_OUTPUTS = "MEANS_OUTPUTS";
-
   private boolean isMeans = false;
-
-
-
 
 
   @Override
   public AssessResponse assess(AssessRequest assessRequest) throws ErrorResponse {
 
     logger.debug("Assess Service" + assessRequest.toString());
+
+    AssessResponse response = null;
 
     com.oracle.determinations.server._12_2.rulebase.assess.types.AssessRequest request = assessRequestMapper
         .map(assessRequest);
@@ -70,29 +73,44 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
 
     isMeans = isMeansAssessment(assessRequest);
 
-    if (isMeans) {
+    try{
 
-      resetAssessOutcomesStyle(request);
+      if (isMeans) {
 
-      assess12Response = opa12MeansAssessServiceProxy.assess(request);
-    } else {
-      assess12Response = opa12BillingAssessServiceProxy.assess(request);
-    }
+        resetAssessOutcomesStyle(request);
 
-    entityLevelRelocationService.moveGlobalEntityToLowerLevel(assess12Response,
-        entityLevelRelocationService.getGlobalEntityId(assessRequest));
+        assess12Response = opa12MeansAssessServiceProxy.assess(request);
 
-    entityLevelRelocationService.moveSubEntitiesToUpperLevel(assess12Response);
+      } else {
+        assess12Response = opa12BillingAssessServiceProxy.assess(request);
+      }
 
-    AssessResponse response = assessResponseMapper.map(assess12Response);
+      entityLevelRelocationService.moveGlobalEntityToLowerLevel(assess12Response,
+          entityLevelRelocationService.getGlobalEntityId(assessRequest));
 
-    entityLevelRelocationService.mapOpa10Relationships(response);
+      entityLevelRelocationService.moveSubEntitiesToUpperLevel(assess12Response);
 
-    if ( isMeans ){
+      response = assessResponseMapper.map(assess12Response);
 
-      decisionReportTransformation.tranformToScreenData(assess12Response, response);
+      entityLevelRelocationService.mapOpa10Relationships(response);
 
-      decisionReportTransformation.restructureDecisionReport(getGlobalEntityId(assessRequest), response);
+      if ( isMeans ){
+
+        decisionReportTransformation.tranformToScreenData(assess12Response, response);
+
+        decisionReportTransformation.restructureDecisionReport(getGlobalEntityId(assessRequest), response);
+
+      }
+
+    } catch (Exception e){
+      if ( e.getCause() instanceof SoapFault ){
+        SoapFault soapFault = (SoapFault) e.getCause();
+        if ( soapFault.hasDetails() ){
+          response = opaErrorResponseTransformation.tranformSoapFault(soapFault);
+        }
+      } else {
+        throw e;
+      }
     }
 
     return response;

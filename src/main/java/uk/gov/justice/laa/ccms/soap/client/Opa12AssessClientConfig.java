@@ -35,7 +35,7 @@ public class Opa12AssessClientConfig {
   @Autowired
   private ClientPasswordCallback clientPasswordCallback;
 
-  private static final int DEFAULT_LIMIT = 1000 * 1000 *1024;
+  private static final int DEFAULT_LIMIT = 1000 * 2097 * 1024;
 
   @Bean(name = "opa12MeansAssessServiceProxy")
   public OdsAssessServiceGeneric122MeansAssessmentV12Type opa12MeansAssessServiceProxy() {
@@ -70,6 +70,8 @@ public class Opa12AssessClientConfig {
     client.getOutInterceptors().add(new WSS4JOutInterceptor(outProps));
     return proxy;
   }
+
+
 
 
 }

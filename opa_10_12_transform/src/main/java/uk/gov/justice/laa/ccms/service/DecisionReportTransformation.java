@@ -280,7 +280,7 @@ public class DecisionReportTransformation {
         AttributeNodeType attributeNodeType = (AttributeNodeType) node;
 
         if (attributeNodeType.getUnknownVal() != null) {
-          logger.debug("Unknown AttributeNodeType Id = " + attributeNodeType.getAttributeId());
+          //logger.debug("Unknown AttributeNodeType Id = " + attributeNodeType.getAttributeId());
           nodeTypeList.add(attributeNodeType);
         }
       }
