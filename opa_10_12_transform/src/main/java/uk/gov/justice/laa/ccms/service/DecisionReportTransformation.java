@@ -33,13 +33,100 @@ public class DecisionReportTransformation {
   private final String BILLING_IS_COMPLETE = "BILLING_IS_COMPLETE";
 
   //Hardcoded data, this should be derived from BR100
-  private String[] level2Entities = {"ADDTHIRD", "BUSPARTBANK", "BPFAMILYEMPL", "BPPROPERTY", "COPROPERTY",
+  private List<String> level0Entities = Arrays.asList("global");
+  private List<String> level1Entities = Arrays.asList("ADDPROPERTY", "BUSINESSPART", "COMPANY", "EMPLOYMENT_CLIENT",
+      "EMPLOYMENT_PARTNER", "SELFEMPLOY");
+  private List<String> level2Entities = Arrays.asList("ADDTHIRD", "BUSPARTBANK", "BPFAMILYEMPL", "BPPROPERTY", "COPROPERTY",
       "SHARE", "CLI_NON_HM_WAGE_SLIP", "CLI_NON_HM_L17", "EMPLOY_BEN_CLIENT", "EMP_CLI_KNOWN_CHANGE",
       "EMPLOY_BEN_PARTNER", "PAR_EMPLOY_KNOWN_CHANGE", "PAR_NON_HM_L17", "PAR_NON_HM_WAGE_SLIP",
-      "SELFEMPBANK", "SEFAMILYEMPL", "SEPROPERTY"};
-  private String[] level1Entities = {"ADDPROPERTY", "BUSINESSPART", "COMPANY", "EMPLOYMENT_CLIENT",
-      "EMPLOYMENT_PARTNER", "SELFEMPLOY"};
+      "SELFEMPBANK", "SEFAMILYEMPL", "SEPROPERTY");
+  private List<String> ignoreAttributes = Arrays.asList("UNKNOWN_TEXT_VALUE",
+      "UNKNOWN_NUMBER_VALUE","UNKNOWN_DATE_VALUE","UNKNOWN_CURRENCY_VALUE","UNKNOWN_BOOLEAN_VALUE");
 
+
+  /**
+   * OPA 12 doesn't support screen/screen-control types, hence manual tranformation is required
+   * to convert Decision Report data to OPA10 screen data
+   *
+   * @param assess12Response
+   * @param assess10Response
+   */
+  public void tranformToScreenDataAscending( com.oracle.determinations.server._12_2.rulebase.assess.types.AssessResponse assess12Response,
+      com.oracle.determinations.server._10_0.rulebase.types.AssessResponse assess10Response ){
+
+    //Get Decision Report from OPA12 response
+    DecisionReportType decisionReportType = getDecisionReport(assess12Response.getGlobalInstance());
+
+    if ( decisionReportType != null ){
+      //Extract MOD309 goal attribute node from Decision Report
+      AttributeNodeType goalAttributeNodeType = getGoalAttributeNodeFromDecisionReport(decisionReportType);
+
+      String goalAttributeInstanceId = goalAttributeNodeType.getInstanceId();
+      logger.debug("Goal attribute instance ID : " + goalAttributeInstanceId);
+
+      if ( goalAttributeNodeType != null ){
+        List<?> childNodes = goalAttributeNodeType.getRelationshipNodeOrAttributeNodeOrAlreadyProvenNode();
+
+        //Extract UNKNOWN Attribute nodes and ignore relationships
+        List<AttributeNodeType> unknownAttributeNodeList = getUnknownAttributeNodeList(childNodes);
+
+        //Check if there are Level zero Entities
+        //List<String> level0List = Arrays.asList(level0Entities);
+        String matchingLevel0Entity = getMatchingLevelEntity(unknownAttributeNodeList, level0Entities);
+        logger.debug("Level-0 matching entity : " + matchingLevel0Entity);
+        if (StringUtils.isEmpty(matchingLevel0Entity)){
+
+          //Level-0 entities doesn't exist, hence check Level-1 entities
+          String matchingLevel1Entity = getMatchingLevelEntity(unknownAttributeNodeList, level1Entities);
+          logger.debug("Level-1 matching sub-entity : " + matchingLevel1Entity);
+          if (StringUtils.isEmpty(matchingLevel1Entity)){
+
+            //Process Level-1 Non-SubEntities data
+            List<String> level1RemainingEntities = mergeList();
+            String level1AllEntities = getNotMatchingLevelEntity(unknownAttributeNodeList, level1RemainingEntities);
+            logger.debug("Level-1 matching non sub-entities : " + level1AllEntities);
+            if (StringUtils.isEmpty(level1AllEntities)){
+              //Process Level-1 Non-SubEntities data
+              String matchingLevel2Entity = getMatchingLevelEntity(unknownAttributeNodeList, level2Entities);
+              if (StringUtils.isNotEmpty(matchingLevel2Entity)){
+                logger.debug("--------------------- Process Level-2 entities ---------------------");
+                //Process Level-1 entities first
+                createOpa10ScreenData(goalAttributeInstanceId, matchingLevel2Entity,
+                    unknownAttributeNodeList, assess10Response);
+              }else {
+                logger.debug("--------------------- NOTHING TO PROCESS ---------------------");
+              }
+            } else {
+              logger.debug("--------------------- Process Level-1 non sub-entities ---------------------");
+              createOpa10ScreenData(goalAttributeInstanceId, level1AllEntities,
+                  unknownAttributeNodeList, assess10Response);
+            }
+          } else {
+            logger.debug("--------------------- Process Level-1 entities ---------------------");
+            //Process Level-1 entities first
+            createOpa10ScreenData(goalAttributeInstanceId, matchingLevel1Entity,
+                unknownAttributeNodeList, assess10Response);
+          }
+        } else {
+          logger.debug("--------------------- Process Level-0 entities ---------------------");
+          //Process Level-2 entities first
+          //Create OPA10 SCREEN data for AssessResponse
+          createOpa10ScreenData(goalAttributeInstanceId, matchingLevel0Entity,
+              unknownAttributeNodeList, assess10Response);
+        }
+      }
+    }
+  }
+
+  private List<String> mergeList() {
+    List<String> list = new ArrayList<>();
+
+    list.addAll(level0Entities);
+    list.addAll(level1Entities);
+    list.addAll(level2Entities);
+
+    return list;
+  }
 
   /**
    * OPA 12 doesn't support screen/screen-control types, hence manual tranformation is required
@@ -68,14 +155,14 @@ public class DecisionReportTransformation {
         List<AttributeNodeType> unknownAttributeNodeList = getUnknownAttributeNodeList(childNodes);
 
         //Check if there are any 2nd Level Entities
-        List<String> level2List = Arrays.asList(level2Entities);
-        String matchingLevel2Entity = getMatchingLevelEntity(unknownAttributeNodeList, level2List);
+        //List<String> level2List = Arrays.asList(level2Entities);
+        String matchingLevel2Entity = getMatchingLevelEntity(unknownAttributeNodeList, level2Entities);
         logger.debug("Level-2 matching entity : " + matchingLevel2Entity);
         if (StringUtils.isEmpty(matchingLevel2Entity)){
 
           //Level-2 sub-entities doesn't exist, hence check Level-1 entities
-          List<String> level1List = Arrays.asList(level1Entities);
-          String matchingLevel1Entity = getMatchingLevelEntity(unknownAttributeNodeList, level1List);
+          //List<String> level1List = Arrays.asList(level1Entities);
+          String matchingLevel1Entity = getMatchingLevelEntity(unknownAttributeNodeList, level1Entities);
           logger.debug("Level-1 matching entity : " + matchingLevel1Entity);
           if (StringUtils.isEmpty(matchingLevel1Entity)){
 
@@ -244,6 +331,21 @@ public class DecisionReportTransformation {
   }
 
   /**
+   * Get Entity ID which matches the levelList
+   * @param unknownAttributeNodeList
+   * @param levelList
+   * @return
+   */
+  private String getNotMatchingLevelEntity(List<AttributeNodeType> unknownAttributeNodeList, List<String> levelList) {
+    for ( AttributeNodeType attributeNodeType : unknownAttributeNodeList ) {
+      if ( !levelList.contains(attributeNodeType.getEntityId()) ){
+        return attributeNodeType.getEntityId();
+      }
+    }
+    return null;
+  }
+
+  /**
    * Extract MOD309 goal from the node list
    *
    * @param decisionReportType
@@ -279,7 +381,7 @@ public class DecisionReportTransformation {
       if (node instanceof AttributeNodeType) {
         AttributeNodeType attributeNodeType = (AttributeNodeType) node;
 
-        if (attributeNodeType.getUnknownVal() != null) {
+        if ( (attributeNodeType.getUnknownVal() != null) && ( !ignoreAttributes.contains(attributeNodeType.getAttributeId())) ) {
           //logger.debug("Unknown AttributeNodeType Id = " + attributeNodeType.getAttributeId());
           nodeTypeList.add(attributeNodeType);
         }

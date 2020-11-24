@@ -35,7 +35,7 @@ public class Opa12AssessClientConfig {
   @Autowired
   private ClientPasswordCallback clientPasswordCallback;
 
-  private static final int DEFAULT_LIMIT = 1000 * 2097 * 1024;
+  private static final int DEFAULT_LIMIT = -1;
 
   @Bean(name = "opa12MeansAssessServiceProxy")
   public OdsAssessServiceGeneric122MeansAssessmentV12Type opa12MeansAssessServiceProxy() {

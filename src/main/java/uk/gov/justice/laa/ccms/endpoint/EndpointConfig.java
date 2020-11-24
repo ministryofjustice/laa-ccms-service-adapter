@@ -34,13 +34,15 @@ public class EndpointConfig {
   @Autowired
   private OpadsRulebaseGeneric opadsRulebaseGeneric;
 
+  private static final int DEFAULT_LIMIT = -1;
+
   @Bean
   public Endpoint endpoint() {
     EndpointImpl endpoint = new EndpointImpl(bus, opadsRulebaseGeneric);
     endpoint.publish(path);
 
-    endpoint.getInInterceptors().add(new LoggingInInterceptor());
-    endpoint.getOutInterceptors().add(new LoggingOutInterceptor());
+    endpoint.getInInterceptors().add(new LoggingInInterceptor(DEFAULT_LIMIT));
+    endpoint.getOutInterceptors().add(new LoggingOutInterceptor(DEFAULT_LIMIT));
 
     Map<String, Object> inProps = new HashMap<String, Object>();
     inProps.put(WSHandlerConstants.ACTION, WSConstants.USERNAME_TOKEN_LN);

@@ -58,7 +58,7 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
   @Override
   public AssessResponse assess(AssessRequest assessRequest) throws ErrorResponse {
 
-    logger.debug("Assess Service" + assessRequest.toString());
+    logger.debug("------------------------------------->> NEW REQUEST <<-------------------------------------");
 
     AssessResponse response = null;
 
@@ -96,7 +96,7 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
 
       if ( isMeans ){
 
-        decisionReportTransformation.tranformToScreenData(assess12Response, response);
+        decisionReportTransformation.tranformToScreenDataAscending(assess12Response, response);
 
         decisionReportTransformation.restructureDecisionReport(getGlobalEntityId(assessRequest), response);
 
