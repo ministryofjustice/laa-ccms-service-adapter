@@ -15,7 +15,7 @@ public class AssessAdapterConfig {
   private final ReferenceDataService referenceDataService;
 
   @Value("${ccms.ref-data-file}")
-  private String opaEntityFielName;
+  private String opaEntityFileName;
 
   @Autowired
   public AssessAdapterConfig(ReferenceDataService referenceDataService) {
@@ -24,7 +24,7 @@ public class AssessAdapterConfig {
 
   @Bean
   public Map<String, OPAEntity> loadOpaEntities() {
-    return referenceDataService.loadObjectList(OPAEntity.class, opaEntityFielName)
+    return referenceDataService.loadObjectList(OPAEntity.class, opaEntityFileName)
         .stream().collect(Collectors.toMap(OPAEntity::getEntityCode, e -> e));
   }
 }

@@ -32,7 +32,8 @@ import org.mapstruct.Mapping;
 public interface AssessResponseMapper {
 
   @Mapping(target = "alreadyProven", ignore = true)
-  @Mapping(target = "entityType", ignore = true)
+  @Mapping(target = "entityType", source = "entityId")
+  @Mapping(target = "entityId", source = "instanceId")
   @Mapping(target = "inferencingType", expression = "java(com.oracle.determinations.server._10_0.rulebase.types.InferencingTypeEnum.GOAL)")
   @Mapping(target = "attributeDecisionNodeOrRelationshipDecisionNode", source = "relationshipNodeOrAttributeNodeOrAlreadyProvenNode")
   AttributeDecisionNode map(AttributeNodeType attributeDecisionNode);

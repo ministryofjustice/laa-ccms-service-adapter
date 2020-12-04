@@ -13,6 +13,8 @@ import com.oracle.determinations.server._12_2.rulebase.assess.types.EntityType;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.justice.laa.ccms.service.OPAEntity;
@@ -20,21 +22,30 @@ import uk.gov.justice.laa.ccms.service.OPAEntity;
 @Component
 public class EntityLevelRelocationServiceImpl implements EntityLevelRelocationService {
 
+  private static final Logger logger = LoggerFactory.getLogger(EntityLevelRelocationServiceImpl.class);
+
   @Autowired
   private Map<String, OPAEntity> opaEntities;
 
   private static final Map<String, String> SUBENTITY_MAP = ImmutableMap.<String, String>builder()
-      .put("ADDTHIRD", "ADDPROPERTY").put("BPFAMILYEMPL", "BUSINESSPART")
+      .put("ADDTHIRD", "ADDPROPERTY")
+      .put("BPFAMILYEMPL", "BUSINESSPART")
       .put("BPPROPERTY", "BUSINESSPART")
-      .put("BUSPARTBANK", "BUSINESSPART").put("CLI_NON_HM_L17", "EMPLOYMENT_CLIENT")
-      .put("CLI_NON_HM_WAGE_SLIP", "EMPLOYMENT_CLIENT").put("COPROPERTY", "COMPANY")
-      .put("EMPLOY_BEN_CLIENT", "EMPLOYMENT_CLIENT").put("EMPLOY_BEN_PARTNER", "EMPLOYMENT_PARTNER")
+      .put("BUSPARTBANK", "BUSINESSPART")
+      .put("CLI_NON_HM_L17", "EMPLOYMENT_CLIENT")
+      .put("CLI_NON_HM_WAGE_SLIP", "EMPLOYMENT_CLIENT")
+      .put("COPROPERTY", "COMPANY")
+      .put("EMPLOY_BEN_CLIENT", "EMPLOYMENT_CLIENT")
+      .put("EMPLOY_BEN_PARTNER", "EMPLOYMENT_PARTNER")
       .put("EMP_CLI_KNOWN_CHANGE", "EMPLOYMENT_CLIENT")
       .put("PAR_EMPLOY_KNOWN_CHANGE", "EMPLOYMENT_PARTNER")
-      .put("PAR_NON_HM_L17", "EMPLOYMENT_PARTNER").put("PAR_NON_HM_WAGE_SLIP", "EMPLOYMENT_PARTNER")
-      .put("SEFAMILYEMPL", "SELFEMPLOY").put("SELFEMPBANK", "SELFEMPLOY")
+      .put("PAR_NON_HM_L17", "EMPLOYMENT_PARTNER")
+      .put("PAR_NON_HM_WAGE_SLIP", "EMPLOYMENT_PARTNER")
+      .put("SEFAMILYEMPL", "SELFEMPLOY")
+      .put("SELFEMPBANK", "SELFEMPLOY")
       .put("SEPROPERTY", "SELFEMPLOY")
-      .put("SHARE", "COMPANY").build();
+      .put("SHARE", "COMPANY")
+      .build();
 
   @Override
   public String getGlobalEntityId(
@@ -67,14 +78,24 @@ public class EntityLevelRelocationServiceImpl implements EntityLevelRelocationSe
         .filter(entity -> SUBENTITY_MAP.containsKey(entity.getId()))
         .collect(Collectors.toList());
     if (subEntities == null) {
+      logger.debug("------------- subEntities is null");
       return;
+    }else {
+      logger.debug("------------- subEntities size " + subEntities.size());
+      for ( EntityType entityType : subEntities ){
+        logger.debug("------------- subEntities ::: " + entityType.getId());
+      }
     }
+
+
 
     for (EntityType subEntity : subEntities) {
       List<EntityType> parentEntities = request.getGlobalInstance().getEntity().stream()
           .filter(parent -> SUBENTITY_MAP.get(subEntity.getId()).equals(parent.getId()))
           .collect(Collectors.toList());
+      logger.debug("------------- parentEntities.size() - " + parentEntities.size());
       if (parentEntities.size() != 1) {
+        logger.debug("------------- subEntity.getId() - " + subEntity.getId());
         throw new IllegalStateException();
       }
 
