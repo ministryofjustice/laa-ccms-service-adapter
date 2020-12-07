@@ -107,6 +107,8 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
         SoapFault soapFault = (SoapFault) e.getCause();
         if ( soapFault.hasDetails() ){
           response = opaErrorResponseTransformation.tranformSoapFault(soapFault);
+          
+          decisionReportTransformation.restructureErrorDecisionReport(getGlobalEntityId(assessRequest), response);
         }
       } else {
         throw e;

@@ -7,6 +7,7 @@ import com.oracle.determinations.server._10_0.rulebase.types.DecisionReport;
 import com.oracle.determinations.server._10_0.rulebase.types.Entity;
 import com.oracle.determinations.server._10_0.rulebase.types.ListEntity;
 import com.oracle.determinations.server._10_0.rulebase.types.ObjectFactory;
+import com.oracle.determinations.server._10_0.rulebase.types.RulebaseEvent;
 import com.oracle.determinations.server._10_0.rulebase.types.ScreenControl;
 import com.oracle.determinations.server._10_0.rulebase.types.ScreenDefinition;
 import com.oracle.determinations.server._12_2.rulebase.assess.types.AttributeNodeType;
@@ -402,35 +403,86 @@ public class DecisionReportTransformation {
     }
     return null;
   }
-
+  
+  /**
+   * OPA10 global entity isn't supported in OPA18 as the AssessService hierarchy is different
+   * @param globalEntityId
+   * @param assess10Response
+   */
   public void restructureDecisionReport( String globalEntityId,
       com.oracle.determinations.server._10_0.rulebase.types.AssessResponse assess10Response ){
-
+    
+    //Reset at GOAL attribute DecisionReport
     DecisionReport decisionReport = getDecisionReport(assess10Response);
-
     if ( decisionReport != null ) {
       //Loop through nodes in Decision Report & retrieve AttributeNodeTypes and RelationshipNodeTypes
       List<?> nodes = (List<?>) decisionReport.getRelationshipDecisionNodeOrAttributeDecisionNode();
       resetGlobalEntityId(nodes, globalEntityId);
     }
+    
+    //Reset at warning level
+    DecisionReport warningDecisionReport = getErrorOrWarningDecisionReport(globalEntityId, assess10Response, "warning");
+    if ( warningDecisionReport != null ) {
+      //Loop through nodes in Decision Report & retrieve AttributeNodeTypes and RelationshipNodeTypes
+      List<?> nodes = (List<?>) warningDecisionReport.getRelationshipDecisionNodeOrAttributeDecisionNode();
+      resetGlobalEntityId(nodes, globalEntityId);
+    }
   }
-
+  
+  /**
+   * Set globalId at warning if entity is global & return warning DecisionReport
+   * @param globalEntityId
+   * @param assess10Response
+   * @return
+   */
+  private DecisionReport getErrorOrWarningDecisionReport(String globalEntityId, AssessResponse assess10Response, String eventName) {
+    logger.debug("eventName ==== " + eventName);
+    if ( (assess10Response.getEvents() != null) && (assess10Response.getEvents().getEvent() != null) ) {
+      logger.debug("============= 1");
+      for ( RulebaseEvent event : assess10Response.getEvents().getEvent() ) {
+        logger.debug("============= event.getName() = " + event.getName());
+        if ( eventName.equalsIgnoreCase(event.getName())) {
+          logger.debug("============= 2");
+          if ( "global".equalsIgnoreCase(event.getEntityId()) ) {
+            event.setEntityId(globalEntityId);
+          }
+          logger.debug("============= 3");
+          return event.getDecisionReport();
+        }
+      }
+    }
+    logger.debug("============= 4");
+    return null;
+  }
+  
+  /**
+   * Get DecisionReport at GOAL attribute level
+   * @param assess10Response
+   * @return
+   */
   private DecisionReport getDecisionReport(
       com.oracle.determinations.server._10_0.rulebase.types.AssessResponse assess10Response ){
     for (ListEntity listEntity : assess10Response.getSessionData().getListEntity()) {
-      for (Entity entity : listEntity.getEntity()) {
-        for ( Attribute attribute : entity.getAttribute()){
-          if ( MEANS_OUTPUTS.equalsIgnoreCase(attribute.getId()) ||
-                MEANS_CALCULATIONS.equalsIgnoreCase(attribute.getId()) ||
-                  BILLING_IS_COMPLETE.equalsIgnoreCase(attribute.getId())) {
-            return attribute.getDecisionReport();
+      if ( "global".equalsIgnoreCase(listEntity.getEntityType()) ) {
+    	for (Entity entity : listEntity.getEntity()) {
+          for ( Attribute attribute : entity.getAttribute()){
+            if ( MEANS_OUTPUTS.equalsIgnoreCase(attribute.getId()) ||
+                  MEANS_CALCULATIONS.equalsIgnoreCase(attribute.getId()) ||
+                    BILLING_IS_COMPLETE.equalsIgnoreCase(attribute.getId())) {
+              return attribute.getDecisionReport();
+            }
           }
         }
       }
     }
     return null;
   }
-
+  
+  /**
+   * Replace OPA10 AssessResponse global entityId with OPA10 ID
+   * @param nodeList
+   * @param globalEntityId
+   */
   private void resetGlobalEntityId(List nodeList, String globalEntityId) {
     // Loop through each node in the nodeList and extract the AttributeNode and RelationshipNode objects but ignore the AlreadyProvenNodes
     for (Object node : nodeList) {
@@ -449,6 +501,24 @@ public class DecisionReportTransformation {
         }
       }
     }
+  }
+  
+  /**
+   * To restructure SoapFault constructed OPA10Response for global entity errors
+   * @param globalEntityId
+   * @param assess10Response
+   */
+  public void restructureErrorDecisionReport(String globalEntityId, AssessResponse assess10Response) {
+    logger.debug("globalEntityId ==== " + globalEntityId);
+    //Reset at warning level
+    DecisionReport errorDecisionReport = getErrorOrWarningDecisionReport(globalEntityId, assess10Response, "Fatal");
+    logger.debug("errorDecisionReport ==== " + errorDecisionReport);
+    if ( errorDecisionReport != null ) {
+      //Loop through nodes in Decision Report & retrieve AttributeNodeTypes and RelationshipNodeTypes
+      List<?> nodes = (List<?>) errorDecisionReport.getRelationshipDecisionNodeOrAttributeDecisionNode();
+      resetGlobalEntityId(nodes, globalEntityId);
+    }
+    
   }
 
 }
