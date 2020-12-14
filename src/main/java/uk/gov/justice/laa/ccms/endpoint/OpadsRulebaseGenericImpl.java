@@ -2,6 +2,7 @@ package uk.gov.justice.laa.ccms.endpoint;
 
 import com.oracle.determinations.server._10_0.rulebase.types.AssessRequest;
 import com.oracle.determinations.server._10_0.rulebase.types.AssessResponse;
+import com.oracle.determinations.server._10_0.rulebase.types.Attribute;
 import com.oracle.determinations.server._10_0.rulebase.types.AttributeOutcome;
 import com.oracle.determinations.server._10_0.rulebase.types.Entity;
 import com.oracle.determinations.server._10_0.rulebase.types.ErrorResponse;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.justice.laa.ccms.mapper.AssessRequestMapper;
 import uk.gov.justice.laa.ccms.mapper.AssessResponseMapper;
 import uk.gov.justice.laa.ccms.mapper.EntityLevelRelocationService;
+import uk.gov.justice.laa.ccms.service.BulkClaimDecisionReportTransformation;
 import uk.gov.justice.laa.ccms.service.DecisionReportTransformation;
 import uk.gov.justice.laa.ccms.service.OpaErrorResponseTransformation;
 
@@ -28,6 +30,8 @@ import uk.gov.justice.laa.ccms.service.OpaErrorResponseTransformation;
 public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
 
   private static final Logger logger = LoggerFactory.getLogger(OpadsRulebaseGenericImpl.class);
+
+  
 
   @Autowired
   private AssessRequestMapper assessRequestMapper;
@@ -46,13 +50,20 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
 
   @Autowired
   private DecisionReportTransformation decisionReportTransformation;
+  
+  @Autowired
+  private BulkClaimDecisionReportTransformation bulkClaimDecisionReportTransformation;
 
   @Autowired
   private OpaErrorResponseTransformation opaErrorResponseTransformation;
 
   private final String MEANS_CALCULATIONS = "MEANS_CALCULATIONS";
   private final String MEANS_OUTPUTS = "MEANS_OUTPUTS";
-  private boolean isMeans = false;
+  private static final String MEANS = "MEANS";
+  private static final String BULK_CLAIM = "BULK_UPLOAD";
+  private static final String CLAIM_UPLOAD_FLAG = "CLAIM_UPLOAD_FLAG";
+  private static final String REPRICING = "REPRICING";
+  private static final String BILLING_IS_COMPLETE = "BILLING_IS_COMPLETE";
 
 
   @Override
@@ -71,18 +82,27 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
 
     com.oracle.determinations.server._12_2.rulebase.assess.types.AssessResponse assess12Response;
 
-    isMeans = isMeansAssessment(assessRequest);
+    String requestType = getAssessmentType(assessRequest);
+    logger.debug("Payload Type : " + requestType);
 
     try{
 
-      if (isMeans) {
+      if ( requestType.equalsIgnoreCase(MEANS) ) {
 
         resetAssessOutcomesStyle(request);
 
         assess12Response = opa12MeansAssessServiceProxy.assess(request);
 
-      } else {
+      } else if (requestType.equalsIgnoreCase(BULK_CLAIM) ){
+        
+        resetAssessOutcomesStyle(request);
+        
         assess12Response = opa12BillingAssessServiceProxy.assess(request);
+        
+      } else {
+        
+        assess12Response = opa12BillingAssessServiceProxy.assess(request);
+        
       }
 
       entityLevelRelocationService.moveGlobalEntityToLowerLevel(assess12Response,
@@ -94,11 +114,17 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
 
       entityLevelRelocationService.mapOpa10Relationships(response);
 
-      if ( isMeans ){
+      if ( requestType.equalsIgnoreCase(MEANS) ){
 
         decisionReportTransformation.tranformToScreenDataAscending(assess12Response, response);
 
         decisionReportTransformation.restructureDecisionReport(getGlobalEntityId(assessRequest), response);
+
+      } else if ( requestType.equalsIgnoreCase(BULK_CLAIM) ) {
+
+        bulkClaimDecisionReportTransformation.tranformToScreenDataAscending(assess12Response, response);
+
+        bulkClaimDecisionReportTransformation.restructureDecisionReport(getGlobalEntityId(assessRequest), response);
 
       }
 
@@ -118,21 +144,28 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
     return response;
   }
 
-  boolean isMeansAssessment(AssessRequest assessRequest) {
+  String getAssessmentType(AssessRequest assessRequest) {
     List<ListEntity> listEntityList = assessRequest.getSessionData().getListEntity();
     for (ListEntity listEntity : listEntityList) {
       List<Entity> entityList = listEntity.getEntity();
       for (Entity entity : entityList) {
-        List<AttributeOutcome> attributes = entity.getAttributeOutcome();
-        for (AttributeOutcome attributeOutcome : attributes) {
+        List<AttributeOutcome> attributeOutcomes = entity.getAttributeOutcome();
+        for (AttributeOutcome attributeOutcome : attributeOutcomes) {
           if ( MEANS_CALCULATIONS.equalsIgnoreCase(attributeOutcome.getId()) ||
               MEANS_OUTPUTS.equalsIgnoreCase(attributeOutcome.getId()) ) {
-            return true;
+            return MEANS;
+          }
+        }
+        
+        List<Attribute> attributes = entity.getAttribute();
+        for ( Attribute attribute : attributes ) {
+          if ( CLAIM_UPLOAD_FLAG.equalsIgnoreCase(attribute.getId()) && attribute.isBooleanVal() ) {
+            return BULK_CLAIM;
           }
         }
       }
     }
-    return false;
+    return REPRICING;
   }
 
   /**
@@ -143,7 +176,8 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
    */
   private void resetAssessOutcomesStyle(com.oracle.determinations.server._12_2.rulebase.assess.types.AssessRequest assessRequest) {
     for ( AttributeType attributeType : assessRequest.getGlobalInstance().getAttribute() ){
-      if (MEANS_CALCULATIONS.equalsIgnoreCase(attributeType.getId())){
+      if (MEANS_CALCULATIONS.equalsIgnoreCase(attributeType.getId()) || 
+            BILLING_IS_COMPLETE.equalsIgnoreCase(attributeType.getId())){
         attributeType.setUnknownOutcomeStyle(OutcomeStyleEnum.BASE_ATTRIBUTES);
         break;
       } else if (MEANS_OUTPUTS.equalsIgnoreCase(attributeType.getId())){
