@@ -30,7 +30,7 @@ public class BulkClaimDecisionReportTransformation extends CustomTransformation 
     DecisionReportType decisionReportType = getDecisionReport(assess12Response.getGlobalInstance(), BILLING_IS_COMPLETE);
 
     if ( decisionReportType != null ){
-      //Extract MOD309 goal attribute node from Decision Report
+      //Extract Bulk Claim goal attribute node from Decision Report
       AttributeNodeType goalAttributeNodeType = getGoalAttributeNodeFromDecisionReport(decisionReportType, BILLING_IS_COMPLETE);
 
       String goalAttributeInstanceId = goalAttributeNodeType.getInstanceId();
@@ -40,7 +40,7 @@ public class BulkClaimDecisionReportTransformation extends CustomTransformation 
         List<?> childNodes = goalAttributeNodeType.getRelationshipNodeOrAttributeNodeOrAlreadyProvenNode();
 
         //Extract UNKNOWN Attribute nodes and ignore relationships
-        List<AttributeNodeType> unknownAttributeNodeList = getUnknownAttributeNodeList(childNodes);
+        List<AttributeNodeType> unknownAttributeNodeList = getUnknownBaseAttributeNodeList(childNodes);
 
         //Check if there are Level zero Entities
         //List<String> level0List = Arrays.asList(level0Entities);

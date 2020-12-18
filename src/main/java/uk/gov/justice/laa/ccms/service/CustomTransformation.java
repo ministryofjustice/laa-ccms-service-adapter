@@ -27,8 +27,10 @@ public class CustomTransformation {
   private static final String GLOBAL = "global";
   public List<String> level0Entities = Arrays.asList("global");
   
-  private List<String> ignoreAttributes = Arrays.asList("UNKNOWN_TEXT_VALUE",
-      "UNKNOWN_NUMBER_VALUE","UNKNOWN_DATE_VALUE","UNKNOWN_CURRENCY_VALUE","UNKNOWN_BOOLEAN_VALUE");
+  String parentId = "";
+  
+  //private List<String> ignoreAttributes = Arrays.asList("UNKNOWN_TEXT_VALUE",
+  //    "UNKNOWN_NUMBER_VALUE","UNKNOWN_DATE_VALUE","UNKNOWN_CURRENCY_VALUE","UNKNOWN_BOOLEAN_VALUE");
   
   private final ObjectFactory factory = new ObjectFactory();
 
@@ -55,7 +57,6 @@ public class CustomTransformation {
     for (Object node : nodes) {
       if (node instanceof AttributeNodeType) {
         AttributeNodeType opaAttributeNodeType = (AttributeNodeType) node;
-        logger.debug("AttributeNodeType Id = " + opaAttributeNodeType.getAttributeId());
         if ( goalAttributeId.equalsIgnoreCase(opaAttributeNodeType.getAttributeId()) ){
           return opaAttributeNodeType;
         }
@@ -65,26 +66,53 @@ public class CustomTransformation {
   }
 
   /**
-   * Retrieve UNKNOWN type attributeNodes
+   * Retrieve UNKNOWN base attributeNodes which doesn't have childNodes
    *
    * @param nodeList
    * @return List<AttributeNodeType>
    */
-  public List<AttributeNodeType> getUnknownAttributeNodeList (List<?> nodeList) {
+  public List<AttributeNodeType> getUnknownBaseAttributeNodeList (List<?> nodeList) {
     List<AttributeNodeType> nodeTypeList = new ArrayList<AttributeNodeType>();
+    
+    logger.debug("------ Before");
+    parseNodes(nodeList, nodeTypeList);
+    logger.debug("------ After");
+    
+    return nodeTypeList;
+  }
 
+  private void parseNodes(List<?> nodeList, List<AttributeNodeType> nodeTypeList) {
+    logger.debug("nodeTypeList size : " + nodeTypeList.size());
+    //This is to exit from all recursions
+    if ( nodeTypeList.size() >= 1 ) {
+      return;
+    }
+    
     // Loop through each node in the nodeList and extract the AttributeNode
+    
     for (Object node : nodeList) {
       if (node instanceof AttributeNodeType) {
         AttributeNodeType attributeNodeType = (AttributeNodeType) node;
-
-        if ( (attributeNodeType.getUnknownVal() != null) && ( !ignoreAttributes.contains(attributeNodeType.getAttributeId())) ) {
+        String id = attributeNodeType.getId();
+        logger.debug("ID -------- " + id + ", attributeID ------- " + attributeNodeType.getAttributeId());
+        
+        int size = attributeNodeType.getRelationshipNodeOrAttributeNodeOrAlreadyProvenNode().size();
+        
+        if ((attributeNodeType.getUnknownVal() != null) && (size == 0 )) {
+          logger.debug(" { " + attributeNodeType.getAttributeId() 
+          + " } - { " + attributeNodeType.getUnknownVal() 
+          + " } - { " + size + " }");
+                
           nodeTypeList.add(attributeNodeType);
-        }
+          
+          return;
+          
+        } else if (size > 0 ) {
+          List<?> nodes = (List<?>) attributeNodeType.getRelationshipNodeOrAttributeNodeOrAlreadyProvenNode();
+          parseNodes( nodes, nodeTypeList );
+        } 
       }
     }
-
-    return nodeTypeList;
   }
 
   /**

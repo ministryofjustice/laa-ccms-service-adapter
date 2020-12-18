@@ -176,8 +176,10 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
    */
   private void resetAssessOutcomesStyle(com.oracle.determinations.server._12_2.rulebase.assess.types.AssessRequest assessRequest) {
     for ( AttributeType attributeType : assessRequest.getGlobalInstance().getAttribute() ){
-      if (MEANS_CALCULATIONS.equalsIgnoreCase(attributeType.getId()) || 
-            BILLING_IS_COMPLETE.equalsIgnoreCase(attributeType.getId())){
+      if (  BILLING_IS_COMPLETE.equalsIgnoreCase(attributeType.getId()) ) {
+        attributeType.setUnknownOutcomeStyle(OutcomeStyleEnum.DECISION_REPORT);
+        break;
+      } else if ( MEANS_CALCULATIONS.equalsIgnoreCase(attributeType.getId()) ){
         attributeType.setUnknownOutcomeStyle(OutcomeStyleEnum.BASE_ATTRIBUTES);
         break;
       } else if (MEANS_OUTPUTS.equalsIgnoreCase(attributeType.getId())){
