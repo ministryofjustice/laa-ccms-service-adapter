@@ -295,33 +295,5 @@ public class CustomTransformation {
       }
     }
   }
-/*  
-  private void printScreenDefinitionData(ScreenDefinition sd) {
-    logger.debug("------------------------- Print ScreenDefinition before adding to Attribute ------------------------- ");
-    logger.debug("ScreenDefinition : Entity ID : " + sd.getEntityId()
-                                + ", EntityType : "+ sd.getEntityType()
-                                + ", Id : "+ sd.getId()
-                                + ", Name : "+ sd.getName()
-                                + ", Title : "+ sd.getTitle());
-    //logger.debug();
-    for ( ScreenControl sc : sd.getScreenControl() ){
-      logger.debug("ScreenControl : Attribute ID : " + sc.getAttributeId()
-          + ", Caption : "+ sc.getCaption()
-          + ", ConfigFile : "+ sc.getConfigFile()
-          + ", ControlType : "+ sc.getControlType()
-          + ", DocType : "+ sc.getDocumentType()
-          + ", Default : "+ sc.getDefault()
-          + ", EntityId : "+ sc.getEntityId()
-          + ", EntityType : "+ sc.getEntityType()
-          + ", IsVisible : "+ sc.isIsVisible()
-          + ", Style : "+ sc.getStyle()
-          + ", IsInferred : "+ sc.isIsInferred()
-          + ", IsMandatory : "+ sc.isIsMandatory()
-          + ", IsReadOnly : "+ sc.isIsReadOnly());
-    }
-  }
-*/
-
-
 
 }
