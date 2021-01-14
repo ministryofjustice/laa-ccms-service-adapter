@@ -3,8 +3,6 @@ package uk.gov.justice.laa.ccms.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.oracle.determinations.server._10_0.rulebase.types.AssessResponse;
 import com.oracle.determinations.server._10_0.rulebase.types.Attribute;
 import com.oracle.determinations.server._10_0.rulebase.types.AttributeDecisionNode;
@@ -22,15 +20,10 @@ import com.oracle.determinations.server._12_2.rulebase.assess.types.GlobalInstan
 
 public class CustomTransformation {
   
-  private static final Logger logger = LoggerFactory.getLogger(CustomTransformation.class);
-
   private static final String GLOBAL = "global";
   public List<String> level0Entities = Arrays.asList("global");
   
   String parentId = "";
-  
-  //private List<String> ignoreAttributes = Arrays.asList("UNKNOWN_TEXT_VALUE",
-  //    "UNKNOWN_NUMBER_VALUE","UNKNOWN_DATE_VALUE","UNKNOWN_CURRENCY_VALUE","UNKNOWN_BOOLEAN_VALUE");
   
   private final ObjectFactory factory = new ObjectFactory();
 
@@ -73,40 +66,26 @@ public class CustomTransformation {
    */
   public List<AttributeNodeType> getUnknownBaseAttributeNodeList (List<?> nodeList) {
     List<AttributeNodeType> nodeTypeList = new ArrayList<AttributeNodeType>();
-    
-    logger.debug("------ Before");
     parseNodes(nodeList, nodeTypeList);
-    logger.debug("------ After");
     
     return nodeTypeList;
   }
 
   private void parseNodes(List<?> nodeList, List<AttributeNodeType> nodeTypeList) {
-    logger.debug("nodeTypeList size : " + nodeTypeList.size());
     //This is to exit from all recursions
     if ( nodeTypeList.size() >= 1 ) {
       return;
     }
     
     // Loop through each node in the nodeList and extract the AttributeNode
-    
     for (Object node : nodeList) {
       if (node instanceof AttributeNodeType) {
         AttributeNodeType attributeNodeType = (AttributeNodeType) node;
-        String id = attributeNodeType.getId();
-        logger.debug("ID -------- " + id + ", attributeID ------- " + attributeNodeType.getAttributeId());
-        
         int size = attributeNodeType.getRelationshipNodeOrAttributeNodeOrAlreadyProvenNode().size();
         
-        if ((attributeNodeType.getUnknownVal() != null) && (size == 0 )) {
-          logger.debug(" { " + attributeNodeType.getAttributeId() 
-          + " } - { " + attributeNodeType.getUnknownVal() 
-          + " } - { " + size + " }");
-                
+        if ((attributeNodeType.getUnknownVal() != null) && (size == 0) && (nodeTypeList.size() < 1) ) {
           nodeTypeList.add(attributeNodeType);
-          
           return;
-          
         } else if (size > 0 ) {
           List<?> nodes = (List<?>) attributeNodeType.getRelationshipNodeOrAttributeNodeOrAlreadyProvenNode();
           parseNodes( nodes, nodeTypeList );
@@ -132,16 +111,13 @@ public class CustomTransformation {
   
   public void createOpa10ScreenData(String parentEntity, String matchingEntity,
       List<AttributeNodeType> unknownNodeList, AssessResponse assess10Response, String goalAttributeId) {
-    logger.debug("Parent Entity : " + parentEntity + ", matchingEntity : " + matchingEntity);
 
     ScreenDefinition screenDefinition = createScreenDefinition(matchingEntity, assess10Response, unknownNodeList);
 
     //Add Screen
     if ( (screenDefinition != null) && (screenDefinition.getScreenControl() != null)
         && (screenDefinition.getScreenControl().size()>0) ) {
-      logger.debug("ScreenControl size " + screenDefinition.getScreenControl());
       addScreenDefinition(screenDefinition, assess10Response, goalAttributeId);
-      logger.debug("------------------------------ ADDED SCREEN-DEFINITION TO RESPONSE -------------------------------");
     }
   }
 
@@ -151,10 +127,8 @@ public class CustomTransformation {
    * @param assess10Response
    */
   public void restructureErrorDecisionReport(String globalEntityId, AssessResponse assess10Response) {
-    logger.debug("globalEntityId ==== " + globalEntityId);
     //Reset at warning level
     DecisionReport errorDecisionReport = getErrorOrWarningDecisionReport(globalEntityId, assess10Response, "Fatal");
-    logger.debug("errorDecisionReport ==== " + errorDecisionReport);
     if ( errorDecisionReport != null ) {
       //Loop through nodes in Decision Report & retrieve AttributeNodeTypes and RelationshipNodeTypes
       List<?> nodes = (List<?>) errorDecisionReport.getRelationshipDecisionNodeOrAttributeDecisionNode();
@@ -172,10 +146,8 @@ public class CustomTransformation {
     screenDefinition.setTitle("OPA-18 Screen");
     screenDefinition.setIsAutomatic(true);
     screenDefinition.setEntityType(entityType);
-
     //instance-id doesn't exist in OPA18, hence retrieve from opa10 response
     screenDefinition.setEntityId(getGlobalInstanceId(assess10Response));
-    logger.debug("Global Instance ID : " + screenDefinition.getEntityId() );
 
     createScreenControl(screenDefinition, entityType, unknownNodeList);
 
@@ -212,7 +184,6 @@ public class CustomTransformation {
         screenControl.setIsVisible(true);
         screenControl.setTextStyle("");
         screenControl.setAttributeId(attributeNodeType.getAttributeId());
-        logger.debug("Attribute ID added to ScreenControl : " + attributeNodeType.getAttributeId());
         screenControl.setIsReadOnly(false);
         screenControl.setIsMandatory(false);
         screenControl.setIsInferred(attributeNodeType.isInferred());
@@ -229,13 +200,12 @@ public class CustomTransformation {
    * @param assess10Response
    */
   private void addScreenDefinition(ScreenDefinition screenDefinition, AssessResponse assess10Response, String goalAttributeId) {
-    printScreenDefinitionData(screenDefinition);
+    //printScreenDefinitionData(screenDefinition);
     for (ListEntity listEntity : assess10Response.getSessionData().getListEntity() ){
       if ( GLOBAL.equalsIgnoreCase(listEntity.getEntityType()) ){
         for ( Entity entity : listEntity.getEntity() ) {
           for ( Attribute attribute : entity.getAttribute() ){
             if ( goalAttributeId.equalsIgnoreCase(attribute.getId()) ){
-              logger.debug("Attribute ID added to ScreenControl : " +attribute.getId());
               attribute.setDecisionReport(null);
               attribute.setScreen(screenDefinition);
               break;
@@ -270,7 +240,6 @@ public class CustomTransformation {
   public DecisionReport getErrorOrWarningDecisionReport(String globalEntityId, AssessResponse assess10Response, String eventName) {
     if ( (assess10Response.getEvents() != null) && (assess10Response.getEvents().getEvent() != null) ) {
       for ( RulebaseEvent event : assess10Response.getEvents().getEvent() ) {
-        logger.debug("============= event.getName() = " + event.getName());
         if ( eventName.equalsIgnoreCase(event.getName())) {
           if ( GLOBAL.equalsIgnoreCase(event.getEntityId()) ) {
             event.setEntityId(globalEntityId);
@@ -315,7 +284,6 @@ public class CustomTransformation {
         AttributeDecisionNode attributeDecisionNode = (AttributeDecisionNode) node;
 
         if ( GLOBAL.equalsIgnoreCase(attributeDecisionNode.getEntityId()) ){
-          //logger.debug("Attribute updated - " + attributeDecisionNode.getAttributeId());
           attributeDecisionNode.setEntityId(globalEntityId);
         }
 
@@ -327,7 +295,7 @@ public class CustomTransformation {
       }
     }
   }
-  
+/*  
   private void printScreenDefinitionData(ScreenDefinition sd) {
     logger.debug("------------------------- Print ScreenDefinition before adding to Attribute ------------------------- ");
     logger.debug("ScreenDefinition : Entity ID : " + sd.getEntityId()
@@ -352,7 +320,7 @@ public class CustomTransformation {
           + ", IsReadOnly : "+ sc.isIsReadOnly());
     }
   }
-
+*/
 
 
 

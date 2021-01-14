@@ -61,7 +61,7 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
   private final String MEANS_OUTPUTS = "MEANS_OUTPUTS";
   private static final String MEANS = "MEANS";
   private static final String BULK_CLAIM = "BULK_UPLOAD";
-  private static final String CLAIM_UPLOAD_FLAG = "CLAIM_UPLOAD_FLAG";
+  private static final String GB_REPRICE_FLAG_SET = "GB_REPRICE_FLAG_SET";
   private static final String REPRICING = "REPRICING";
   private static final String BILLING_IS_COMPLETE = "BILLING_IS_COMPLETE";
 
@@ -159,13 +159,13 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
         
         List<Attribute> attributes = entity.getAttribute();
         for ( Attribute attribute : attributes ) {
-          if ( CLAIM_UPLOAD_FLAG.equalsIgnoreCase(attribute.getId()) && attribute.isBooleanVal() ) {
-            return BULK_CLAIM;
+          if ( GB_REPRICE_FLAG_SET.equalsIgnoreCase(attribute.getId()) && attribute.isBooleanVal() ) {
+            return REPRICING;
           }
         }
       }
     }
-    return REPRICING;
+    return BULK_CLAIM;
   }
 
   /**
