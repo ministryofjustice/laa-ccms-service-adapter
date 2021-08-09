@@ -119,6 +119,18 @@
 				<activatedProperties>stage</activatedProperties>
 			</properties>
 		</profile>
+		<profile>
+			<id>uat</id>
+			<properties>
+				<activatedProperties>uat</activatedProperties>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<activatedProperties>prod</activatedProperties>
+			</properties>
+		</profile>
 	</profiles>
 
 	<build>
