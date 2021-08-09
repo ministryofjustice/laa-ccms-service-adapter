@@ -14,6 +14,9 @@ The service adapter is a Spring Boot mircoservice built for processing OPA 18 As
 To build the application:  
 `./mvnw clean install`
 
+To build for environment specific:  
+`./mvnw clean install`-Pstage (for stage)
+
 Then to run this application in Docker:  
 `docker-compose up`
 

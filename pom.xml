@@ -5,7 +5,7 @@
 	<groupId>uk.gov.justice.laa.ccms</groupId>
 	<artifactId>AssessServiceAdapter</artifactId>
 	<version>0.0.18-SNAPSHOT</version>
-<!--	<packaging>war</packaging>-->
+	<packaging>war</packaging>
 
 	<name>OPA10 to OPA 12 Assess Service Adapter</name>
 
@@ -117,6 +117,18 @@
 			<id>stage</id>
 			<properties>
 				<activatedProperties>stage</activatedProperties>
+			</properties>
+		</profile>
+		<profile>
+			<id>uat</id>
+			<properties>
+				<activatedProperties>uat</activatedProperties>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<activatedProperties>prod</activatedProperties>
 			</properties>
 		</profile>
 	</profiles>
