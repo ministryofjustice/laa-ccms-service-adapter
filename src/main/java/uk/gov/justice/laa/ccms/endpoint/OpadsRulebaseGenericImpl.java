@@ -126,6 +126,10 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
 
         bulkClaimDecisionReportTransformation.restructureDecisionReport(getGlobalEntityId(assessRequest), response);
 
+      } else {
+    	
+    	  decisionReportTransformation.restructureDecisionReport(getGlobalEntityId(assessRequest), response);
+    	  
       }
 
     } catch (Exception e){
