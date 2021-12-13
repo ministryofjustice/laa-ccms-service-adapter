@@ -23,6 +23,7 @@
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
 		<cucumber.version>4.3.0</cucumber.version>
+		<log4j2.version>2.15.0</log4j2.version>
 	</properties>
 
 	<dependencies>
@@ -41,6 +42,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j2</artifactId>
+
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -130,6 +132,12 @@
 			<properties>
 				<activatedProperties>prod</activatedProperties>
 			</properties>
+		</profile>
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 		</profile>
 	</profiles>
 
