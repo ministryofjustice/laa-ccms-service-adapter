@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN" monitorInterval="30">
 	<Properties>
-		<Property name="LOG_PATTERN">%d %-5p [%X{msgId}] %c - %m%n</Property>
+		<Property name="LOG_PATTERN">%d %-5p [%X{msgId}] %c - %m{nolookups}%n</Property>
 	</Properties>
 	<Appenders>
 		<Console name="stdout" target="SYSTEM_OUT" >

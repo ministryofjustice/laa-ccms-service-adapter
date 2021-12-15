@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN" monitorInterval="30">
 	<Properties>
-		<Property name="LOG_PATTERN">%d %-5p [%X{msgId}] %c - %m%n</Property>
+		<Property name="LOG_PATTERN">%d %-5p [%X{msgId}] %c - %m{nolookups}%n</Property>
 		<Property name="LOG_DIRECTORY">/u01/oracle/e11/opa12e11/mid/1213/user_projects/domains/aopa12e11_domain/connector-logs</Property>
 		<Property name="LOG_SUFFIX">_civil</Property>
 		<Property name="ERR_FILE_NAME">${LOG_DIRECTORY}/ccms_assess_service_adapter_err${LOG_SUFFIX}.log</Property>
