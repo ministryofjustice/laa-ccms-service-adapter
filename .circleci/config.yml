@@ -45,7 +45,7 @@ jobs:
       - persist_to_workspace:
           root: ~/laa-ccms-service-adapter
           paths:
-            - target/assess-service-adapter.jar
+            - target/assess-service-adapter.war
 
   build-and-push-docker-image:
     executor: docker/machine
