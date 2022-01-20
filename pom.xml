@@ -5,7 +5,7 @@
 	<groupId>uk.gov.justice.laa.ccms</groupId>
 	<artifactId>AssessServiceAdapter</artifactId>
 	<version>0.0.18-SNAPSHOT</version>
-<!--	<packaging>war</packaging>-->
+	<packaging>war</packaging>
 
 	<name>OPA10 to OPA 12 Assess Service Adapter</name>
 
@@ -23,7 +23,7 @@
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
 		<cucumber.version>4.3.0</cucumber.version>
-		<log4j2.version>2.15.0</log4j2.version>
+<!--		<log4j2.version>2.15.0</log4j2.version>-->
 	</properties>
 
 	<dependencies>
