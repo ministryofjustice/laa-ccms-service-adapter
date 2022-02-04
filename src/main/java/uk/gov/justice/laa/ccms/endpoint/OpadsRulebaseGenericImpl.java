@@ -8,9 +8,9 @@ import com.oracle.determinations.server._10_0.rulebase.types.Entity;
 import com.oracle.determinations.server._10_0.rulebase.types.ErrorResponse;
 import com.oracle.determinations.server._10_0.rulebase.types.ListEntity;
 import com.oracle.determinations.server._10_0.rulebase.types.OpadsRulebaseGeneric;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.AttributeType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.OdsAssessServiceGeneric122MeansAssessmentV12Type;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.OutcomeStyleEnum;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AttributeType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.OdsAssessServiceGeneric1221MeritsAssessmentType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.OutcomeStyleEnum;
 import java.util.List;
 import org.apache.cxf.binding.soap.SoapFault;
 import org.slf4j.Logger;
@@ -40,10 +40,10 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
   private AssessResponseMapper assessResponseMapper;
 
   @Autowired
-  private OdsAssessServiceGeneric122MeansAssessmentV12Type opa12MeansAssessServiceProxy;
+  private OdsAssessServiceGeneric1221MeritsAssessmentType opa12MeansAssessServiceProxy;
 
   @Autowired
-  private OdsAssessServiceGeneric122MeansAssessmentV12Type opa12BillingAssessServiceProxy;
+  private OdsAssessServiceGeneric1221MeritsAssessmentType opa12BillingAssessServiceProxy;
 
   @Autowired
   private EntityLevelRelocationService entityLevelRelocationService;
@@ -73,14 +73,14 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
 
     AssessResponse response = null;
 
-    com.oracle.determinations.server._12_2.rulebase.assess.types.AssessRequest request = assessRequestMapper
+    com.oracle.determinations.server._12_2_1.rulebase.assess.types.AssessRequest request = assessRequestMapper
         .map(assessRequest);
 
     entityLevelRelocationService.moveGlobalAttributesAndRelationsToBaseLevel(request);
 
     entityLevelRelocationService.moveSubEntitiesToLowerLevel(request);
 
-    com.oracle.determinations.server._12_2.rulebase.assess.types.AssessResponse assess12Response;
+    com.oracle.determinations.server._12_2_1.rulebase.assess.types.AssessResponse assess12Response;
 
     String requestType = getAssessmentType(assessRequest);
     logger.debug("Payload Type : " + requestType);
@@ -178,7 +178,7 @@ public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
    *
    * @param assessRequest
    */
-  private void resetAssessOutcomesStyle(com.oracle.determinations.server._12_2.rulebase.assess.types.AssessRequest assessRequest) {
+  private void resetAssessOutcomesStyle(com.oracle.determinations.server._12_2_1.rulebase.assess.types.AssessRequest assessRequest) {
     for ( AttributeType attributeType : assessRequest.getGlobalInstance().getAttribute() ){
       if (  BILLING_IS_COMPLETE.equalsIgnoreCase(attributeType.getId()) ) {
         attributeType.setUnknownOutcomeStyle(OutcomeStyleEnum.DECISION_REPORT);

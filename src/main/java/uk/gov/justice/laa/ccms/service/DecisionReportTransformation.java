@@ -10,10 +10,10 @@ import com.oracle.determinations.server._10_0.rulebase.types.ObjectFactory;
 import com.oracle.determinations.server._10_0.rulebase.types.RulebaseEvent;
 import com.oracle.determinations.server._10_0.rulebase.types.ScreenControl;
 import com.oracle.determinations.server._10_0.rulebase.types.ScreenDefinition;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.AttributeNodeType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.AttributeType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.DecisionReportType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.GlobalInstanceType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AttributeNodeType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AttributeType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.DecisionReportType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.GlobalInstanceType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,7 +52,7 @@ public class DecisionReportTransformation {
    * @param assess12Response
    * @param assess10Response
    */
-  public void tranformToScreenDataAscending( com.oracle.determinations.server._12_2.rulebase.assess.types.AssessResponse assess12Response,
+  public void tranformToScreenDataAscending( com.oracle.determinations.server._12_2_1.rulebase.assess.types.AssessResponse assess12Response,
       com.oracle.determinations.server._10_0.rulebase.types.AssessResponse assess10Response ){
 
     //Get Decision Report from OPA12 response
@@ -130,13 +130,13 @@ public class DecisionReportTransformation {
   }
 
   /**
-   * OPA 12 doesn't support screen/screen-control types, hence manual tranformation is required
+   * OPA 12 doesn't support screen/screen-control types, hence manual transformation is required
    * to convert Decision Report data to OPA10 screen data
    *
    * @param assess12Response
    * @param assess10Response
    */
-  public void tranformToScreenData( com.oracle.determinations.server._12_2.rulebase.assess.types.AssessResponse assess12Response,
+  public void tranformToScreenData( com.oracle.determinations.server._12_2_1.rulebase.assess.types.AssessResponse assess12Response,
       com.oracle.determinations.server._10_0.rulebase.types.AssessResponse assess10Response ){
 
     //Get Decision Report from OPA12 response

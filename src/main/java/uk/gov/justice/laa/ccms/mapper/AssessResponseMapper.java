@@ -10,19 +10,19 @@ import com.oracle.determinations.server._10_0.rulebase.types.Relationship;
 import com.oracle.determinations.server._10_0.rulebase.types.RelationshipDecisionNode;
 import com.oracle.determinations.server._10_0.rulebase.types.RelationshipTarget;
 import com.oracle.determinations.server._10_0.rulebase.types.Session;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.AlreadyProvenNodeType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.AssessmentConfiguration;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.AttributeNodeType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.AttributeType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.DecisionReportType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.EntityInstanceType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.EntityType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.GlobalInstanceType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.RelationshipNodeType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.RelationshipTargetType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.RelationshipType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.UncertainValue;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.UnknownValue;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AlreadyProvenNodeType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AssessmentConfiguration;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AttributeNodeType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AttributeType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.DecisionReportType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.EntityInstanceType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.EntityType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.GlobalInstanceType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.RelationshipNodeType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.RelationshipTargetType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.RelationshipType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.UncertainValue;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.UnknownValue;
 import java.util.ArrayList;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -82,7 +82,7 @@ public interface AssessResponseMapper {
 
   @Mapping(target = "sessionData", source = "globalInstance")
   AssessResponse map(
-      com.oracle.determinations.server._12_2.rulebase.assess.types.AssessResponse assessResponse);
+      com.oracle.determinations.server._12_2_1.rulebase.assess.types.AssessResponse assessResponse);
 
   default List<Object> mapObjects(List<Object> objects) {
     List<Object> returnObjects = new ArrayList<Object>();

@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.oracle.determinations.server._10_0.rulebase.types.DecisionReport;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.AttributeNodeType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.DecisionReportType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AttributeNodeType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.DecisionReportType;
 
 @Service
 public class BulkClaimDecisionReportTransformation extends CustomTransformation {
@@ -23,7 +23,7 @@ public class BulkClaimDecisionReportTransformation extends CustomTransformation 
    * @param assess12Response
    * @param assess10Response
    */
-  public void tranformToScreenDataAscending( com.oracle.determinations.server._12_2.rulebase.assess.types.AssessResponse assess12Response,
+  public void tranformToScreenDataAscending( com.oracle.determinations.server._12_2_1.rulebase.assess.types.AssessResponse assess12Response,
       com.oracle.determinations.server._10_0.rulebase.types.AssessResponse assess10Response ){
 
     //Get Decision Report from OPA12 response
