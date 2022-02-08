@@ -45,125 +45,125 @@ jobs:
       - persist_to_workspace:
           root: ~/laa-ccms-service-adapter
           paths:
-            - target/assess-service-adapter.jar
+            - target/assess-service-adapter.war
 
-  build-and-push-docker-image:
-    executor: docker/machine
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          name: Install aws cli
-          command: |
-            sudo apt-get update
-            sudo apt-get -y install awscli
-            aws --version
-      - run:
-          name: Copy build artifacts from workspace
-          command: cp -r /tmp/workspace/target /home/circleci/project/
-      - docker/build:
-          image: 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter
-          tag: latest
-      - service-adapter/ecr_login
-      - run:
-          name: Push container
-          command: |
-            export SHORT_HASH=${CIRCLE_SHA1:0:7}
-            docker tag 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter:latest 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter:$SHORT_HASH
-            if [ "${CIRCLE_BRANCH}" == "main" ]; then
-              # We want all of the tags pushed
-              docker push 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter
-            else
-              docker push 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter:$SHORT_HASH
-            fi
-
-  deploy:
-    executor: docker/machine
-    parameters:
-      aws-account:
-        description: "Aws Acccount"
-        type: string
-    environment:
-      AWS_ACCOUNT=<<parameters.aws-account>>
-    steps:
-      - run:
-          name: Install aws cli
-          command: |
-            sudo apt-get update
-            sudo apt-get -y install awscli
-            aws --version
-      - run:
-          name: Set environment variables
-          command: |
-            export SHORT_HASH=${CIRCLE_SHA1:0:7}
-            echo "export SHORT_HASH=${CIRCLE_SHA1:0:7}" >> $BASH_ENV 
-      - service-adapter/aws-credentials
-      - aws-ecs/update-service:
-          family: 'laa-ccms-assessment-service-task-definition'
-          cluster-name: 'ccms-opa18-hub-cluster'
-          container-image-name-updates: 'container=laa-ccms-assessment-service-container,tag=${SHORT_HASH}'
-          service-name: 'laa-ccms-assessment-service-ecs-service'
-          force-new-deployment: true
-
-workflows:
-  version: 2
-  build-and-push:
-    jobs:
-      - build
-      - build-and-push-docker-image:
-          requires:
-            - build
-      - dev-approval:
-          type: approval
-          requires:
-            - build-and-push-docker-image
-          filters:
-            branches:
-              ignore: main
-      - deploy:
-          name: dev-deploy
-          aws-account: "411213865113"
-          requires:
-            - dev-approval
-          filters:
-            branches:
-              ignore: main
-      - test-approval:
-          type: approval
-          requires:
-            - dev-deploy
-          filters:
-            branches:
-              ignore: main
-      - deploy:
-          name: test-deploy
-          aws-account: "013163512034"
-          requires:
-            - test-approval
-          filters:
-            branches:
-              ignore: main
-      - deploy:
-          name: pre-prod-deploy
-          aws-account: "484221692666"
-          requires:
-            - build-and-push-docker-image
-          filters:
-            branches:
-              only: main
-      - prod-approval:
-          type: approval
-          requires:
-            - pre-prod-deploy
-          filters:
-            branches:
-              only: main
-      - deploy:
-          name: prod-deploy
-          aws-account: "842522700642"
-          requires:
-            - prod-approval
-          filters:
-            branches:
-              only: main
+#  build-and-push-docker-image:
+#    executor: docker/machine
+#    steps:
+#      - checkout
+#      - attach_workspace:
+#          at: /tmp/workspace
+#      - run:
+#          name: Install aws cli
+#          command: |
+#            sudo apt-get update
+#            sudo apt-get -y install awscli
+#            aws --version
+#      - run:
+#          name: Copy build artifacts from workspace
+#          command: cp -r /tmp/workspace/target /home/circleci/project/
+#      - docker/build:
+#          image: 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter
+#          tag: latest
+#      - service-adapter/ecr_login
+#      - run:
+#          name: Push container
+#          command: |
+#            export SHORT_HASH=${CIRCLE_SHA1:0:7}
+#            docker tag 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter:latest 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter:$SHORT_HASH
+#            if [ "${CIRCLE_BRANCH}" == "main" ]; then
+#              # We want all of the tags pushed
+#              docker push 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter
+#            else
+#              docker push 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter:$SHORT_HASH
+#            fi
+#
+#  deploy:
+#    executor: docker/machine
+#    parameters:
+#      aws-account:
+#        description: "Aws Acccount"
+#        type: string
+#    environment:
+#      AWS_ACCOUNT=<<parameters.aws-account>>
+#    steps:
+#      - run:
+#          name: Install aws cli
+#          command: |
+#            sudo apt-get update
+#            sudo apt-get -y install awscli
+#            aws --version
+#      - run:
+#          name: Set environment variables
+#          command: |
+#            export SHORT_HASH=${CIRCLE_SHA1:0:7}
+#            echo "export SHORT_HASH=${CIRCLE_SHA1:0:7}" >> $BASH_ENV
+#      - service-adapter/aws-credentials
+#      - aws-ecs/update-service:
+#          family: 'laa-ccms-assessment-service-task-definition'
+#          cluster-name: 'ccms-opa18-hub-cluster'
+#          container-image-name-updates: 'container=laa-ccms-assessment-service-container,tag=${SHORT_HASH}'
+#          service-name: 'laa-ccms-assessment-service-ecs-service'
+#          force-new-deployment: true
+#
+#workflows:
+#  version: 2
+#  build-and-push:
+#    jobs:
+#      - build
+#      - build-and-push-docker-image:
+#          requires:
+#            - build
+#      - dev-approval:
+#          type: approval
+#          requires:
+#            - build-and-push-docker-image
+#          filters:
+#            branches:
+#              ignore: main
+#      - deploy:
+#          name: dev-deploy
+#          aws-account: "411213865113"
+#          requires:
+#            - dev-approval
+#          filters:
+#            branches:
+#              ignore: main
+#      - test-approval:
+#          type: approval
+#          requires:
+#            - dev-deploy
+#          filters:
+#            branches:
+#              ignore: main
+#      - deploy:
+#          name: test-deploy
+#          aws-account: "013163512034"
+#          requires:
+#            - test-approval
+#          filters:
+#            branches:
+#              ignore: main
+#      - deploy:
+#          name: pre-prod-deploy
+#          aws-account: "484221692666"
+#          requires:
+#            - build-and-push-docker-image
+#          filters:
+#            branches:
+#              only: main
+#      - prod-approval:
+#          type: approval
+#          requires:
+#            - pre-prod-deploy
+#          filters:
+#            branches:
+#              only: main
+#      - deploy:
+#          name: prod-deploy
+#          aws-account: "842522700642"
+#          requires:
+#            - prod-approval
+#          filters:
+#            branches:
+#              only: main
