@@ -2,17 +2,17 @@
 <wsdl:definitions name="determinations_service"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
                   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-                  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wsswssecurity-secext-1.0.xsd"
-                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wsswssecurity-utility-1.0.xsd"
-                  xmlns:typ="http://oracle.com/determinations/server/12.2/rulebase/assess/types"
+                  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                  xmlns:typ="http://oracle.com/determinations/server/12.2.1/rulebase/assess/types"
                   xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
                   xmlns:i18n="http://www.w3.org/2005/09/ws-i18n"
-                  targetNamespace="http://oracle.com/determinations/server/12.2/rulebase/assess/types">
+                  targetNamespace="http://oracle.com/determinations/server/12.2.1/rulebase/assess/types">
 
   <wsdl:types>
             <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns="http://oracle.com/determinations/server/12.2/rulebase/assess/types"
-	targetNamespace="http://oracle.com/determinations/server/12.2/rulebase/assess/types"
+	xmlns="http://oracle.com/determinations/server/12.2.1/rulebase/assess/types"
+	targetNamespace="http://oracle.com/determinations/server/12.2.1/rulebase/assess/types"
 	elementFormDefault="qualified" version="1.0">
 
 	<!-- Assess Request and response -->
@@ -474,53 +474,53 @@ A decision report provides information on how the value of an attribute was dete
 <xsd:complexType name="AttributeNodeType">
     <xsd:sequence>
         <!--node attribute value-->
-<xsd:choice minOccurs="0">
-    <xsd:element name="boolean-val" type="xsd:boolean">
-        <xsd:annotation>
-            <xsd:documentation>For boolean attributes, contains the value of the attribute</xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="date-val" type="xsd:date">
-        <xsd:annotation>
-            <xsd:documentation>For date attributes, contains the value of the attribute</xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="datetime-val" type="xsd:dateTime">
-        <xsd:annotation>
-            <xsd:documentation>For datetime attributes, contains the value of the attribute</xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="time-val" type="xsd:time">
-        <xsd:annotation>
-            <xsd:documentation>For time attributes, contains the value of the attribute</xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="number-val" type="xsd:decimal">
-        <xsd:annotation>
-            <xsd:documentation>For number or currency attributes, contains the value of the attribute</xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="text-val" type="xsd:string">
-        <xsd:annotation>
-            <xsd:documentation>For text attributes, contains the value of the attribute </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="uncertain-val" type="UncertainValue">
-        <xsd:annotation>
-            <xsd:documentation>For attributes of any type, this field is used when the attribute has the value uncertain</xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="unknown-val" type="UnknownValue">
-        <xsd:annotation>
-            <xsd:documentation>For attributes of any type, this field is used when the attribute has the value unknown</xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-</xsd:choice>
-<xsd:element name="change-point" type="ChangePoint" minOccurs="0" maxOccurs="unbounded">
-    <xsd:annotation>
-        <xsd:documentation>When an attribute has temporal change points, these fields indicate where those change points occur</xsd:documentation>
-    </xsd:annotation>
-</xsd:element>
+        <xsd:choice minOccurs="0">
+            <xsd:element name="boolean-val" type="xsd:boolean">
+                <xsd:annotation>
+                    <xsd:documentation>For boolean attributes, contains the value of the attribute</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="date-val" type="xsd:date">
+                <xsd:annotation>
+                    <xsd:documentation>For date attributes, contains the value of the attribute</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="datetime-val" type="xsd:dateTime">
+                <xsd:annotation>
+                    <xsd:documentation>For datetime attributes, contains the value of the attribute</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="time-val" type="xsd:time">
+                <xsd:annotation>
+                    <xsd:documentation>For time attributes, contains the value of the attribute</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="number-val" type="xsd:decimal">
+                <xsd:annotation>
+                    <xsd:documentation>For number or currency attributes, contains the value of the attribute</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="text-val" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>For text attributes, contains the value of the attribute </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="uncertain-val" type="UncertainValue">
+                <xsd:annotation>
+                    <xsd:documentation>For attributes of any type, this field is used when the attribute has the value uncertain</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="unknown-val" type="UnknownValue">
+                <xsd:annotation>
+                    <xsd:documentation>For attributes of any type, this field is used when the attribute has the value unknown</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:choice>
+        <xsd:element name="change-point" type="ChangePoint" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+                <xsd:documentation>When an attribute has temporal change points, these fields indicate where those change points occur</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
 
         <!--node attribute custom properties -->
         <xsd:element name="properties" type="ListCustomPropertiesType" minOccurs="0">
@@ -528,6 +528,7 @@ A decision report provides information on how the value of an attribute was dete
                 <xsd:documentation>(Not currently used.) Custom properties specified for the attribute, if any. Only included if show-properties is set to true in the AssessmentConfiguration.</xsd:documentation>
             </xsd:annotation>
         </xsd:element>
+
         <!--child nodes -->
         <xsd:choice minOccurs="0" maxOccurs="unbounded">
     <xsd:element name="relationship-node" type="RelationshipNodeType" minOccurs="0" maxOccurs="unbounded">
@@ -545,7 +546,13 @@ A decision report provides information on how the value of an attribute was dete
             <xsd:documentation>A cross-reference to another decision report node that is relevant to the decision report for this node</xsd:documentation>
         </xsd:annotation>
     </xsd:element>
-</xsd:choice>    </xsd:sequence>
+</xsd:choice>
+        <xsd:element name="reference-tags" type="ReferenceTagList" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+                <xsd:documentation>Contains the reference tags for this decision node.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+    </xsd:sequence>
     <!--node id -->
     <xsd:attribute name="id" type="xsd:string" use="required">
         <xsd:annotation>
@@ -620,6 +627,7 @@ A decision report provides information on how the value of an attribute was dete
                 <xsd:documentation>(Not currently used.) Custom properties specified for the relationship, if any. Only included if show-properties is set to true in the AssessmentConfiguration. </xsd:documentation>
             </xsd:annotation>
         </xsd:element>
+
         <!--child nodes -->
         <xsd:choice minOccurs="0" maxOccurs="unbounded">
     <xsd:element name="relationship-node" type="RelationshipNodeType" minOccurs="0" maxOccurs="unbounded">
@@ -637,7 +645,13 @@ A decision report provides information on how the value of an attribute was dete
             <xsd:documentation>A cross-reference to another decision report node that is relevant to the decision report for this node</xsd:documentation>
         </xsd:annotation>
     </xsd:element>
-</xsd:choice>    </xsd:sequence>
+</xsd:choice>
+        <xsd:element name="reference-tags" type="ReferenceTagList" minOccurs="0" maxOccurs="1">
+            <xsd:annotation>
+                <xsd:documentation>Contains the reference tags for this decision node.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+    </xsd:sequence>
     <!--node id -->
     <xsd:attribute name="id" type="xsd:string" use="required">
         <xsd:annotation>
@@ -709,6 +723,27 @@ A decision report provides information on how the value of an attribute was dete
             <xsd:documentation>The id of a decision report node for an attribute or relationship</xsd:documentation>
         </xsd:annotation>
     </xsd:attribute>
+</xsd:complexType>
+<xsd:complexType name="ReferenceTagList">
+    <xsd:annotation>
+        <xsd:documentation>A container for reference tags</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+        <xsd:element name="reference-tag" type="ReferenceTag" minOccurs="1" maxOccurs="unbounded">
+            <xsd:annotation>
+                <xsd:documentation>The reference tag definition</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
+    </xsd:sequence>
+</xsd:complexType>
+<xsd:complexType name="ReferenceTag">
+    <xsd:annotation>
+        <xsd:documentation>The reference tag</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+        <xsd:extension base="xsd:string">
+        </xsd:extension>
+    </xsd:simpleContent>
 </xsd:complexType><!--property types -->
 <xsd:complexType name="ListCustomPropertiesType">
     <xsd:annotation>
@@ -904,53 +939,53 @@ Notes:
     </xsd:annotation>
     <xsd:sequence>
         <!--node attribute value-->
-<xsd:choice minOccurs="0">
-    <xsd:element name="boolean-val" type="xsd:boolean">
-        <xsd:annotation>
-            <xsd:documentation>For boolean attributes, contains the value of the attribute</xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="date-val" type="xsd:date">
-        <xsd:annotation>
-            <xsd:documentation>For date attributes, contains the value of the attribute</xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="datetime-val" type="xsd:dateTime">
-        <xsd:annotation>
-            <xsd:documentation>For datetime attributes, contains the value of the attribute</xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="time-val" type="xsd:time">
-        <xsd:annotation>
-            <xsd:documentation>For time attributes, contains the value of the attribute</xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="number-val" type="xsd:decimal">
-        <xsd:annotation>
-            <xsd:documentation>For number or currency attributes, contains the value of the attribute</xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="text-val" type="xsd:string">
-        <xsd:annotation>
-            <xsd:documentation>For text attributes, contains the value of the attribute </xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="uncertain-val" type="UncertainValue">
-        <xsd:annotation>
-            <xsd:documentation>For attributes of any type, this field is used when the attribute has the value uncertain</xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-    <xsd:element name="unknown-val" type="UnknownValue">
-        <xsd:annotation>
-            <xsd:documentation>For attributes of any type, this field is used when the attribute has the value unknown</xsd:documentation>
-        </xsd:annotation>
-    </xsd:element>
-</xsd:choice>
-<xsd:element name="change-point" type="ChangePoint" minOccurs="0" maxOccurs="unbounded">
-    <xsd:annotation>
-        <xsd:documentation>When an attribute has temporal change points, these fields indicate where those change points occur</xsd:documentation>
-    </xsd:annotation>
-</xsd:element>
+        <xsd:choice minOccurs="0">
+            <xsd:element name="boolean-val" type="xsd:boolean">
+                <xsd:annotation>
+                    <xsd:documentation>For boolean attributes, contains the value of the attribute</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="date-val" type="xsd:date">
+                <xsd:annotation>
+                    <xsd:documentation>For date attributes, contains the value of the attribute</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="datetime-val" type="xsd:dateTime">
+                <xsd:annotation>
+                    <xsd:documentation>For datetime attributes, contains the value of the attribute</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="time-val" type="xsd:time">
+                <xsd:annotation>
+                    <xsd:documentation>For time attributes, contains the value of the attribute</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="number-val" type="xsd:decimal">
+                <xsd:annotation>
+                    <xsd:documentation>For number or currency attributes, contains the value of the attribute</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="text-val" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>For text attributes, contains the value of the attribute </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="uncertain-val" type="UncertainValue">
+                <xsd:annotation>
+                    <xsd:documentation>For attributes of any type, this field is used when the attribute has the value uncertain</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="unknown-val" type="UnknownValue">
+                <xsd:annotation>
+                    <xsd:documentation>For attributes of any type, this field is used when the attribute has the value unknown</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:choice>
+        <xsd:element name="change-point" type="ChangePoint" minOccurs="0" maxOccurs="unbounded">
+            <xsd:annotation>
+                <xsd:documentation>When an attribute has temporal change points, these fields indicate where those change points occur</xsd:documentation>
+            </xsd:annotation>
+        </xsd:element>
         <!--this element will only be provided if the 'show-properties' attribute is true in the assessment configuration options -->
         <xsd:element name="properties" type="ListCustomPropertiesType" minOccurs="0">
             <xsd:annotation>
@@ -1049,7 +1084,7 @@ Notes:
     <wsdl:part element="typ:assess-request" name="AssessRequest" />
   </wsdl:message>
 
-  <wsdl:portType name="odsAssessServiceGeneric122_Means__Assessment__v12_type">
+  <wsdl:portType name="odsAssessServiceGeneric1221_MeritsAssessment_type">
                 <wsdl:operation name="ListGoals">
             <wsdl:input message="typ:ListGoalsRequest"/>
             <wsdl:output message="typ:ListGoalsResponse"/>
@@ -1060,11 +1095,11 @@ Notes:
         </wsdl:operation>
             </wsdl:portType>
 
-    <wsdl:binding name="odsAssessServiceGeneric122_Means__Assessment__v12" type="typ:odsAssessServiceGeneric122_Means__Assessment__v12_type">
+    <wsdl:binding name="odsAssessServiceGeneric1221_MeritsAssessment" type="typ:odsAssessServiceGeneric1221_MeritsAssessment_type">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 
                 <wsdl:operation name="ListGoals">
-            <soap:operation soapAction="http://oracle.com/determinations/server/12.2/rulebase/types/ListGoals"/>
+            <soap:operation soapAction="http://oracle.com/determinations/server/12.2.1/rulebase/types/ListGoals"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -1073,7 +1108,7 @@ Notes:
             </wsdl:output>
         </wsdl:operation>
                 <wsdl:operation name="Assess">
-            <soap:operation soapAction="http://oracle.com/determinations/server/12.2/rulebase/types/Assess"/>
+            <soap:operation soapAction="http://oracle.com/determinations/server/12.2.1/rulebase/types/Assess"/>
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
@@ -1083,9 +1118,9 @@ Notes:
         </wsdl:operation>
             </wsdl:binding>
 
-    <wsdl:service name="odsAssessServiceGeneric122_Means__Assessment__v12">
-        <wsdl:port binding="typ:odsAssessServiceGeneric122_Means__Assessment__v12" name="odsAssessServiceGeneric122_Means__Assessment__v12_SOAP">
-            <soap:address location="http://172.16.3.121:7703/devopa10/determinations-server/assess/soap/generic/12.2/Means__Assessment__v12"/>
+    <wsdl:service name="odsAssessServiceGeneric1221_MeritsAssessment">
+        <wsdl:port binding="typ:odsAssessServiceGeneric1221_MeritsAssessment" name="odsAssessServiceGeneric1221_MeritsAssessment_SOAP">
+            <soap:address location="http://c17opa12-e10:7055/rulesbeta_18a/determinations-server/assess/soap/generic/12.2.1/MeritsAssessment"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

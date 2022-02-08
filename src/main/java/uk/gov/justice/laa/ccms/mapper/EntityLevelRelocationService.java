@@ -1,7 +1,7 @@
 package uk.gov.justice.laa.ccms.mapper;
 
-import com.oracle.determinations.server._12_2.rulebase.assess.types.AssessRequest;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.AssessResponse;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AssessRequest;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AssessResponse;
 
 public interface EntityLevelRelocationService {
 

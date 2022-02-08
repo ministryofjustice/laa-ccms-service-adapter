@@ -1,6 +1,7 @@
 package uk.gov.justice.laa.ccms.soap.client;
 
-import com.oracle.determinations.server._12_2.rulebase.assess.types.OdsAssessServiceGeneric122MeansAssessmentV12Type;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.OdsAssessServiceGeneric1221MeritsAssessmentType;
+
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.cxf.frontend.ClientProxy;
@@ -38,26 +39,26 @@ public class Opa12AssessClientConfig {
   private static final int DEFAULT_LIMIT = -1;
 
   @Bean(name = "opa12MeansAssessServiceProxy")
-  public OdsAssessServiceGeneric122MeansAssessmentV12Type opa12MeansAssessServiceProxy() {
-    return getOdsAssessServiceGeneric122MeansAssessmentV12Type(meansAddress);
+  public OdsAssessServiceGeneric1221MeritsAssessmentType opa12MeansAssessServiceProxy() {
+    return getOdsAssessServiceGenericAssessmentType(meansAddress);
   }
 
   @Bean(name = "opa12BillingAssessServiceProxy")
-  public OdsAssessServiceGeneric122MeansAssessmentV12Type opa12BillingAssessServiceProxy() {
-    return getOdsAssessServiceGeneric122MeansAssessmentV12Type(billingAddress);
+  public OdsAssessServiceGeneric1221MeritsAssessmentType opa12BillingAssessServiceProxy() {
+    return getOdsAssessServiceGenericAssessmentType(billingAddress);
   }
 
-  private OdsAssessServiceGeneric122MeansAssessmentV12Type getOdsAssessServiceGeneric122MeansAssessmentV12Type(
+  private OdsAssessServiceGeneric1221MeritsAssessmentType getOdsAssessServiceGenericAssessmentType(
       String address) {
     logger.debug("Address:" + address);
 
     JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
-    jaxWsProxyFactoryBean.setServiceClass(OdsAssessServiceGeneric122MeansAssessmentV12Type.class);
+    jaxWsProxyFactoryBean.setServiceClass(OdsAssessServiceGeneric1221MeritsAssessmentType.class);
     jaxWsProxyFactoryBean.setAddress(address);
     jaxWsProxyFactoryBean.getInInterceptors().add(new LoggingInInterceptor(DEFAULT_LIMIT));
     jaxWsProxyFactoryBean.getOutInterceptors().add(new LoggingOutInterceptor(DEFAULT_LIMIT));
 
-    OdsAssessServiceGeneric122MeansAssessmentV12Type proxy = (OdsAssessServiceGeneric122MeansAssessmentV12Type) jaxWsProxyFactoryBean
+    OdsAssessServiceGeneric1221MeritsAssessmentType proxy = (OdsAssessServiceGeneric1221MeritsAssessmentType) jaxWsProxyFactoryBean
         .create();
 
     Map<String, Object> outProps = new HashMap<String, Object>();

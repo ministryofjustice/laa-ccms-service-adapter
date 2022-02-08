@@ -13,10 +13,10 @@ import com.oracle.determinations.server._10_0.rulebase.types.ObjectFactory;
 import com.oracle.determinations.server._10_0.rulebase.types.RulebaseEvent;
 import com.oracle.determinations.server._10_0.rulebase.types.ScreenControl;
 import com.oracle.determinations.server._10_0.rulebase.types.ScreenDefinition;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.AttributeNodeType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.AttributeType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.DecisionReportType;
-import com.oracle.determinations.server._12_2.rulebase.assess.types.GlobalInstanceType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AttributeNodeType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AttributeType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.DecisionReportType;
+import com.oracle.determinations.server._12_2_1.rulebase.assess.types.GlobalInstanceType;
 
 public class CustomTransformation {
   
