@@ -8,8 +8,7 @@ import org.springframework.web.WebApplicationInitializer;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.oracle.determinations.server", "uk.gov.justice.laa.ccms"})
-public class SpringCxfApplication extends SpringBootServletInitializer implements
-    WebApplicationInitializer {
+public class SpringCxfApplication  {
 
   public static void main(String[] args) {
     SpringApplication.run(SpringCxfApplication.class, args);
