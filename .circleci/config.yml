@@ -5,6 +5,14 @@ orbs:
   docker: circleci/docker@2.1.1
   service-adapter:
     commands:
+      aws_cli_install:
+        steps:
+          - run:
+              name: Install aws cli
+              command: |
+                sudo apt-get update
+                sudo apt-get -y install awscli
+                aws --version
       ecr_login:
         steps:
           - run:
@@ -14,7 +22,7 @@ orbs:
                 export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
-                echo $ECR_LOGIN | aws ecr get-login-password | docker login --username AWS --password-stdin
+                aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_LOGIN
       aws-credentials:
         steps:
           - run:
@@ -62,8 +70,8 @@ jobs:
       CONTAINER_TAG: <<parameters.container_tag>>
     steps:
       - checkout
-      - pui/aws_cli_install
-      - pui/ecr_login
+      - service-adapter/aws_cli_install
+      - service-adapter/ecr_login
       - run:
           name: Retag latest to environment
           command: |
@@ -107,12 +115,7 @@ jobs:
     environment:
       AWS_ACCOUNT=<<parameters.aws-account>>
     steps:
-      - run:
-          name: Install aws cli
-          command: |
-            sudo apt-get update
-            sudo apt-get -y install awscli
-            aws --version
+      - service-adapter/aws_cli_install
       - service-adapter/aws-credentials
       - aws-ecs/update-service:
           family: 'laa-ccms-assessment-service-task-definition'
@@ -136,6 +139,15 @@ workflows:
           filters:
             branches:
               ignore: main
+      - promote-image:
+          name: dev-service-adapter-promote-image
+          repo_name: laa-ccms-service-adapter
+          container_tag: dev
+          requires:
+            - dev-approval
+          filters:
+            branches:
+              ignore: main
       - deploy:
           name: dev-deploy
           aws-account: "411213865113"
@@ -151,6 +163,15 @@ workflows:
           filters:
             branches:
               ignore: main
+      - promote-image:
+          name: test-service-adapter-promote-image
+          repo_name: laa-ccms-service-adapter
+          container_tag: test
+          requires:
+            - test-approval
+          filters:
+            branches:
+              ignore: main
       - deploy:
           name: test-deploy
           aws-account: "013163512034"
@@ -159,6 +180,15 @@ workflows:
           filters:
             branches:
               ignore: main
+      - promote-image:
+          name: pre-prod-service-adapter-promote-image
+          repo_name: laa-ccms-service-adapter
+          container_tag: pre-prod
+          requires:
+            - build-and-push-docker-image
+          filters:
+            branches:
+              only: main
       - deploy:
           name: pre-prod-deploy
           aws-account: "484221692666"
@@ -171,6 +201,15 @@ workflows:
           type: approval
           requires:
             - pre-prod-deploy
+          filters:
+            branches:
+              only: main
+      - promote-image:
+          name: prod-service-adapter-promote-image
+          repo_name: laa-ccms-service-adapter
+          container_tag: prod
+          requires:
+            - prod-approval
           filters:
             branches:
               only: main
