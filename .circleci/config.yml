@@ -1,8 +1,8 @@
 version: 2.1
 
 orbs:
-  aws-ecs: circleci/aws-ecs@1.2.0
-  docker: circleci/docker@1.2.1
+  aws-ecs: circleci/aws-ecs@2.2.1
+  docker: circleci/docker@2.1.1
   service-adapter:
     commands:
       ecr_login:
@@ -14,7 +14,7 @@ orbs:
                 export AWS_ACCESS_KEY_ID=$(echo $temp_role | jq .Credentials.AccessKeyId | xargs)
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
-                eval $(aws ecr get-login --no-include-email --region=eu-west-2)
+                echo $ECR_LOGIN | aws ecr get-login-password | docker login --username AWS --password-stdin
       aws-credentials:
         steps:
           - run:
@@ -46,6 +46,33 @@ jobs:
           root: ~/laa-ccms-service-adapter
           paths:
             - target/assess-service-adapter.jar
+  promote-image:
+    executor: docker/machine
+    parameters:
+      container_tag:
+        description: Image tag
+        type: string
+        default: dev
+      repo_name:
+        description: Short name for repo
+        type: string
+        default: none
+    environment:
+      ECR_REPO_NAME: <<parameters.repo_name>>
+      CONTAINER_TAG: <<parameters.container_tag>>
+    steps:
+      - checkout
+      - pui/aws_cli_install
+      - pui/ecr_login
+      - run:
+          name: Retag latest to environment
+          command: |
+            export ECR_REPO_NAME
+            export AWS_REGION
+            MANIFEST=$(aws ecr batch-get-image --repository-name $ECR_REPO_NAME --image-ids imageTag=latest --query 'images[0].imageManifest' --output text --region $AWS_REGION)
+            aws ecr put-image --repository-name $ECR_REPO_NAME --image-tag $CONTAINER_TAG --image-manifest "$MANIFEST" --region $AWS_REGION
+
+  
 
   build-and-push-docker-image:
     executor: docker/machine
@@ -68,15 +95,8 @@ jobs:
       - service-adapter/ecr_login
       - run:
           name: Push container
-          command: |
-            export SHORT_HASH=${CIRCLE_SHA1:0:7}
-            docker tag 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter:latest 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter:$SHORT_HASH
-            if [ "${CIRCLE_BRANCH}" == "main" ]; then
-              # We want all of the tags pushed
-              docker push 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter
-            else
-              docker push 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter:$SHORT_HASH
-            fi
+          command: docker push 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter
+
 
   deploy:
     executor: docker/machine
@@ -93,16 +113,11 @@ jobs:
             sudo apt-get update
             sudo apt-get -y install awscli
             aws --version
-      - run:
-          name: Set environment variables
-          command: |
-            export SHORT_HASH=${CIRCLE_SHA1:0:7}
-            echo "export SHORT_HASH=${CIRCLE_SHA1:0:7}" >> $BASH_ENV
       - service-adapter/aws-credentials
       - aws-ecs/update-service:
           family: 'laa-ccms-assessment-service-task-definition'
           cluster-name: 'ccms-opa18-hub-cluster'
-          container-image-name-updates: 'container=laa-ccms-assessment-service-container,tag=${SHORT_HASH}'
+          container-image-name-updates: 'container=laa-ccms-assessment-service-container,tag=latest'
           service-name: 'laa-ccms-assessment-service-ecs-service'
           force-new-deployment: true
 

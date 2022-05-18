@@ -62,3 +62,9 @@
 .DS_Store
 
 node_modules
+/.idea/compiler.xml
+/.idea/jarRepositories.xml
+/.idea/modules.xml
+/AssessServiceAdapter.iml
+/.idea/libraries/
+/.idea/aws.xml
