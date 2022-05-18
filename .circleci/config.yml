@@ -24,7 +24,6 @@ orbs:
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
                 aws ecr get-login-password | docker login --username AWS --password-stdin 902837325998.dkr.ecr.eu-west-2.amazonaws.com
-
       aws-credentials:
         steps:
           - run:
@@ -75,16 +74,11 @@ jobs:
       - service-adapter/aws_cli_install
       - service-adapter/ecr_login
       - run:
-          name: set circle sha in env
-          command: |
-            echo "export IMAGE_TAG=${CIRCLE_SHA1:0:7}" >> $BASH_ENV
-            source $BASH_ENV
-      - run:
-          name: Retag short hash to environment
+          name: Retag latest to environment
           command: |
             export ECR_REPO_NAME
             export AWS_REGION
-            MANIFEST=$(aws ecr batch-get-image --repository-name $ECR_REPO_NAME --image-ids imageTag=$IMAGE_TAG --query 'images[0].imageManifest' --output text --region $AWS_REGION)
+            MANIFEST=$(aws ecr batch-get-image --repository-name $ECR_REPO_NAME --image-ids imageTag=latest --query 'images[0].imageManifest' --output text --region $AWS_REGION)
             aws ecr put-image --repository-name $ECR_REPO_NAME --image-tag $CONTAINER_TAG --image-manifest "$MANIFEST" --region $AWS_REGION
 
   
@@ -93,9 +87,14 @@ jobs:
     executor: docker/machine
     steps:
       - checkout
-      - service-adapter/aws_cli_install
       - attach_workspace:
           at: /tmp/workspace
+      - run:
+          name: Install aws cli
+          command: |
+            sudo apt-get update
+            sudo apt-get -y install awscli
+            aws --version
       - run:
           name: Copy build artifacts from workspace
           command: cp -r /tmp/workspace/target /home/circleci/project/
@@ -105,11 +104,7 @@ jobs:
       - service-adapter/ecr_login
       - run:
           name: Push container
-          command: | 
-            export SHORT_HASH=${CIRCLE_SHA1:0:7}
-            docker tag 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter:latest 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter:$SHORT_HASH
-            docker push 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter:$SHORT_HASH
-            docker image ls
+          command: docker push 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter
 
 
   deploy:
@@ -122,17 +117,11 @@ jobs:
       AWS_ACCOUNT=<<parameters.aws-account>>
     steps:
       - service-adapter/aws_cli_install
-      - run:
-          name: Set environment variables
-          command: |
-            export SHORT_HASH=${CIRCLE_SHA1:0:7}
-            echo "export SHORT_HASH=${CIRCLE_SHA1:0:7}" >> $BASH_ENV
-            source $BASH_ENV
       - service-adapter/aws-credentials
       - aws-ecs/update-service:
           family: 'laa-ccms-assessment-service-task-definition'
           cluster-name: 'ccms-opa18-hub-cluster'
-          container-image-name-updates: 'container=laa-ccms-assessment-service-container,tag=${SHORT_HASH}'
+          container-image-name-updates: 'container=laa-ccms-assessment-service-container,tag=latest'
           service-name: 'laa-ccms-assessment-service-ecs-service'
           force-new-deployment: true
 
@@ -164,7 +153,7 @@ workflows:
           name: dev-deploy
           aws-account: "411213865113"
           requires:
-            - dev-service-adapter-promote-image
+            - dev-approval
           filters:
             branches:
               ignore: main
@@ -188,7 +177,7 @@ workflows:
           name: test-deploy
           aws-account: "013163512034"
           requires:
-            - test-service-adapter-promote-image
+            - test-approval
           filters:
             branches:
               ignore: main
@@ -205,7 +194,7 @@ workflows:
           name: pre-prod-deploy
           aws-account: "484221692666"
           requires:
-            - pre-prod-service-adapter-promote-image
+            - build-and-push-docker-image
           filters:
             branches:
               only: main
@@ -229,7 +218,7 @@ workflows:
           name: prod-deploy
           aws-account: "842522700642"
           requires:
-            - prod-service-adapter-promote-image
+            - prod-approval
           filters:
             branches:
               only: main
