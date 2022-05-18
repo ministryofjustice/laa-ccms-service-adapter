@@ -23,6 +23,7 @@ orbs:
                 export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)
                 export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)
                 aws ecr get-login-password | docker login --username AWS --password-stdin 902837325998.dkr.ecr.eu-west-2.amazonaws.com
+
       aws-credentials:
         steps:
           - run:
@@ -54,6 +55,7 @@ jobs:
           root: ~/laa-ccms-service-adapter
           paths:
             - target/assess-service-adapter.jar
+
   promote-image:
     executor: docker/machine
     parameters:
@@ -86,14 +88,9 @@ jobs:
     executor: docker/machine
     steps:
       - checkout
+      - service-adapter/aws_cli_install
       - attach_workspace:
           at: /tmp/workspace
-      - run:
-          name: Install aws cli
-          command: |
-            sudo apt-get update
-            sudo apt-get -y install awscli
-            aws --version
       - run:
           name: Copy build artifacts from workspace
           command: cp -r /tmp/workspace/target /home/circleci/project/
@@ -152,7 +149,7 @@ workflows:
           name: dev-deploy
           aws-account: "411213865113"
           requires:
-            - dev-approval
+            - dev-service-adapter-promote-image
           filters:
             branches:
               ignore: main
@@ -176,7 +173,7 @@ workflows:
           name: test-deploy
           aws-account: "013163512034"
           requires:
-            - test-approval
+            - test-service-adapter-promote-image
           filters:
             branches:
               ignore: main
@@ -193,7 +190,7 @@ workflows:
           name: pre-prod-deploy
           aws-account: "484221692666"
           requires:
-            - build-and-push-docker-image
+            - pre-prod-service-adapter-promote-image
           filters:
             branches:
               only: main
@@ -217,7 +214,7 @@ workflows:
           name: prod-deploy
           aws-account: "842522700642"
           requires:
-            - prod-approval
+            - prod-service-adapter-promote-image
           filters:
             branches:
               only: main
