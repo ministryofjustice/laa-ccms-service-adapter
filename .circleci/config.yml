@@ -41,6 +41,7 @@ orbs:
                 aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
                 aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
                 aws configure set region $AWS_REGION --profile default
+                
 
 jobs:
   build:
@@ -100,7 +101,9 @@ jobs:
       - service-adapter/ecr_login
       - run:
           name: Push container
-          command: docker push 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter
+          command: | 
+            docker push 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter
+            docker image ls
 
 
   deploy:
