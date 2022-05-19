@@ -79,8 +79,8 @@ jobs:
           name: Retag latest to environment
           command: |
             export ECR_REPO_NAME
-            export AWS_REGION      
-            MANIFEST=$(aws ecr batch-get-image --repository-name $ECR_REPO_NAME --image-ids imageTag=latest --query 'images[].imageManifest' --output text --region $AWS_REGION)
+            export AWS_REGION        
+            MANIFEST=$(aws ecr batch-get-image --repository-name $ECR_REPO_NAME --image-ids imageTag=latest --query 'images[0].imageManifest' --output text --region $AWS_REGION)
             aws ecr put-image --repository-name $ECR_REPO_NAME --image-tag $CONTAINER_TAG --image-manifest "$MANIFEST" --region $AWS_REGION
 
   
