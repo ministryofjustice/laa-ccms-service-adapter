@@ -76,11 +76,16 @@ jobs:
       - service-adapter/aws_cli_install
       - service-adapter/ecr_login
       - run:
-          name: Retag latest to environment
+          name: set circle sha in env
+          command: |
+            echo "export IMAGE_TAG=${CIRCLE_SHA1:0:7}" >> $BASH_ENV
+            source $BASH_ENV
+      - run:
+          name: Retag short hash to environment
           command: |
             export ECR_REPO_NAME
             export AWS_REGION        
-            MANIFEST=$(aws ecr batch-get-image --repository-name $ECR_REPO_NAME --image-ids imageTag=latest --query 'images[0].imageManifest' --output text --region $AWS_REGION)
+            MANIFEST=$(aws ecr batch-get-image --repository-name $ECR_REPO_NAME --image-ids imageTag=$IMAGE_TAG --query 'images[0].imageManifest' --output text --region $AWS_REGION)
             aws ecr put-image --repository-name $ECR_REPO_NAME --image-tag $CONTAINER_TAG --image-manifest "$MANIFEST" --region $AWS_REGION
 
   
@@ -101,8 +106,10 @@ jobs:
       - service-adapter/ecr_login
       - run:
           name: Push container
-          command: | 
-            docker push 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter
+          command: |            
+            export SHORT_HASH=${CIRCLE_SHA1:0:7}
+            docker tag 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter:latest 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter:$SHORT_HASH
+            docker push 902837325998.dkr.ecr.eu-west-2.amazonaws.com/laa-ccms-service-adapter:$SHORT_HASH
             docker image ls
 
 
@@ -116,11 +123,17 @@ jobs:
       AWS_ACCOUNT=<<parameters.aws-account>>
     steps:
       - service-adapter/aws_cli_install
+      - run:
+          name: Set environment variables
+          command: |
+            export SHORT_HASH=${CIRCLE_SHA1:0:7}
+            echo "export SHORT_HASH=${CIRCLE_SHA1:0:7}" >> $BASH_ENV
+            source $BASH_ENV
       - service-adapter/aws-credentials
       - aws-ecs/update-service:
           family: 'laa-ccms-assessment-service-task-definition'
           cluster-name: 'ccms-opa18-hub-cluster'
-          container-image-name-updates: 'container=laa-ccms-assessment-service-container,tag=latest'
+          container-image-name-updates: 'container=laa-ccms-assessment-service-container,tag=${SHORT_HASH}'
           service-name: 'laa-ccms-assessment-service-ecs-service'
           force-new-deployment: true
 
