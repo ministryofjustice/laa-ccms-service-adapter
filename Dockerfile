@@ -4,5 +4,5 @@ COPY target/assess-service-adapter.jar assess-service-adapter.jar
 
 EXPOSE 8080
 
-ENV TZ=UTC
+ENV TZ=Europe/London
 ENTRYPOINT ["java","-jar","assess-service-adapter.jar"]
