@@ -167,7 +167,7 @@ workflows:
           filters:
             branches:
               ignore: main
-      - test-approval:
+      - uat-approval:
           type: approval
           requires:
             - dev-deploy
@@ -175,19 +175,19 @@ workflows:
             branches:
               ignore: main
       - promote-image:
-          name: test-service-adapter-promote-image
+          name: uat-service-adapter-promote-image
           repo_name: laa-ccms-service-adapter
-          container_tag: test
+          container_tag: uat
           requires:
-            - test-approval
+            - uat-approval
           filters:
             branches:
               ignore: main
       - deploy:
-          name: test-deploy
-          aws-account: "013163512034"
+          name: uat-deploy
+          aws-account: "140455166311"
           requires:
-            - test-service-adapter-promote-image
+            - uat-service-adapter-promote-image
           filters:
             branches:
               ignore: main
