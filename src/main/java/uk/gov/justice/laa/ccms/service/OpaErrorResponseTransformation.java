@@ -24,6 +24,7 @@ import uk.gov.justice.laa.ccms.soap.error.Event;
 public class OpaErrorResponseTransformation {
 
   private static final Logger logger = LoggerFactory.getLogger(OpaErrorResponseTransformation.class);
+  public static final String NONE = "none";
 
   private final String OPA_EVENT_ERROR = "assess.request.event.error";
 
@@ -63,20 +64,62 @@ public class OpaErrorResponseTransformation {
      */
     AssessResponse assessResponse = null;
     ObjectFactory factory = new ObjectFactory();
-    if ( (detail.getErrorResponse() != null)
-        && (detail.getErrorResponse().getEvents() != null)
-        && (detail.getErrorResponse().getEvents().getEventList() != null) ){
+    if ( detail.getErrorResponse() != null ) {
       assessResponse = factory.createAssessResponse();
-      ListEvents listEvents = factory.createListEvents();
-      List<RulebaseEvent> rulebaseEvents = listEvents.getEvent();
-      List<Event> events = detail.getErrorResponse().getEvents().getEventList();
-      for ( Event event : events ){
-        rulebaseEvents.add(createEvent(event, factory));
+      if ( detail.getErrorResponse().getEvents() != null
+          && detail.getErrorResponse().getEvents().getEventList() != null ){
+        ListEvents listEvents = factory.createListEvents();
+        List<RulebaseEvent> rulebaseEvents = listEvents.getEvent();
+        List<Event> events = detail.getErrorResponse().getEvents().getEventList();
+        for ( Event event : events ){
+          rulebaseEvents.add(createEvent(event, factory));
+        }
+        assessResponse.setEvents(listEvents);
+      } else {
+        ListEvents listEvents = factory.createListEvents();
+        List<RulebaseEvent> rulebaseEvents = listEvents.getEvent();
+
+        RulebaseEvent rulebaseEvent = getSoapFaultRulebaseEvent(detail, factory);
+        addRulebaseEventParamters(detail, rulebaseEvent);
+        addDecisionReport(factory, rulebaseEvent);
+        rulebaseEvents.add(rulebaseEvent);
+        assessResponse.setEvents(listEvents);
       }
-      assessResponse.setEvents(listEvents);
     }
 
     return assessResponse;
+  }
+
+  private void addDecisionReport(ObjectFactory factory, RulebaseEvent rulebaseEvent) {
+    DecisionReport decisionReport = factory.createDecisionReport();
+    decisionReport.setReportStyle("base-attributes");
+    List<Object> attributeDecisionNodes = decisionReport.getRelationshipDecisionNodeOrAttributeDecisionNode();
+    AttributeDecisionNode attributeDecisionNode = factory.createAttributeDecisionNode();
+    attributeDecisionNode.setId("dn:2");
+    attributeDecisionNode.setEntityType(NONE);
+    attributeDecisionNode.setEntityId(NONE);
+    attributeDecisionNode.setAttributeId(NONE);
+    attributeDecisionNode.setType(AttributeTypeEnum.TEXT);
+    attributeDecisionNode.setText(NONE);
+    attributeDecisionNode.setTextVal("");
+    attributeDecisionNodes.add(attributeDecisionNode);
+    rulebaseEvent.setDecisionReport(decisionReport);
+  }
+
+  private RulebaseEvent getSoapFaultRulebaseEvent(Detail detail, ObjectFactory factory) {
+    RulebaseEvent rulebaseEvent = factory.createRulebaseEvent();
+    rulebaseEvent.setName("Fatal");
+    rulebaseEvent.setEntityId("00000");
+    rulebaseEvent.setMessage(detail.getErrorResponse().getMessage());
+    return rulebaseEvent;
+  }
+
+  private void addRulebaseEventParamters(Detail detail, RulebaseEvent rulebaseEvent) {
+    RulebaseEvent.Parameters parameters = new RulebaseEvent.Parameters();
+    List<String> parametersValue = parameters.getValue();
+    parametersValue.add("Message : " + detail.getErrorResponse().getMessage());
+    parametersValue.add("Response Code : " + detail.getErrorResponse().getCode());
+    rulebaseEvent.setParameters(parameters);
   }
 
   private RulebaseEvent createEvent(Event opa12Event, ObjectFactory factory) {
@@ -85,7 +128,7 @@ public class OpaErrorResponseTransformation {
     if ( "error".equalsIgnoreCase(opa12Event.getName()) ){
       rulebaseEvent.setName("Fatal");
     }
-    //rulebaseEvent.setEntityId(opa12Event.getInstanceId());
+
     rulebaseEvent.setMessage(opa12Event.getMessage());
 
     //Parameters
@@ -168,7 +211,7 @@ public class OpaErrorResponseTransformation {
     JAXBContext jaxbContext = JAXBContext.newInstance(Detail.class);
     Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
     Detail detail = (Detail) unmarshaller.unmarshal(soapFault.getDetail());
-    logger.debug("*************detail************* : " + detail);
+    logger.info("*************detail************* : " + detail);
     return detail;
   }
 
