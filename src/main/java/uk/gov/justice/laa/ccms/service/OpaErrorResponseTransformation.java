@@ -66,25 +66,23 @@ public class OpaErrorResponseTransformation {
     ObjectFactory factory = new ObjectFactory();
     if ( detail.getErrorResponse() != null ) {
       assessResponse = factory.createAssessResponse();
+      ListEvents listEvents = factory.createListEvents();
+      List<RulebaseEvent> rulebaseEvents = listEvents.getEvent();
+
       if ( detail.getErrorResponse().getEvents() != null
           && detail.getErrorResponse().getEvents().getEventList() != null ){
-        ListEvents listEvents = factory.createListEvents();
-        List<RulebaseEvent> rulebaseEvents = listEvents.getEvent();
         List<Event> events = detail.getErrorResponse().getEvents().getEventList();
         for ( Event event : events ){
           rulebaseEvents.add(createEvent(event, factory));
         }
-        assessResponse.setEvents(listEvents);
       } else {
-        ListEvents listEvents = factory.createListEvents();
-        List<RulebaseEvent> rulebaseEvents = listEvents.getEvent();
-
         RulebaseEvent rulebaseEvent = getSoapFaultRulebaseEvent(detail, factory);
         addRulebaseEventParamters(detail, rulebaseEvent);
         addDecisionReport(factory, rulebaseEvent);
         rulebaseEvents.add(rulebaseEvent);
-        assessResponse.setEvents(listEvents);
       }
+
+      assessResponse.setEvents(listEvents);
     }
 
     return assessResponse;
