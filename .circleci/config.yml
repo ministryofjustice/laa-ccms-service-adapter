@@ -46,7 +46,9 @@ jobs:
   build:
     working_directory: ~/laa-ccms-service-adapter
     docker:
-      - image: circleci/openjdk:8-jdk-browsers
+      - image: cimg/openjdk:8.0-browsers
+    parallelism: 4
+    resource_class: large
     steps:
       - checkout
       - add_ssh_keys
@@ -56,6 +58,9 @@ jobs:
           paths:
             - target/assess-service-adapter.jar
   promote-image:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
     executor: docker/machine
     parameters:
       container_tag:
@@ -89,6 +94,9 @@ jobs:
   
 
   build-and-push-docker-image:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
     executor: docker/machine
     steps:
       - checkout
@@ -112,7 +120,12 @@ jobs:
 
 
   deploy:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
     executor: docker/machine
+    parallelism: 4
+    resource_class: large
     parameters:
       aws-account:
         description: "Aws Acccount"
