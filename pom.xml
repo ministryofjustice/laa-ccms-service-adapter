@@ -19,7 +19,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-		<cxf.version>3.2.1</cxf.version>
+		<cxf.version>3.5.10</cxf.version>
 		<org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
