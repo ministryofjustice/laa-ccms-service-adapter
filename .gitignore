@@ -68,3 +68,4 @@ node_modules
 /AssessServiceAdapter.iml
 /.idea/libraries/
 /.idea/aws.xml
+/.idea/checkstyle-idea.xml
