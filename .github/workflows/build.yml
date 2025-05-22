@@ -73,7 +73,6 @@ jobs:
           REPOSITORY: ${{ vars.ECR_REPOSITORY }}
           IMAGE_TAG: ${{ format('{0}-{1}', vars.IMAGE_PREFIX, needs.define-version.outputs.image_version) }}
       - name: Scan image
-        if: ${{ inputs.scan_image == 'true' }}
         uses: aquasecurity/trivy-action@0.30.0
         with:
           image-ref: ${{ steps.build-image.outputs.image_name }}
