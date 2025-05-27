@@ -1,0 +1,89 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'org.springframework.boot' version '2.7.18'
+    id 'uk.co.boothen.gradle.wsimport' version '0.17'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'uk.gov.justice.laa.ccms'
+description = 'OPA10 to OPA 12 Assess Service Adapter'
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-log4j2"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.hibernate.validator:hibernate-validator:9.0.0.Final"
+    implementation "org.apache.cxf:cxf-spring-boot-starter-jaxws:3.6.7"
+    implementation "org.apache.cxf:cxf-rt-ws-security:3.6.7"
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
+    implementation "org.mapstruct:mapstruct:1.6.3"
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.19.0"
+    implementation "javax.xml.bind:jaxb-api:2.3.1"
+    implementation 'javax.xml.ws:jaxws-api:2.3.1'
+    implementation "com.sun.xml.bind:jaxb-core:4.0.5"
+    implementation "com.sun.xml.bind:jaxb-impl:4.0.5"
+    implementation "javax.activation:activation:1.1.1"
+
+    compileOnly "org.springframework.boot:spring-boot-starter-tomcat"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+}
+
+configurations {
+    wsdl2java
+}
+
+tasks.register("updateSnapshotVersion") {
+    doLast(task -> {
+        def gitHash = "git rev-parse --short HEAD".execute().text.trim()
+        def propertiesFile = file('gradle.properties')
+        def properties = new Properties()
+        properties.load(new FileInputStream(propertiesFile))
+
+        def currentVersion = properties.getProperty('version')
+        def newVersion = currentVersion.replace('-SNAPSHOT', "-${gitHash}-SNAPSHOT")
+        properties.setProperty('version', newVersion)
+        properties.store(propertiesFile.newWriter(), null)
+    }
+    )
+}
+
+publishing {
+    repositories {
+        maven {
+            url "https://maven.pkg.github.com/ministryofjustice/${rootProject.name}"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")?.trim()
+                password = System.getenv("GITHUB_TOKEN")?.trim()
+            }
+        }
+    }
+}
+
+wsimport {
+    generatedSourceRoot = "/generated/src/wsdl/main"
+    generatedClassesRoot = "/classes/main"
+    target = "2.2"
+    keep = true
+    extension = true
+    verbose = false
+    quiet = true
+    debug = false
+    xnocompile = true
+    xadditionalHeaders = true
+
+    wsdl('AssessService-12.2.1.wsdl') {
+        wsdlLocation = '/wsdl/Answer.wsdl'
+    }
+    wsdl('opa10assess.wsdl') {
+        wsdlLocation = '/wsdl/opa10assess.wsdl'
+    }
+}
