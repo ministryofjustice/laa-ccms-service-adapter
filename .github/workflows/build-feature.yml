@@ -23,7 +23,7 @@ jobs:
     secrets:
       gh_token: ${{ secrets.GITHUB_TOKEN }}
 
-  ecr-publish-image:
+  scan-image:
     needs: [ build-and-publish-snapshot ]
     uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/ecr-publish-image.yml@feature/add-image-scanning
     permissions:
@@ -31,6 +31,7 @@ jobs:
       id-token: write
     with:
       image_version: ${{ format('{0}-{1}', vars.IMAGE_PREFIX, needs.build-and-publish-snapshot.outputs.published_artifact_version) }}
+      publish: false
     secrets:
       gh_token: ${{ secrets.GITHUB_TOKEN }}
       ecr_repository: ${{ vars.ECR_REPOSITORY }}
