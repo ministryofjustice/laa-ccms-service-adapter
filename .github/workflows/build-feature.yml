@@ -1,0 +1,40 @@
+name: Build feature
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - main-cp
+      - 'feature-dev/*'
+      - 'feature-test/*'
+
+jobs:
+  build-and-publish-snapshot:
+    uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/gradle-build-and-publish.yml@v1
+    permissions:
+      contents: write
+      packages: write
+    with:
+      publish_package: 'true'
+      is_snapshot: 'true'
+      junit_results: 'false'
+      junit_report: 'false'
+      checkstyle_report: 'false'
+      jacoco_coverage_report: 'false'
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+
+  scan-image:
+    needs: [ build-and-publish-snapshot ]
+    uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/ecr-publish-image.yml@feature/add-image-scanning
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      image_version: ${{ format('{0}-{1}', vars.IMAGE_PREFIX, needs.build-and-publish-snapshot.outputs.published_artifact_version) }}
+      publish: false
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY }}
+      ecr_region: ${{ vars.ECR_REGION }}
+      ecr_role_to_assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}

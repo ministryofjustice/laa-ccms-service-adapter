@@ -3,21 +3,18 @@
 The service adapter is a Spring Boot mircoservice built for processing OPA 18 AssessService requests for means, merits and billing rulebases.
 
 # Technologies Used
-1. Java 8
+1. Java 11
 2. Spring boot
 3. Apache CXF
 4. OPA 12 AssessService
-5. Maven
+5. Gradle
 
 ## How to build and run locally
 
 To build the application:  
-`./mvnw clean install`
+`./gradlew clean build`
 
-To build for environment specific:  
-`./mvnw clean install`-Pstage (for stage)
-
-Then to run this application in Docker:  
+Then to run this application in Docker:
 `docker-compose up`
 
 To run the Cypress tests:  
