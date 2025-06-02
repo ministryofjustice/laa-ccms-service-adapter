@@ -14,6 +14,7 @@ jobs:
       packages: write
     with:
       create_tag: 'true'
+      override_tagged_branch: 'main-cp'
       github_bot_username: 'laa-ccms-caab-service'
       junit_results: 'false'
       junit_report: 'false'
