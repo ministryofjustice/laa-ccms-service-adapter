@@ -12,19 +12,18 @@
 # Log file
 *.log
 
-
 # Package Files #
 *.war
 *.ear
 *.tar.gz
 *.rar
 
- # IntelliJ
- out/
+# IntelliJ
+out/
 .idea
- auto-import.
- *.iml
- *.ipr
+auto-import.
+*.iml
+*.ipr
 
 # Gradle
 .gradle/
