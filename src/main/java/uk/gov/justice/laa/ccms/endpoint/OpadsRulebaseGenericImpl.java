@@ -24,8 +24,6 @@ import uk.gov.justice.laa.ccms.service.BulkClaimDecisionReportTransformation;
 import uk.gov.justice.laa.ccms.service.DecisionReportTransformation;
 import uk.gov.justice.laa.ccms.service.OpaErrorResponseTransformation;
 
-;
-
 @Component
 public class OpadsRulebaseGenericImpl implements OpadsRulebaseGeneric {
 

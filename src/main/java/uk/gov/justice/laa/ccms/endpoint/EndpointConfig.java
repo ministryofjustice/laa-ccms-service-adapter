@@ -3,7 +3,7 @@ package uk.gov.justice.laa.ccms.endpoint;
 import com.oracle.determinations.server._10_0.rulebase.types.OpadsRulebaseGeneric;
 import java.util.HashMap;
 import java.util.Map;
-import jakarta.xml.ws.Endpoint;
+import javax.xml.ws.Endpoint;
 import org.apache.cxf.Bus;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
