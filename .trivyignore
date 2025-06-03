@@ -1,3 +1,14 @@
+# com.google.guava:guava (guava-19.0.jar)
+CVE-2023-2976
+CVE-2020-8908
+
+# org.bouncycastle:bcprov-jdk15on (bcprov-jdk15on-1.54.jar)
+CVE-2020-15522
+CVE-2020-26939
+CVE-2023-33202
+CVE-2024-29857
+CVE-2024-30171
+
 # com.fasterxml.jackson.core:jackson-databind (ehcache-2.10.9.2.jar)
 CVE-2020-36518
 CVE-2021-46877
@@ -86,3 +97,7 @@ CVE-2022-38750
 CVE-2022-38751
 CVE-2022-38752
 CVE-2022-41854
+
+# layers/paketo-buildpacks_spring-boot/helper/helper (gobinary)
+# stdlib
+CVE-2025-22871
