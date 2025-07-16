@@ -1,10 +1,10 @@
 
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.18'
+    id 'org.springframework.boot' version '3.0.13'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'maven-publish'
-    id 'uk.co.boothen.gradle.wsimport' version '0.17'
+    id 'uk.co.boothen.gradle.wsimport' version '0.23'
     id 'net.researchgate.release' version '3.1.0'
 }
 
@@ -13,6 +13,7 @@ java {
 }
 
 repositories {
+    maven { url "https://build.shibboleth.net/nexus/content/repositories/releases/" }
     mavenCentral()
 }
 
@@ -25,13 +26,15 @@ configurations {
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter"
     implementation "org.springframework.boot:spring-boot-starter-log4j2"
+//    jaxWsTools "com.sun.xml.ws:jaxws-rt:4.0.3"
+//    runtimeOnly "org.glassfish.jaxb:jaxb-runtime:3.0.2"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation "org.hibernate.validator:hibernate-validator:6.2.5.Final"
 
-    implementation "org.apache.cxf:cxf-spring-boot-starter-jaxws:3.2.1"
-    implementation "org.apache.cxf:cxf-rt-ws-security:3.2.1"
-    implementation "org.apache.cxf.xjcplugins:cxf-xjc-ts:3.2.1"
+    implementation "org.apache.cxf:cxf-spring-boot-starter-jaxws:4.0.8"
+    implementation "org.apache.cxf:cxf-rt-ws-security:4.0.8"
+//    implementation "org.apache.cxf.xjcplugins:cxf-xjc-ts:3.2.1"
 
     implementation 'org.apache.commons:commons-lang3:3.17.0'
 
@@ -40,9 +43,9 @@ dependencies {
 
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
 
-    implementation "com.sun.xml.ws:jaxws-rt:2.3.7"
-    implementation "jakarta.xml.bind:jakarta.xml.bind-api:2.3.3"
-    implementation "jakarta.xml.ws:jakarta.xml.ws-api:2.3.3"
+//    implementation "com.sun.xml.ws:jaxws-rt:4.0.3"
+//    implementation "jakarta.xml.bind:jakarta.xml.bind-api:4.0.2"
+//    implementation "jakarta.xml.ws:jakarta.xml.ws-api:4.0.2"
     implementation "javax.activation:activation:1.1.1"
 
     compileOnly "org.springframework.boot:spring-boot-starter-tomcat"
@@ -80,7 +83,7 @@ publishing {
 }
 
 wsimport {
-    target = '2.0'
+    target = '3.0'
     keep = true
     extension = true
     verbose = false
@@ -101,4 +104,7 @@ release {
     git {
         requireBranch.set('main-cp')
     }
+}
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
 }
