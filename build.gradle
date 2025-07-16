@@ -1,11 +1,10 @@
-import uk.co.boothen.gradle.wsimport.WsImport
 
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.18'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'maven-publish'
-    id 'uk.co.boothen.gradle.wsimport' version '0.10'
+    id 'uk.co.boothen.gradle.wsimport' version '0.17'
     id 'net.researchgate.release' version '3.1.0'
 }
 
@@ -80,7 +79,7 @@ publishing {
     }
 }
 
-tasks.register('wsimport', WsImport) {
+wsimport {
     target = '2.0'
     keep = true
     extension = true
