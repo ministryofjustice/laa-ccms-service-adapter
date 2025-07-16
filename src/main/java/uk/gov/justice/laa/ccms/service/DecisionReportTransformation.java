@@ -355,8 +355,7 @@ public class DecisionReportTransformation {
   private AttributeNodeType getGoalAttributeNodeFromDecisionReport(DecisionReportType decisionReportType) {
     List<?> nodes = (List<?>) decisionReportType.getRelationshipNodeOrAttributeNodeOrAlreadyProvenNode();
     for (Object node : nodes) {
-      if (node instanceof AttributeNodeType) {
-        AttributeNodeType opaAttributeNodeType = (AttributeNodeType) node;
+      if (node instanceof AttributeNodeType opaAttributeNodeType) {
         logger.debug("AttributeNodeType Id = " + opaAttributeNodeType.getAttributeId());
 
         if ( MEANS_CALCULATIONS.equalsIgnoreCase(opaAttributeNodeType.getAttributeId()) ||
@@ -379,8 +378,7 @@ public class DecisionReportTransformation {
 
     // Loop through each node in the nodeList and extract the AttributeNode
     for (Object node : nodeList) {
-      if (node instanceof AttributeNodeType) {
-        AttributeNodeType attributeNodeType = (AttributeNodeType) node;
+      if (node instanceof AttributeNodeType attributeNodeType) {
 
         if ( (attributeNodeType.getUnknownVal() != null) && ( !ignoreAttributes.contains(attributeNodeType.getAttributeId())) ) {
           //logger.debug("Unknown AttributeNodeType Id = " + attributeNodeType.getAttributeId());
@@ -486,8 +484,7 @@ public class DecisionReportTransformation {
   private void resetGlobalEntityId(List nodeList, String globalEntityId) {
     // Loop through each node in the nodeList and extract the AttributeNode and RelationshipNode objects but ignore the AlreadyProvenNodes
     for (Object node : nodeList) {
-      if (node instanceof AttributeDecisionNode) {
-        AttributeDecisionNode attributeDecisionNode = (AttributeDecisionNode) node;
+      if (node instanceof AttributeDecisionNode attributeDecisionNode) {
 
         if ( "global".equalsIgnoreCase(attributeDecisionNode.getEntityId()) ){
           //logger.debug("Attribute updated - " + attributeDecisionNode.getAttributeId());

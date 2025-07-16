@@ -48,8 +48,7 @@ public class CustomTransformation {
             String goalAttributeId) {
     List<?> nodes = (List<?>) decisionReportType.getRelationshipNodeOrAttributeNodeOrAlreadyProvenNode();
     for (Object node : nodes) {
-      if (node instanceof AttributeNodeType) {
-        AttributeNodeType opaAttributeNodeType = (AttributeNodeType) node;
+      if (node instanceof AttributeNodeType opaAttributeNodeType) {
         if ( goalAttributeId.equalsIgnoreCase(opaAttributeNodeType.getAttributeId()) ){
           return opaAttributeNodeType;
         }
@@ -79,8 +78,7 @@ public class CustomTransformation {
     
     // Loop through each node in the nodeList and extract the AttributeNode
     for (Object node : nodeList) {
-      if (node instanceof AttributeNodeType) {
-        AttributeNodeType attributeNodeType = (AttributeNodeType) node;
+      if (node instanceof AttributeNodeType attributeNodeType) {
         int size = attributeNodeType.getRelationshipNodeOrAttributeNodeOrAlreadyProvenNode().size();
         
         if ((attributeNodeType.getUnknownVal() != null) && (size == 0) && (nodeTypeList.size() < 1) ) {
@@ -280,8 +278,7 @@ public class CustomTransformation {
   public void resetGlobalEntityId(List<?> nodeList, String globalEntityId) {
     // Loop through each node in the nodeList and extract the AttributeNode and RelationshipNode objects but ignore the AlreadyProvenNodes
     for (Object node : nodeList) {
-      if (node instanceof AttributeDecisionNode) {
-        AttributeDecisionNode attributeDecisionNode = (AttributeDecisionNode) node;
+      if (node instanceof AttributeDecisionNode attributeDecisionNode) {
 
         if ( GLOBAL.equalsIgnoreCase(attributeDecisionNode.getEntityId()) ){
           attributeDecisionNode.setEntityId(globalEntityId);

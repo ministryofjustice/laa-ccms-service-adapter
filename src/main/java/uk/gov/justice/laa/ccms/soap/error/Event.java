@@ -95,8 +95,7 @@ public class Event {
     builder.append("DecisionReportType: ");
     builder.append("[ReportStyle = " + decisionReport.getReportStyle() + "]");
     for (Object node : decisionReport.getRelationshipNodeOrAttributeNodeOrAlreadyProvenNode()) {
-      if (node instanceof AttributeNodeType) {
-        AttributeNodeType node1 = (AttributeNodeType) node;
+      if (node instanceof AttributeNodeType node1) {
         builder.append("[id = " + node1.getId() + "]");
         builder.append("[entityId = " + node1.getEntityId() + "]");
         builder.append("[instanceId = " + node1.getInstanceId() + "]");

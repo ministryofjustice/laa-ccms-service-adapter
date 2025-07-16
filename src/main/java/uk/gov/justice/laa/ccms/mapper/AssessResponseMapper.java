@@ -88,10 +88,10 @@ public interface AssessResponseMapper {
     List<Object> returnObjects = new ArrayList<Object>();
 
     for (Object object : objects) {
-      if (object instanceof AttributeNodeType) {
-        returnObjects.add(map((AttributeNodeType) object));
-      } else if (object instanceof RelationshipNodeType) {
-        returnObjects.add(map((RelationshipNodeType) object));
+      if (object instanceof AttributeNodeType type1) {
+        returnObjects.add(map(type1));
+      } else if (object instanceof RelationshipNodeType type) {
+        returnObjects.add(map(type));
       } else if (object instanceof AlreadyProvenNodeType) {
         // ignore as there is no corresponding object in the opa10 response
       } else {

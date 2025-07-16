@@ -115,8 +115,7 @@ public class OpaErrorResponseTransformation {
       DecisionReportType opa18DecisionReportType, ObjectFactory factory,
       RulebaseEvent rulebaseEvent) {
     for ( Object object : opa18DecisionReportType.getRelationshipNodeOrAttributeNodeOrAlreadyProvenNode() ){
-      if ( object instanceof AttributeNodeType ){
-        AttributeNodeType opa12NodeType = ( AttributeNodeType ) object;
+      if ( object instanceof AttributeNodeType opa12NodeType ){
         AttributeDecisionNode node = factory.createAttributeDecisionNode();
         createAttributeDecisionNode(node, opa12NodeType, factory, rulebaseEvent);
         opa10DecisionReport.getRelationshipDecisionNodeOrAttributeDecisionNode().add(node);
