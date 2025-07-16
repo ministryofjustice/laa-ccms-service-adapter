@@ -101,3 +101,10 @@ CVE-2022-41854
 # layers/paketo-buildpacks_spring-boot/helper/helper (gobinary)
 # stdlib
 CVE-2025-22871
+
+# libgnutls30 │ libgnutls30
+
+CVE-2025-32988
+CVE-2025-32989
+CVE-2025-32990
+CVE-2025-6395

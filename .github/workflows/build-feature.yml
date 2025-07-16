@@ -34,7 +34,7 @@ jobs:
     with:
       java_version: '17'
       image_version: ${{ format('{0}-{1}', vars.IMAGE_PREFIX, needs.build-and-publish-snapshot.outputs.published_artifact_version) }}
-      publish: false
+      publish: true
     secrets:
       gh_token: ${{ secrets.GITHUB_TOKEN }}
       ecr_repository: ${{ vars.ECR_REPOSITORY }}
