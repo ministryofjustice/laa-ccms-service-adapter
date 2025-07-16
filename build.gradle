@@ -34,7 +34,7 @@ dependencies {
     implementation "org.apache.cxf:cxf-spring-boot-starter-jaxws:4.0.8"
     implementation "org.apache.cxf:cxf-rt-ws-security:4.0.8"
 
-    implementation 'org.apache.commons:commons-lang3:3.17.0'
+    implementation 'org.apache.commons:commons-lang3:3.18.0'
 
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
