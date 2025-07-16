@@ -29,7 +29,7 @@ dependencies {
 
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation 'io.micrometer:micrometer-registry-prometheus'
-    implementation "org.hibernate.validator:hibernate-validator:6.2.5.Final"
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     implementation "org.apache.cxf:cxf-spring-boot-starter-jaxws:4.0.8"
     implementation "org.apache.cxf:cxf-rt-ws-security:4.0.8"
