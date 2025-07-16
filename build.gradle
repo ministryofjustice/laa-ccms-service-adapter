@@ -36,8 +36,8 @@ dependencies {
 
     implementation 'org.apache.commons:commons-lang3:3.17.0'
 
-    implementation 'org.mapstruct:mapstruct-jdk8:1.2.0.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.2.0.Final'
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
 
