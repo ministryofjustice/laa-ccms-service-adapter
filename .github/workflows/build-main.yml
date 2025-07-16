@@ -13,7 +13,7 @@ jobs:
       contents: write
       packages: write
     with:
-      java_version: '17'
+      java_version: '21'
       create_tag: 'true'
       override_tagged_branch: 'main-cp'
       github_bot_username: 'laa-ccms-caab-service'

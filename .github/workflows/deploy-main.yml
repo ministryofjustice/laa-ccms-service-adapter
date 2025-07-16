@@ -15,7 +15,7 @@ jobs:
       contents: write
       packages: write
     with:
-      java_version: '17'
+      java_version: '21'
       build_command: 'assemble'
       publish_package: 'true'
       junit_results: 'false'
@@ -32,7 +32,7 @@ jobs:
       contents: read
       id-token: write
     with:
-      java_version: '17'
+      java_version: '21'
       image_version: ${{ format('{0}-{1}', vars.IMAGE_PREFIX, needs.assemble-and-publish.outputs.published_artifact_version) }}
     secrets:
       gh_token: ${{ secrets.GITHUB_TOKEN }}

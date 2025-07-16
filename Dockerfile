@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17
+FROM eclipse-temurin:21
 
 # Create group and user before copying files
 RUN groupadd --system --gid 800 customgroup \

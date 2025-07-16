@@ -10,6 +10,7 @@ import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AssessResp
 import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AttributeType;
 import com.oracle.determinations.server._12_2_1.rulebase.assess.types.EntityInstanceType;
 import com.oracle.determinations.server._12_2_1.rulebase.assess.types.EntityType;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -52,7 +53,7 @@ public class EntityLevelRelocationServiceImpl implements EntityLevelRelocationSe
       com.oracle.determinations.server._10_0.rulebase.types.AssessRequest request) {
     return request.getSessionData().getListEntity().stream()
         .filter(entity -> entity.getEntityType().equalsIgnoreCase("global")).findFirst()
-        .map(e -> e.getEntity().get(0).getId()).get();
+        .map(e -> e.getEntity().getFirst().getId()).get();
 
   }
 
@@ -60,9 +61,10 @@ public class EntityLevelRelocationServiceImpl implements EntityLevelRelocationSe
   public void moveGlobalAttributesAndRelationsToBaseLevel(AssessRequest request) {
     List<AttributeType> attributeTypes = request.getGlobalInstance().getEntity().stream()
         .filter(entity -> entity.getId().equalsIgnoreCase("global"))
-        .map(entity -> entity.getInstance())
-        .flatMap(el -> el.stream()).map(e -> e.getAttribute()).flatMap(al -> al.stream())
-        .collect(Collectors.toList());
+        .map(EntityType::getInstance)
+        .flatMap(Collection::stream).map(EntityInstanceType::getAttribute).flatMap(
+            Collection::stream)
+        .toList();
 
     request.getGlobalInstance().getAttribute().addAll(attributeTypes);
 
@@ -76,7 +78,7 @@ public class EntityLevelRelocationServiceImpl implements EntityLevelRelocationSe
 
     List<EntityType> subEntities = request.getGlobalInstance().getEntity().stream()
         .filter(entity -> SUBENTITY_MAP.containsKey(entity.getId()))
-        .collect(Collectors.toList());
+        .toList();
     if (subEntities == null) {
       logger.debug("------------- subEntities is null");
       return;
@@ -99,7 +101,7 @@ public class EntityLevelRelocationServiceImpl implements EntityLevelRelocationSe
         throw new IllegalStateException();
       }
 
-      parentEntities.get(0).getInstance().get(0).getEntity().add(subEntity);
+      parentEntities.getFirst().getInstance().getFirst().getEntity().add(subEntity);
     }
 
     request.getGlobalInstance().getEntity().removeIf(entity -> subEntities.contains(entity));
@@ -160,12 +162,12 @@ public class EntityLevelRelocationServiceImpl implements EntityLevelRelocationSe
         Relationship childRelationship = new Relationship();
         childRelationship.setName(opaEntity.getReverseRelPublicName());
         RelationshipTarget target = new RelationshipTarget();
-        target.setEntityId(parentEntity.getEntity().get(0).getId());
+        target.setEntityId(parentEntity.getEntity().getFirst().getId());
         childRelationship.getTarget().add(target);
 
         entity.getRelationships().getRelationship().add(childRelationship);
       }
-      parentEntity.getEntity().get(0).getRelationships().getRelationship().add(parentRelationship);
+      parentEntity.getEntity().getFirst().getRelationships().getRelationship().add(parentRelationship);
 
     }
   }
