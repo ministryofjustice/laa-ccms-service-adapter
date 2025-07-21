@@ -108,3 +108,6 @@ CVE-2025-32988
 CVE-2025-32989
 CVE-2025-32990
 CVE-2025-6395
+
+# 2.39-0ubuntu8.4 - glibc: Vector register overwrite bug in glibc │
+CVE-2025-5702
