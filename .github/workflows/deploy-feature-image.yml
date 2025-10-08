@@ -1,0 +1,58 @@
+name: Publish feature image
+
+on:
+  push:
+    branches:
+      - 'feature-mp/**'
+
+permissions:
+  contents: read
+
+jobs:
+  define-feature-version:
+    runs-on: ubuntu-latest
+    outputs:
+      feature_version: ${{ steps.get-feature-version.outputs.feature_version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ministryofjustice/laa-ccms-common-workflows/.github/actions/remove-prefix@v1
+        id: get-feature-name
+        with:
+          string: ${{ github.ref_name }}
+          prefix: 'feature-mp/'
+      - name: Get feature version
+        id: get-feature-version
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          echo "feature_version=${{ steps.get-feature-name.outputs.result }}-${COMMIT_HASH}-SNAPSHOT" >> $GITHUB_OUTPUT
+          echo "Feature version: ${{ steps.get-feature-name.outputs.result }}-${COMMIT_HASH}-SNAPSHOT"
+
+  build-and-publish-snapshot:
+    needs: [ define-feature-version ]
+    uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/gradle-build-and-publish.yml@v1
+    permissions:
+      contents: write
+      packages: write
+    with:
+      java_version: '8'
+      publish_package: 'true'
+      override_version: ${{ needs.define-feature-version.outputs.feature_version }}
+      checkstyle_report: 'false'
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+
+  ecr-publish-image:
+    needs: [ build-and-publish-snapshot ]
+    uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/ecr-publish-image.yml@feature/support-ecr-in-another-repository
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      java_version: '8'
+      image_version: ${{ format('{0}-{1}', vars.IMAGE_PREFIX, needs.build-and-publish-snapshot.outputs.published_artifact_version) }}
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY_MP }}
+      ecr_region: ${{ vars.ECR_REGION_MP }}
+      ecr_role_to_assume: ${{ secrets.ECR_ROLE_TO_ASSUME_MP }}
+      ecr_registry: ${{ secrets.ECR_REGISTRY_MP }}
