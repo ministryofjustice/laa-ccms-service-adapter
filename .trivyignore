@@ -14,9 +14,33 @@ CVE-2020-36518
 CVE-2021-46877
 CVE-2022-42003
 CVE-2022-42004
+CVE-2025-52999
+CVE-2025-49128
 
 # com.fasterxml.woodstox:woodstox-core (woodstox-core-5.0.3.jar)
 CVE-2022-40152
+
+# com.fasterxml.jackson.core:jackson-core (jackson-core-2.13.5.jar)
+CVE-2025-52999
+
+# org.apache.commons:commons-lang3 (commons-lang3-3.17.0.jar)
+CVE-2025-48924
+
+# org.apache.cxf:cxf-core (cxf-core-3.2.1.jar)
+CVE-2025-48795
+
+# org.bouncycastle:bcprov-jdk15on (bcprov-jdk15on-1.54.jar)
+CVE-2016-1000338
+CVE-2016-1000340
+CVE-2016-1000342
+CVE-2016-1000343
+CVE-2016-1000344
+CVE-2016-1000352
+CVE-2018-1000180
+CVE-2016-1000339
+CVE-2016-1000341
+CVE-2016-1000345
+CVE-2016-1000346
 
 # com.google.guava:guava (guava-19.0.jar)
 CVE-2018-10237
@@ -44,6 +68,9 @@ CVE-2024-24549
 CVE-2025-31650
 CVE-2025-31651
 CVE-2025-46701
+CVE-2025-48988
+CVE-2025-48989
+CVE-2025-49125
 
 # org.apache.tomcat.embed:tomcat-embed-websocket (tomcat-embed-websocket-9.0.83.jar)
 CVE-2024-23672
@@ -65,6 +92,9 @@ CVE-2023-26049
 
 # org.glassfish.jersey.core:jersey-common (ehcache-2.10.9.2.jar)
 CVE-2021-28168
+
+# org.springframework:spring-core (spring-core-5.3.31.jar)
+CVE-2025-41249
 
 # org.springframework.boot:spring-boot (spring-boot-2.7.18.jar)
 CVE-2025-22235
@@ -88,6 +118,7 @@ CVE-2024-38820
 CVE-2024-38816
 CVE-2024-38819
 CVE-2024-38828
+CVE-2025-41242
 
 # org.yaml:snakeyaml (snakeyaml-1.30.jar)
 CVE-2022-1471
