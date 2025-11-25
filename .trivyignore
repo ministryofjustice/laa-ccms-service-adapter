@@ -71,6 +71,10 @@ CVE-2025-46701
 CVE-2025-48988
 CVE-2025-48989
 CVE-2025-49125
+CVE-2025-55752
+CVE-2025-49124
+CVE-2025-55754
+CVE-2025-61795
 
 # org.apache.tomcat.embed:tomcat-embed-websocket (tomcat-embed-websocket-9.0.83.jar)
 CVE-2024-23672
@@ -132,3 +136,7 @@ CVE-2022-41854
 # layers/paketo-buildpacks_spring-boot/helper/helper (gobinary)
 # stdlib
 CVE-2025-22871
+
+# golang.org/x/crypto
+CVE-2025-47914
+CVE-2025-58181
