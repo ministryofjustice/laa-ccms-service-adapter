@@ -33,7 +33,7 @@ jobs:
       id-token: write
     with:
       java_version: '8'
-      image_version: ${{ needs.build-and-publish-snapshot.outputs.published_artifact_version }}
+      image_version: ${{ needs.assemble.outputs.published_artifact_version }}
     secrets:
       gh_token: ${{ secrets.GITHUB_TOKEN }}
       ecr_repository: ${{ vars.ECR_REPOSITORY_MP }}
