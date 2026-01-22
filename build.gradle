@@ -2,10 +2,10 @@ import uk.co.boothen.gradle.wsimport.WsImport
 
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.18'
+    id 'org.springframework.boot' version '4.0.2'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'maven-publish'
-    id 'uk.co.boothen.gradle.wsimport' version '0.10'
+    id 'uk.co.boothen.gradle.wsimport' version '0.25'
     id 'net.researchgate.release' version '3.1.0'
 }
 
@@ -28,22 +28,22 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-log4j2"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation 'io.micrometer:micrometer-registry-prometheus'
-    implementation "org.hibernate.validator:hibernate-validator:6.2.5.Final"
+    implementation "org.hibernate.validator:hibernate-validator:9.1.0.Final"
 
-    implementation "org.apache.cxf:cxf-spring-boot-starter-jaxws:3.2.1"
-    implementation "org.apache.cxf:cxf-rt-ws-security:3.2.1"
-    implementation "org.apache.cxf.xjcplugins:cxf-xjc-ts:3.2.1"
+    implementation "org.apache.cxf:cxf-spring-boot-starter-jaxws:4.1.4"
+    implementation "org.apache.cxf:cxf-rt-ws-security:4.1.4"
+    implementation "org.apache.cxf.xjcplugins:cxf-xjc-ts:4.1.4"
 
-    implementation 'org.apache.commons:commons-lang3:3.17.0'
+    implementation 'org.apache.commons:commons-lang3:3.20.0'
 
-    implementation 'org.mapstruct:mapstruct-jdk8:1.2.0.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.2.0.Final'
+    implementation 'org.mapstruct:mapstruct-jdk8:1.6.3'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv"
 
-    implementation "javax.xml.bind:jaxb-api:2.2.12"
-    implementation "com.sun.xml.bind:jaxb-core:2.2.11"
-    implementation "com.sun.xml.bind:jaxb-impl:2.2.11"
+    implementation "javax.xml.bind:jaxb-api:2.3.1"
+    implementation "com.sun.xml.bind:jaxb-core:4.0.6"
+    implementation "com.sun.xml.bind:jaxb-impl:4.0.6"
     implementation "javax.activation:activation:1.1.1"
 
     compileOnly "org.springframework.boot:spring-boot-starter-tomcat"
