@@ -1,0 +1,58 @@
+name: Deploy to MP
+
+on:
+  workflow_call:
+    inputs:
+      image_version:
+        required: true
+        type: string
+        description: 'The image version from ECR repository to use'
+      deployment_environment:
+        required: true
+        type: string
+        description: 'The environment the workflow is running in'
+
+    secrets:
+      aws_region:
+        required: true
+      aws_role_to_assume_mp:
+        required: true
+      ecr_registry:
+        required: true
+      ecr_repository:
+        required: true
+
+jobs:
+  deploy-to-mp:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.deployment_environment }}
+
+    env:
+      AWS_REGION: ${{ secrets.aws_region }}
+
+    steps:
+      - name: Configure aws credentials for ECS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_MP }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Download current task definition
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ vars.TASK_DEFINITION_NAME }} --query taskDefinition > task-definition.json
+
+      - name: Update task definition with new image
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: ${{ vars.CONTAINER_NAME }}
+          image: ${{ secrets.ecr_registry }}/${{ secrets.ecr_repository }}:${{ inputs.image_version }}
+
+      - name: Deploy to Amazon ECS service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ vars.SERVICE_NAME }}
+          cluster: ${{ vars.CLUSTER_NAME }}
+          wait-for-service-stability: true
