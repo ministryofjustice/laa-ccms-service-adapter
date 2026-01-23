@@ -97,9 +97,3 @@ tasks.register('wsimport', WsImport) {
     }
 }
 
-// todo remove when moving to main
-release {
-    git {
-        requireBranch.set('main-cp')
-    }
-}

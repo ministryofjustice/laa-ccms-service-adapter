@@ -2,7 +2,7 @@ name: Build main
 
 on:
   pull_request:
-    branches: [ main, main-cp ]
+    branches: [ main ]
     types: [ closed ]
 
 jobs:
@@ -15,7 +15,6 @@ jobs:
     with:
       java_version: '8'
       create_tag: 'true'
-      override_tagged_branch: 'main-cp'
       github_bot_username: 'laa-ccms-caab-service'
       junit_results: 'false'
       junit_report: 'false'
