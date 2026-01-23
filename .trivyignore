@@ -140,6 +140,15 @@ CVE-2022-41854
 # stdlib
 CVE-2025-22871
 
+# libgnutls30 │ libgnutls30
+
+CVE-2025-32988
+CVE-2025-32989
+CVE-2025-32990
+CVE-2025-6395
+
+# 2.39-0ubuntu8.4 - glibc: Vector register overwrite bug in glibc │
+CVE-2025-5702
 # golang.org/x/crypto
 CVE-2025-47914
 CVE-2025-58181

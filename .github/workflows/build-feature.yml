@@ -16,7 +16,7 @@ jobs:
       contents: write
       packages: write
     with:
-      java_version: '8'
+      java_version: '21'
       publish_package: 'true'
       is_snapshot: 'true'
       junit_results: 'false'
@@ -33,9 +33,9 @@ jobs:
       contents: read
       id-token: write
     with:
-      java_version: '8'
+      java_version: '21'
       image_version: ${{ format('{0}-{1}', vars.IMAGE_PREFIX, needs.build-and-publish-snapshot.outputs.published_artifact_version) }}
-      publish: false
+      publish: true
     secrets:
       gh_token: ${{ secrets.GITHUB_TOKEN }}
       ecr_repository: ${{ vars.ECR_REPOSITORY }}

@@ -127,10 +127,10 @@ public interface AssessRequestMapper {
     List<Object> returnObjects = new ArrayList<Object>();
 
     for (Object object : objects) {
-      if (object instanceof AttributeDecisionNode) {
-        returnObjects.add(map((AttributeDecisionNode) object));
-      } else if (object instanceof RelationshipDecisionNode) {
-        returnObjects.add(map((RelationshipDecisionNode) object));
+      if (object instanceof AttributeDecisionNode node1) {
+        returnObjects.add(map(node1));
+      } else if (object instanceof RelationshipDecisionNode node) {
+        returnObjects.add(map(node));
       } else if (object instanceof AlreadyProvenNodeType) {
         // ignore as there is no corresponding object in the opa10 response
       } else {

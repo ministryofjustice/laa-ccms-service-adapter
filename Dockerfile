@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk
+FROM eclipse-temurin:21
 
 # Create group and user before copying files
 RUN groupadd --system --gid 800 customgroup \

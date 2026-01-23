@@ -5,9 +5,9 @@ import com.oracle.determinations.server._10_0.rulebase.types.Error;
 import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AttributeNodeType;
 import com.oracle.determinations.server._12_2_1.rulebase.assess.types.DecisionReportType;
 import java.util.List;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import org.apache.cxf.binding.soap.SoapFault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,8 +115,7 @@ public class OpaErrorResponseTransformation {
       DecisionReportType opa18DecisionReportType, ObjectFactory factory,
       RulebaseEvent rulebaseEvent) {
     for ( Object object : opa18DecisionReportType.getRelationshipNodeOrAttributeNodeOrAlreadyProvenNode() ){
-      if ( object instanceof AttributeNodeType ){
-        AttributeNodeType opa12NodeType = ( AttributeNodeType ) object;
+      if ( object instanceof AttributeNodeType opa12NodeType ){
         AttributeDecisionNode node = factory.createAttributeDecisionNode();
         createAttributeDecisionNode(node, opa12NodeType, factory, rulebaseEvent);
         opa10DecisionReport.getRelationshipDecisionNodeOrAttributeDecisionNode().add(node);

@@ -2,10 +2,10 @@ package uk.gov.justice.laa.ccms.soap.error;
 
 import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AttributeNodeType;
 import com.oracle.determinations.server._12_2_1.rulebase.assess.types.DecisionReportType;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Event {
@@ -95,8 +95,7 @@ public class Event {
     builder.append("DecisionReportType: ");
     builder.append("[ReportStyle = " + decisionReport.getReportStyle() + "]");
     for (Object node : decisionReport.getRelationshipNodeOrAttributeNodeOrAlreadyProvenNode()) {
-      if (node instanceof AttributeNodeType) {
-        AttributeNodeType node1 = (AttributeNodeType) node;
+      if (node instanceof AttributeNodeType node1) {
         builder.append("[id = " + node1.getId() + "]");
         builder.append("[entityId = " + node1.getEntityId() + "]");
         builder.append("[instanceId = " + node1.getInstanceId() + "]");
