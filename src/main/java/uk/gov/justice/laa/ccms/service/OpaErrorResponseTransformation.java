@@ -1,6 +1,7 @@
 package uk.gov.justice.laa.ccms.service;
 
 import com.oracle.determinations.server._10_0.rulebase.types.*;
+import com.oracle.determinations.server._10_0.rulebase.types.Error;
 import com.oracle.determinations.server._12_2_1.rulebase.assess.types.AttributeNodeType;
 import com.oracle.determinations.server._12_2_1.rulebase.assess.types.DecisionReportType;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import uk.gov.justice.laa.ccms.soap.error.Detail;
 import uk.gov.justice.laa.ccms.soap.error.Event;
+import uk.gov.justice.laa.ccms.soap.error.OpaErrorResponse;
 
 @Service
 public class OpaErrorResponseTransformation {
@@ -29,7 +31,10 @@ public class OpaErrorResponseTransformation {
       }
 
     } catch (JAXBException e) {
-      throw new ErrorResponse(e.getMessage());
+      Error error = new Error();
+      error.setCode(e.getErrorCode());
+      error.setMessage(e.getMessage());
+      throw new ErrorResponse(e.getMessage(), error);
     }
     return null;
   }
@@ -66,7 +71,11 @@ public class OpaErrorResponseTransformation {
           rulebaseEvents.add(createEvent(event, factory));
         }
       } else {
-        throw new ErrorResponse(detail.getErrorResponse().getMessage());
+        OpaErrorResponse opaErrorResponse = detail.getErrorResponse();
+        Error error = new Error();
+        error.setCode(opaErrorResponse.getCode());
+        error.setMessage(opaErrorResponse.getMessage());
+        throw new ErrorResponse(detail.getErrorResponse().getMessage(), error);
       }
 
       assessResponse.setEvents(listEvents);

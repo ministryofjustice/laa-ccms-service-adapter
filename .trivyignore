@@ -1,0 +1,145 @@
+# com.google.guava:guava (guava-19.0.jar)
+CVE-2023-2976
+CVE-2020-8908
+
+# org.bouncycastle:bcprov-jdk15on (bcprov-jdk15on-1.54.jar)
+CVE-2020-15522
+CVE-2020-26939
+CVE-2023-33202
+CVE-2024-29857
+CVE-2024-30171
+
+# com.fasterxml.jackson.core:jackson-databind (ehcache-2.10.9.2.jar)
+CVE-2020-36518
+CVE-2021-46877
+CVE-2022-42003
+CVE-2022-42004
+CVE-2025-52999
+CVE-2025-49128
+
+# com.fasterxml.woodstox:woodstox-core (woodstox-core-5.0.3.jar)
+CVE-2022-40152
+
+# com.fasterxml.jackson.core:jackson-core (jackson-core-2.13.5.jar)
+CVE-2025-52999
+
+# org.apache.commons:commons-lang3 (commons-lang3-3.17.0.jar)
+CVE-2025-48924
+
+# org.apache.cxf:cxf-core (cxf-core-3.2.1.jar)
+CVE-2025-48795
+
+# org.bouncycastle:bcprov-jdk15on (bcprov-jdk15on-1.54.jar)
+CVE-2016-1000338
+CVE-2016-1000340
+CVE-2016-1000342
+CVE-2016-1000343
+CVE-2016-1000344
+CVE-2016-1000352
+CVE-2018-1000180
+CVE-2016-1000339
+CVE-2016-1000341
+CVE-2016-1000345
+CVE-2016-1000346
+
+# com.google.guava:guava (guava-19.0.jar)
+CVE-2018-10237
+
+# org.apache.cxf:cxf-core (cxf-core-3.2.1.jar)
+CVE-2022-46364
+CVE-2024-28752
+CVE-2022-46363
+CVE-2025-23184
+
+# org.apache.cxf:cxf-rt-transports-http (cxf-rt-transports-http-3.2.1.jar)
+CVE-2018-8039
+
+# org.apache.santuario:xmlsec (xmlsec-2.1.0.jar)
+CVE-2021-40690
+CVE-2019-12400
+CVE-2023-44483
+
+# org.apache.tomcat.embed:tomcat-embed-core (tomcat-embed-core-9.0.83.jar)
+CVE-2025-24813
+CVE-2024-34750
+CVE-2024-50379
+CVE-2024-56337
+CVE-2024-24549
+CVE-2025-31650
+CVE-2025-31651
+CVE-2025-46701
+CVE-2025-48988
+CVE-2025-48989
+CVE-2025-49125
+CVE-2025-55752
+CVE-2025-49124
+CVE-2025-55754
+CVE-2025-61795
+
+# org.apache.tomcat.embed:tomcat-embed-websocket (tomcat-embed-websocket-9.0.83.jar)
+CVE-2024-23672
+
+# org.apache.logging.log4j:log4j-core (log4j-core-2.17.2.jar)
+CVE-2025-68161
+
+# org.cryptacular:cryptacular (cryptacular-1.1.1.jar)
+CVE-2020-7226
+
+# org.eclipse.jetty:jetty-http (ehcache-2.10.9.2.jar)
+CVE-2023-40167
+CVE-2024-6763
+CVE-2022-2047
+
+# org.eclipse.jetty:jetty-server (ehcache-2.10.9.2.jar)
+CVE-2024-13009
+CVE-2023-26048
+CVE-2024-8184
+CVE-2021-34428
+CVE-2023-26049
+
+# org.glassfish.jersey.core:jersey-common (ehcache-2.10.9.2.jar)
+CVE-2021-28168
+
+# org.springframework:spring-core (spring-core-5.3.31.jar)
+CVE-2025-41249
+
+# org.springframework.boot:spring-boot (spring-boot-2.7.18.jar)
+CVE-2025-22235
+
+# org.springframework:spring-context (spring-context-5.3.31.jar)
+CVE-2024-38820
+CVE-2025-22233
+
+# org.springframework:spring-expression (spring-expression-5.3.31.jar)
+CVE-2024-38808
+
+# org.springframework:spring-web (spring-web-5.3.31.jar)
+CVE-2016-1000027
+CVE-2024-22243
+CVE-2024-22259
+CVE-2024-22262
+CVE-2024-38809
+CVE-2024-38820
+
+# org.springframework:spring-webmvc (spring-webmvc-5.3.31.jar)
+CVE-2024-38816
+CVE-2024-38819
+CVE-2024-38828
+CVE-2025-41242
+
+# org.yaml:snakeyaml (snakeyaml-1.30.jar)
+CVE-2022-1471
+CVE-2022-25857
+CVE-2022-38749
+CVE-2022-38750
+CVE-2022-38751
+CVE-2022-38752
+CVE-2022-41854
+
+# layers/paketo-buildpacks_spring-boot/helper/helper (gobinary)
+# stdlib
+CVE-2025-22871
+
+# golang.org/x/crypto
+CVE-2025-47914
+CVE-2025-58181

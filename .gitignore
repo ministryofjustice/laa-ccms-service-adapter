@@ -12,59 +12,25 @@
 # Log file
 *.log
 
-
 # Package Files #
 *.war
 *.ear
 *.tar.gz
 *.rar
 
-# User-specific stuff
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/**/usage.statistics.xml
-.idea/**/dictionaries
-.idea/**/shelf
+# IntelliJ
+out/
+.idea
+auto-import.
+*.iml
+*.ipr
 
-# Generated files
-.idea/**/contentModel.xml
+# Gradle
+.gradle/
+build/
 
-# Sensitive or high-churn files
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/dataSources.local.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-.idea/**/dbnavigator.xml
-
-# Gradle and Maven with auto-import
- auto-import.
- .idea/artifacts
- .idea/compiler.xml
- .idea/jarRepositories.xml
- .idea/modules.xml
- .idea/*.iml
- .idea/modules
- *.iml
- *.ipr
- .idea/libraries
-
- # IntelliJ
- out/
-
- # Maven
- log/
- target/
-
- node_modules
-
-.DS_Store
-
+# npm
 node_modules
-/.idea/compiler.xml
-/.idea/jarRepositories.xml
-/.idea/modules.xml
-/AssessServiceAdapter.iml
-/.idea/libraries/
-/.idea/aws.xml
+
+# MacOS
+.DS_Store
