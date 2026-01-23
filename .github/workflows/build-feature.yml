@@ -7,6 +7,7 @@ on:
       - main-cp
       - 'feature-dev/*'
       - 'feature-test/*'
+      - 'feature-mp/*'
 
 jobs:
   build-and-publish-snapshot:

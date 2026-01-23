@@ -1,0 +1,159 @@
+name: Deploy main to MP
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: read
+
+jobs:
+  assemble:
+    uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/gradle-build-and-publish.yml@v1
+    permissions:
+      contents: write
+      packages: write
+    with:
+      java_version: '8'
+      build_command: 'assemble'
+      publish_package: 'false'
+      junit_results: 'false'
+      junit_report: 'false'
+      checkstyle_report: 'false'
+      jacoco_coverage_report: 'false'
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+
+  ecr-publish-image-dev:
+    needs: [ assemble ]
+    uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/ecr-publish-image.yml@v1
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      java_version: '8'
+      image_version: ${{ format('{0}-dev', needs.assemble.outputs.published_artifact_version) }}
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY_MP }}
+      ecr_region: ${{ vars.ECR_REGION_MP }}
+      ecr_role_to_assume: ${{ secrets.ECR_ROLE_TO_ASSUME_MP }}
+      ecr_registry: ${{ secrets.ECR_REGISTRY_MP }}
+      root_certificate: ${{ secrets.DB_ROOT_CERT_DEV }}
+      binding_directory: "bindings/certificates"
+
+  deploy-to-mp-dev:
+    needs: [ ecr-publish-image-dev ]
+    uses: ./.github/workflows/deploy-to-mp.yml
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      deployment_environment: development
+      image_version: ${{ needs.ecr-publish-image-dev.outputs.published_image_version }}
+    secrets:
+      aws_region: ${{ vars.ECR_REGION_MP }}
+      aws_role_to_assume_mp: ${{ secrets.AWS_ROLE_TO_ASSUME_MP }}
+      ecr_registry: ${{ secrets.DEPLOY_ECR_REGISTRY_MP }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY_MP }}
+
+  ecr-publish-image-test:
+    needs: [ assemble, ecr-publish-image-dev ]
+    uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/ecr-publish-image.yml@v1
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      java_version: '8'
+      image_version: ${{ format('{0}-test', needs.assemble.outputs.published_artifact_version) }}
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY_MP }}
+      ecr_region: ${{ vars.ECR_REGION_MP }}
+      ecr_role_to_assume: ${{ secrets.ECR_ROLE_TO_ASSUME_MP }}
+      ecr_registry: ${{ secrets.ECR_REGISTRY_MP }}
+      root_certificate: ${{ secrets.DB_ROOT_CERT_TEST }}
+      binding_directory: "bindings/certificates"
+
+  deploy-to-mp-test:
+    needs: [ ecr-publish-image-test ]
+    uses: ./.github/workflows/deploy-to-mp.yml
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      deployment_environment: uat
+      image_version: ${{ needs.ecr-publish-image-test.outputs.published_image_version }}
+    secrets:
+      aws_region: ${{ vars.ECR_REGION_MP }}
+      aws_role_to_assume_mp: ${{ secrets.AWS_ROLE_TO_ASSUME_MP }}
+      ecr_registry: ${{ secrets.DEPLOY_ECR_REGISTRY_MP }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY_MP }}
+
+  ecr-publish-image-preprod:
+    needs: [ assemble, ecr-publish-image-test ]
+    uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/ecr-publish-image.yml@v1
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      java_version: '8'
+      image_version: ${{ format('{0}-preprod', needs.assemble.outputs.published_artifact_version) }}
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY_MP }}
+      ecr_region: ${{ vars.ECR_REGION_MP }}
+      ecr_role_to_assume: ${{ secrets.ECR_ROLE_TO_ASSUME_MP }}
+      ecr_registry: ${{ secrets.ECR_REGISTRY_MP }}
+      root_certificate: ${{ secrets.DB_ROOT_CERT_PREPROD }}
+      binding_directory: "bindings/certificates"
+
+  deploy-to-mp-preprod:
+    needs: [ ecr-publish-image-preprod ]
+    uses: ./.github/workflows/deploy-to-mp.yml
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      deployment_environment: staging
+      image_version: ${{ needs.ecr-publish-image-preprod.outputs.published_image_version }}
+    secrets:
+      aws_region: ${{ vars.ECR_REGION_MP }}
+      aws_role_to_assume_mp: ${{ secrets.AWS_ROLE_TO_ASSUME_MP }}
+      ecr_registry: ${{ secrets.DEPLOY_ECR_REGISTRY_MP }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY_MP }}
+
+  ecr-publish-image-prod:
+    needs: [ assemble, ecr-publish-image-preprod ]
+    uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/ecr-publish-image.yml@v1
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      java_version: '8'
+      image_version: ${{ format('{0}-prod', needs.assemble.outputs.published_artifact_version) }}
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY_MP }}
+      ecr_region: ${{ vars.ECR_REGION_MP }}
+      ecr_role_to_assume: ${{ secrets.ECR_ROLE_TO_ASSUME_MP }}
+      ecr_registry: ${{ secrets.ECR_REGISTRY_MP }}
+      root_certificate: ${{ secrets.DB_ROOT_CERT_PROD }}
+      binding_directory: "bindings/certificates"
+
+  deploy-to-mp-prod:
+    needs: [ ecr-publish-image-prod ]
+    uses: ./.github/workflows/deploy-to-mp.yml
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      deployment_environment: production
+      image_version: ${{ needs.ecr-publish-image-prod.outputs.published_image_version }}
+    secrets:
+      aws_region: ${{ vars.ECR_REGION_MP }}
+      aws_role_to_assume_mp: ${{ secrets.AWS_ROLE_TO_ASSUME_MP }}
+      ecr_registry: ${{ secrets.DEPLOY_ECR_REGISTRY_MP }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY_MP }}

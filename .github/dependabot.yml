@@ -4,15 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    groups:
-      gradle-updates:
-        patterns:
-          - "**"
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    groups:
-      npm-updates:
-        patterns:
-          - "**"
+    ignore:
+      - dependency-name: *
+      - update-types: [ version-update:semver-major ]
