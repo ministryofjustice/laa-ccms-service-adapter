@@ -32,7 +32,7 @@ dependencies {
 
     implementation "org.apache.cxf:cxf-spring-boot-starter-jaxws:3.2.1"
     implementation "org.apache.cxf:cxf-rt-ws-security:3.2.1"
-    implementation "org.apache.cxf.xjcplugins:cxf-xjc-ts:3.2.1"
+    implementation "org.apache.cxf.xjcplugins:cxf-xjc-ts:3.3.4"
 
     implementation 'org.apache.commons:commons-lang3:3.17.0'
 
