@@ -1,5 +1,7 @@
 # laa-ccms-service-adapter
 
+[![Ministry of Justice Repository Compliance Badge](https://github-community.service.justice.gov.uk/repository-standards/api/laa-ccms-service-adapter/badge)](https://github-community.service.justice.gov.uk/repository-standards/laa-ccms-service-adapter)
+
 The service adapter is a Spring Boot microservice built for processing OPA 18 AssessService requests for means, merits and billing rulebases.
 
 # Technologies Used
@@ -27,3 +29,5 @@ To ensure your code is formatted correctly, import one of these formatters into 
 
 Import it by going to `Code Style -> Java` (or `Java -> Code Style`) in the preferences.
 
+## Contributing
+Follow the [contribution guide](./CONTRIBUTING.md) to make code changes.
