@@ -30,9 +30,9 @@ dependencies {
     implementation 'io.micrometer:micrometer-registry-prometheus'
     implementation "org.hibernate.validator:hibernate-validator:6.2.5.Final"
 
-    implementation "org.apache.cxf:cxf-spring-boot-starter-jaxws:3.2.1"
-    implementation "org.apache.cxf:cxf-rt-ws-security:3.2.1"
-    implementation "org.apache.cxf.xjcplugins:cxf-xjc-ts:3.2.1"
+    implementation "org.apache.cxf:cxf-spring-boot-starter-jaxws:3.6.9"
+    implementation "org.apache.cxf:cxf-rt-ws-security:3.6.9"
+    implementation "org.apache.cxf.xjcplugins:cxf-xjc-ts:3.6.9"
 
     implementation 'org.apache.commons:commons-lang3:3.17.0'
 
