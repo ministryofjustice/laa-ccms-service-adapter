@@ -1,0 +1,34 @@
+name: Deploy to MP (Manual)
+
+on:
+  workflow_dispatch:
+    inputs: 
+      image_version:
+        type: string
+        description: 'Image version to deploy'
+        required: true
+      deployment_environment:
+        type: choice
+        options: [feasibility]
+        description: 'Deployment environment to deploy to'
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+
+  deploy-to-mp:
+    name: Deploy version ${{ inputs.image_version }} to ${{ inputs.deployment_environment }} MP
+    uses: ./.github/workflows/deploy-to-mp.yml
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      deployment_environment: ${{ inputs.deployment_environment }}
+      image_version: ${{ inputs.image_version }}
+    secrets:
+      aws_region: ${{ vars.ECR_REGION_MP }}
+      aws_role_to_assume_mp: ${{ secrets.AWS_ROLE_TO_ASSUME_MP }}
+      ecr_registry: ${{ secrets.DEPLOY_ECR_REGISTRY_MP }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY_MP }}
