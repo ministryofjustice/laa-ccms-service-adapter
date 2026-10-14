@@ -5,5 +5,17 @@ updates:
     schedule:
       interval: "weekly"
     ignore:
-    - dependency-name: "*"
-      update-types: ["version-update:semver-major"]
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      gradle-updates:
+        patterns:
+          - "**"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      github-actions:
+        patterns:
+          - "**"
