@@ -1,0 +1,46 @@
+name: Deploy cert patch CP
+
+on:
+  push:
+    branches:
+      - '0.0.12-cert-patch.1'
+
+permissions:
+  contents: read
+
+jobs:
+  assemble-and-publish:
+    uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/gradle-build-and-publish.yml@v2
+    permissions:
+      contents: write
+      packages: write
+    with:
+      java_version: '8'
+      build_command: 'assemble'
+      publish_package: 'true'
+      junit_results: 'false'
+      junit_report: 'false'
+      checkstyle_report: 'false'
+      jacoco_coverage_report: 'false'
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+
+  ecr-publish-image:
+    needs: [ assemble-and-publish ]
+    uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/ecr-publish-image.yml@v2.5.8
+    permissions:
+      actions: read
+      contents: read
+      id-token: write
+      security-events: write
+    with:
+      java_version: '8'
+      image_version: ${{ format('{0}-0.0.12-cert-patch.1', vars.IMAGE_PREFIX) }}
+      image_scan: false
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY }}
+      ecr_region: ${{ vars.ECR_REGION }}
+      ecr_role_to_assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
+      snyk_client_id: ${{ secrets.SNYK_CLIENT_ID }}
+      snyk_client_secret: ${{ secrets.SNYK_CLIENT_SECRET }}

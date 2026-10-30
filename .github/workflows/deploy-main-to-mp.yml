@@ -2,9 +2,6 @@ name: Deploy main to MP
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - '*'
 
 permissions:
   contents: read

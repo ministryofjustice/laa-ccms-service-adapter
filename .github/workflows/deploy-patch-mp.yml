@@ -1,0 +1,88 @@
+name: Deploy cert patch MP
+
+on:
+  push:
+    branches:
+      - '0.0.12-cert-patch.1'
+
+permissions:
+  contents: read
+
+jobs:
+  assemble:
+    uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/gradle-build-and-publish.yml@v2
+    permissions:
+      contents: write
+      packages: write
+    with:
+      java_version: '8'
+      build_command: 'assemble'
+      publish_package: 'false'
+      junit_results: 'false'
+      junit_report: 'false'
+      checkstyle_report: 'false'
+      jacoco_coverage_report: 'false'
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+
+  short-sha:
+    runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - name: Get short SHA
+        id: commit
+        run: echo "sha=$(echo ${{ github.sha }} | cut -c1-7)" >> "$GITHUB_OUTPUT"
+
+  ecr-publish-image:
+    needs: [ assemble, short-sha ]
+    uses: ministryofjustice/laa-ccms-common-workflows/.github/workflows/ecr-publish-image.yml@v2.5.8
+    permissions:
+      contents: read
+      id-token: write
+      security-events: write
+      actions: read
+    with:
+      java_version: '8'
+      image_version: '0.0.12-cert-patch.1'
+      image_scan: false
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY_MP }}
+      ecr_region: ${{ vars.ECR_REGION_MP }}
+      ecr_role_to_assume: ${{ secrets.ECR_ROLE_TO_ASSUME_MP }}
+      ecr_registry: ${{ secrets.ECR_REGISTRY_MP }}
+      snyk_client_id: ${{ secrets.SNYK_CLIENT_ID }}
+      snyk_client_secret: ${{ secrets.SNYK_CLIENT_SECRET }}
+      certificate_bundle: ${{ secrets.DB_CERTIFICATE_BUNDLE }}
+      binding_directory: "bindings/certificates"
+
+  deploy-to-mp-preprod:
+    needs: [ ecr-publish-image ]
+    uses: ./.github/workflows/deploy-to-mp.yml
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      deployment_environment: staging
+      image_version: ${{ needs.ecr-publish-image.outputs.published_image_version }}
+    secrets:
+      aws_region: ${{ vars.ECR_REGION_MP }}
+      aws_role_to_assume_mp: ${{ secrets.AWS_ROLE_TO_ASSUME_MP }}
+      ecr_registry: ${{ secrets.DEPLOY_ECR_REGISTRY_MP }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY_MP }}
+
+  deploy-to-mp-prod:
+    needs: [ ecr-publish-image, deploy-to-mp-preprod ]
+    uses: ./.github/workflows/deploy-to-mp.yml
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      deployment_environment: production
+      image_version: ${{ needs.ecr-publish-image.outputs.published_image_version }}
+    secrets:
+      aws_region: ${{ vars.ECR_REGION_MP }}
+      aws_role_to_assume_mp: ${{ secrets.AWS_ROLE_TO_ASSUME_MP }}
+      ecr_registry: ${{ secrets.DEPLOY_ECR_REGISTRY_MP }}
+      ecr_repository: ${{ vars.ECR_REPOSITORY_MP }}
